@@ -1,7 +1,5 @@
 package ru.spiiran.us_complex.model.dto;
 
-import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
-
 public class dtoStatusGeneral implements IDTOEntity{
 
     private Boolean statusOfEdit;
@@ -15,9 +13,5 @@ public class dtoStatusGeneral implements IDTOEntity{
     }
 
     public dtoStatusGeneral(){}
-
-    public dtoStatusGeneral(generalStatusEntity generalStatusEntity){
-        this.statusOfEdit = generalStatusEntity.getStatusOfEdit();
-    }
 
 }

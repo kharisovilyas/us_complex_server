@@ -1,14 +1,17 @@
 package ru.spiiran.us_complex.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import ru.spiiran.us_complex.model.entitys.EarthPointEntity;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class dtoEarthPoint implements IDTOEntity {
+    //TODO: возможно будут возникать проблемы с Long - если будет null ошибка падать - заменить на long - примитивный тип данных
     private Long ID;
     private Long idNode;
     private String nameEarthPoint;
     private Double longitude;
     private Double latitude;
-    private Boolean statusOfEdit;
+    private Boolean isDeleted;
 
     public dtoEarthPoint() {}
 
@@ -17,10 +20,8 @@ public class dtoEarthPoint implements IDTOEntity {
         this.nameEarthPoint = earthPointEntity.getNameEarthPoint();
         this.longitude = earthPointEntity.getLongitude();
         this.latitude = earthPointEntity.getLatitude();
-        this.statusOfEdit = earthPointEntity.getStatusGeneral() != null && earthPointEntity.getStatusGeneral().getStatusOfEdit() != null
-                ? earthPointEntity.getStatusGeneral().getStatusOfEdit()
-                : false;
-        this.idNode = earthPointEntity.getGeneralIdNodeEntity().getIdNode();
+        this.isDeleted = false;
+        this.idNode = earthPointEntity.getEarthIdNode();
     }
 
     public Long getIdNode() {
@@ -63,11 +64,11 @@ public class dtoEarthPoint implements IDTOEntity {
         this.ID = ID;
     }
 
-    public Boolean getStatusOfEdit() {
-        return statusOfEdit;
+    public Boolean getDeleted() {
+        return isDeleted;
     }
 
-    public void setStatusOfEdit(Boolean statusOfEdit) {
-        this.statusOfEdit = statusOfEdit;
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 }

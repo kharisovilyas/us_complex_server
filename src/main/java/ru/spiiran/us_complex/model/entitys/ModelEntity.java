@@ -18,8 +18,8 @@ public class ModelEntity implements IEntity {
     private String modelName;
 
     @Override
-    public long getID() {
-        return 0;
+    public Long getID() {
+        return 0L;
     }
 
     @Override

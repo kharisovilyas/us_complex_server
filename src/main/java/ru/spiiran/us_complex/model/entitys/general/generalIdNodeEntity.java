@@ -1,12 +1,14 @@
 package ru.spiiran.us_complex.model.entitys.general;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
+import ru.spiiran.us_complex.model.entitys.ConstellationDetailed;
 import ru.spiiran.us_complex.model.entitys.EarthPointEntity;
 
 @Entity
 @Table(name = "id_node_general")
-public class generalIdNodeEntity implements IEntity, IEntityNode{
+public class generalIdNodeEntity implements IEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -16,10 +18,15 @@ public class generalIdNodeEntity implements IEntity, IEntityNode{
     private Long idNode;
 
     @OneToOne(mappedBy = "generalIdNodeEntity", cascade = CascadeType.ALL)
+    @JsonIgnore
     private EarthPointEntity earthPointEntity;
 
+    @OneToOne(mappedBy = "generalIdNodeEntity", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private ConstellationDetailed constellationDetailed;
+
     @Override
-    public long getID() {
+    public Long getID() {
         return ID;
     }
 
@@ -28,7 +35,6 @@ public class generalIdNodeEntity implements IEntity, IEntityNode{
         return new dtoMessage(type, message);
     }
 
-    @Override
     public Long getIdNode() {
         return idNode;
     }

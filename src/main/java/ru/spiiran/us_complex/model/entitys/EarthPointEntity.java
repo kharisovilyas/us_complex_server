@@ -1,16 +1,16 @@
 package ru.spiiran.us_complex.model.entitys;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.dtoEarthPoint;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
-import ru.spiiran.us_complex.model.entitys.general.IEntityNode;
-import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
 import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
+import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
 
 @Entity
 @Table(name= "earth_point")
-public class EarthPointEntity implements IEntity, IEntityNode {
+public class EarthPointEntity implements IEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,31 +18,26 @@ public class EarthPointEntity implements IEntity, IEntityNode {
     private String nameEarthPoint;
     private Double longitude;
     private Double latitude;
-    @OneToOne
-    @JoinColumn(name = "status_id")
-    private generalStatusEntity generalStatusEntity;
+
     @OneToOne
     @JoinColumn(name = "node_id")
+    @JsonIgnore
     private generalIdNodeEntity generalIdNodeEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    @JsonIgnore
+    private generalStatusEntity generalStatus;
 
     public EarthPointEntity(dtoEarthPoint earthPoint) {
         this.nameEarthPoint = earthPoint.getNameEarthPoint();
         this.longitude = earthPoint.getLongitude();
         this.latitude = earthPoint.getLatitude();
     }
-
     public EarthPointEntity() {}
 
     public generalIdNodeEntity getGeneralIdNodeEntity() {
         return generalIdNodeEntity;
-    }
-
-    public void setGeneralIdNodeEntity(generalIdNodeEntity generalIdNodeEntity) {
-        this.generalIdNodeEntity = generalIdNodeEntity;
-    }
-
-    public generalStatusEntity getStatusGeneral() {
-        return generalStatusEntity;
     }
 
     public dtoEarthPoint getDto() {
@@ -50,7 +45,7 @@ public class EarthPointEntity implements IEntity, IEntityNode {
     }
 
     @Override
-    public long getID() {
+    public Long getID() {
         return ID;
     }
 
@@ -60,11 +55,6 @@ public class EarthPointEntity implements IEntity, IEntityNode {
     }
     public void setID(long ID) {
         this.ID = ID;
-    }
-
-    @Override
-    public Long getIdNode() {
-        return generalIdNodeEntity.getIdNode();
     }
 
     public String getNameEarthPoint() {
@@ -91,7 +81,18 @@ public class EarthPointEntity implements IEntity, IEntityNode {
         this.latitude = latitude;
     }
 
-    public void setStatusGeneral(generalStatusEntity generalStatusEntity) {
-        this.generalStatusEntity = generalStatusEntity;
+    public Long getEarthIdNode() {
+        return generalIdNodeEntity.getIdNode();
+    }
+    public void setGeneralIdNodeEntity(generalIdNodeEntity generalIdNodeEntity) {
+        this.generalIdNodeEntity = generalIdNodeEntity;
+    }
+
+    public generalStatusEntity getGeneralStatus() {
+        return generalStatus;
+    }
+
+    public void setGeneralStatus(generalStatusEntity generalStatus) {
+        this.generalStatus = generalStatus;
     }
 }

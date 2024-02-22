@@ -28,7 +28,7 @@ public class SystemEntity implements IEntity {
     private String controlSystem;
 
     @Override
-    public long getID() {
+    public Long getID() {
         return ID;
     }
 

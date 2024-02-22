@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.spiiran.us_complex.model.dto.dtoEarthPoint;
-import ru.spiiran.us_complex.model.dto.dtoListOfEarthPoint;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.EarthPointEntity;
 import ru.spiiran.us_complex.services.EarthPointService;
@@ -16,8 +15,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/api/v1/earth")
 public class RestEarthPointController {
-    @Autowired
-    private EarthPointService earthPointService;
+    @Autowired private EarthPointService earthPointService;
 
     @GetMapping("/get/list")
     public ResponseEntity<List<dtoEarthPoint>> getAllEarthPoints() {
@@ -32,10 +30,6 @@ public class RestEarthPointController {
     public ResponseEntity<dtoMessage> addEarthPoint(@RequestBody dtoEarthPoint earthPoint) {
         return ResponseEntity.ok().body(earthPointService.addEarthPoint(earthPoint));
     }
-    @PostMapping("/add/byList")
-    public ResponseEntity<dtoMessage> addEarthPointList(@RequestBody dtoListOfEarthPoint dtoListOfEarthPoint) {
-        return ResponseEntity.ok().body(earthPointService.addEarthPointByList(dtoListOfEarthPoint));
-    }
 
     @PostMapping("/update/byId")
     public ResponseEntity<dtoMessage> updateEarthPointById(@RequestBody dtoEarthPoint dtoEarthPoint){
@@ -43,7 +37,7 @@ public class RestEarthPointController {
     }
 
     @PostMapping("/update/byList")
-    public ResponseEntity<dtoMessage> updateList(@RequestBody dtoListOfEarthPoint dtoListOfEarthPoint){
+    public ResponseEntity<dtoMessage> updateList(@RequestBody List<dtoEarthPoint> dtoListOfEarthPoint){
         return ResponseEntity.ok().body(earthPointService.updatePointByList(dtoListOfEarthPoint));
     }
 
@@ -59,7 +53,7 @@ public class RestEarthPointController {
 
     @PostMapping("/set/status")
     public ResponseEntity<dtoMessage> setStatusOfEdit(@RequestParam Boolean status){
-        return ResponseEntity.ok().body(earthPointService.setStatusOfEdit(status));
+        return ResponseEntity.ok().body(earthPointService.setTableStatusOfEdit(status));
     }
 
 }
