@@ -2,23 +2,19 @@ package ru.spiiran.us_complex.model.entitys;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import ru.spiiran.us_complex.model.dto.constellation.dtoDetailedConstellation;
+import ru.spiiran.us_complex.model.dto.constellation.dtoConstellationArbitrary;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
 import ru.spiiran.us_complex.model.entitys.general.IEntityNode;
 import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
-import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
 
 @Entity
-@Table(name = "constellation_detailed")
-public class ConstellationDetailed implements IEntity, IEntityNode {
+@Table(name = "constellation_arbitrary")
+public class ConstellationArbitrary implements IEntity, IEntityNode {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long ID;
-
-    @Column(name = "model_sat")
-    private Long modelSat;
 
     @Column(name = "altitude")
     private Integer altitude;
@@ -43,26 +39,21 @@ public class ConstellationDetailed implements IEntity, IEntityNode {
     @JsonIgnore
     private generalIdNodeEntity generalIdNodeEntity;
     @ManyToOne
-    @JoinColumn(name = "status_id")
-    @JsonIgnore
-    private generalStatusEntity generalStatus;
-    @ManyToOne
     @JoinColumn(name = "table_id")
     @JsonIgnore
     private ConstellationEntity constellation;
 
 
     // Constructors, getters, and setters
-    public ConstellationDetailed() {}
+    public ConstellationArbitrary() {}
 
-    public ConstellationDetailed(dtoDetailedConstellation dtoDetailedConstellation) {
-        this.altitude = dtoDetailedConstellation.getAltitude();
-        this.incline = dtoDetailedConstellation.getIncline();
-        this.eccentricity = dtoDetailedConstellation.getEccentricity();
-        this.longitudeAscendingNode = dtoDetailedConstellation.getLongitudeAscendingNode();
-        this.perigeeWidthArgument = dtoDetailedConstellation.getPerigeeWidthArgument();
-        this.trueAnomaly = dtoDetailedConstellation.getTrueAnomaly();
-        this.modelSat = dtoDetailedConstellation.getModelSat();
+    public ConstellationArbitrary(dtoConstellationArbitrary dtoConstellationArbitrary) {
+        this.altitude = dtoConstellationArbitrary.getAltitude();
+        this.incline = dtoConstellationArbitrary.getIncline();
+        this.eccentricity = dtoConstellationArbitrary.getEccentricity();
+        this.longitudeAscendingNode = dtoConstellationArbitrary.getLongitudeAscendingNode();
+        this.perigeeWidthArgument = dtoConstellationArbitrary.getPerigeeWidthArgument();
+        this.trueAnomaly = dtoConstellationArbitrary.getTrueAnomaly();
     }
 
     public generalIdNodeEntity getGeneralIdNodeEntity() {
@@ -71,14 +62,6 @@ public class ConstellationDetailed implements IEntity, IEntityNode {
 
     public void setGeneralIdNodeEntity(generalIdNodeEntity generalIdNodeEntity) {
         this.generalIdNodeEntity = generalIdNodeEntity;
-    }
-
-    public Long getModelSat() {
-        return modelSat;
-    }
-
-    public void setModelSat(Long modelSat) {
-        this.modelSat = modelSat;
     }
 
     public Integer getAltitude() {
@@ -134,19 +117,19 @@ public class ConstellationDetailed implements IEntity, IEntityNode {
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
     }
-    public dtoDetailedConstellation getDto() {
-        return new dtoDetailedConstellation(this);
+    public dtoConstellationArbitrary getDto() {
+        return new dtoConstellationArbitrary(this);
     }
 
     public Long getDetailedConstellationIdNode() {
         return this.generalIdNodeEntity.getIdNode();
     }
 
-    public generalStatusEntity getGeneralStatus() {
-        return generalStatus;
+    public ConstellationEntity getConstellation() {
+        return constellation;
     }
 
-    public void setGeneralStatus(generalStatusEntity generalStatus) {
-        this.generalStatus = generalStatus;
+    public void setConstellation(ConstellationEntity constellation) {
+        this.constellation = constellation;
     }
 }

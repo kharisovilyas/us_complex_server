@@ -3,7 +3,7 @@ package ru.spiiran.us_complex.model.entitys.general;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.entitys.ConstellationDetailed;
+import ru.spiiran.us_complex.model.entitys.ConstellationArbitrary;
 import ru.spiiran.us_complex.model.entitys.EarthPointEntity;
 
 @Entity
@@ -23,7 +23,7 @@ public class generalIdNodeEntity implements IEntity{
 
     @OneToOne(mappedBy = "generalIdNodeEntity", cascade = CascadeType.ALL)
     @JsonIgnore
-    private ConstellationDetailed constellationDetailed;
+    private ConstellationArbitrary constellationArbitrary;
 
     @Override
     public Long getID() {

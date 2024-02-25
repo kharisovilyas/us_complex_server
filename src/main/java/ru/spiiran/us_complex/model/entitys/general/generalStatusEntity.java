@@ -2,7 +2,6 @@ package ru.spiiran.us_complex.model.entitys.general;
 
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.entitys.ConstellationDetailed;
 import ru.spiiran.us_complex.model.entitys.ConstellationEntity;
 import ru.spiiran.us_complex.model.entitys.EarthPointEntity;
 
@@ -13,15 +12,13 @@ import java.util.List;
 public class generalStatusEntity implements IEntity {
     @Id
     @Column(name = "status_id")
-    private Long statusId;
+    private final Long statusId;
     @Column(name = "status_edit_earth")
     private Boolean statusOfEditEarth;
     @Column(name = "status_edit_constellation")
     private Boolean statusOfEditConstellation;
     @OneToMany(mappedBy = "generalStatus", cascade = CascadeType.ALL)
     private List<EarthPointEntity> earthPointEntities;
-    @OneToMany(mappedBy = "generalStatus", cascade = CascadeType.ALL)
-    private List<ConstellationDetailed> constellationDetailedList;
     @OneToMany(mappedBy = "generalStatus", cascade = CascadeType.ALL)
     private List<ConstellationEntity> constellationEntities;
 
@@ -60,5 +57,13 @@ public class generalStatusEntity implements IEntity {
     @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
+    }
+
+    public List<ConstellationEntity> getConstellationEntities() {
+        return constellationEntities;
+    }
+
+    public void setConstellationEntities(List<ConstellationEntity> constellationEntities) {
+        this.constellationEntities = constellationEntities;
     }
 }

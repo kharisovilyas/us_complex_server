@@ -1,12 +1,11 @@
 package ru.spiiran.us_complex.model.dto.constellation;
 
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
-import ru.spiiran.us_complex.model.entitys.ConstellationDetailed;
+import ru.spiiran.us_complex.model.entitys.ConstellationArbitrary;
 
-public class dtoDetailedConstellation implements IDTOEntity {
+public class dtoConstellationArbitrary implements IDTOEntity {
     private Long id;
     private Long idNode;
-    private Long modelSat;
     private Integer altitude;
     private Double eccentricity;
     private Double incline;
@@ -15,18 +14,17 @@ public class dtoDetailedConstellation implements IDTOEntity {
     private Double trueAnomaly;
     private Boolean isDeleted;
 
-    public dtoDetailedConstellation(){}
+    public dtoConstellationArbitrary(){}
 
-    public dtoDetailedConstellation(ConstellationDetailed constellationDetailed) {
-        this.id = constellationDetailed.getID();
-        this.modelSat = constellationDetailed.getModelSat();
-        this.altitude = constellationDetailed.getAltitude();
-        this.eccentricity = constellationDetailed.getEccentricity();
-        this.incline = constellationDetailed.getIncline();
-        this.longitudeAscendingNode = constellationDetailed.getLongitudeAscendingNode();
-        this.perigeeWidthArgument = constellationDetailed.getPerigeeWidthArgument();
-        this.trueAnomaly = constellationDetailed.getTrueAnomaly();
-        this.idNode = constellationDetailed.getDetailedConstellationIdNode();
+    public dtoConstellationArbitrary(ConstellationArbitrary constellationArbitrary) {
+        this.id = constellationArbitrary.getID();
+        this.altitude = constellationArbitrary.getAltitude();
+        this.eccentricity = constellationArbitrary.getEccentricity();
+        this.incline = constellationArbitrary.getIncline();
+        this.longitudeAscendingNode = constellationArbitrary.getLongitudeAscendingNode();
+        this.perigeeWidthArgument = constellationArbitrary.getPerigeeWidthArgument();
+        this.trueAnomaly = constellationArbitrary.getTrueAnomaly();
+        this.idNode = constellationArbitrary.getDetailedConstellationIdNode();
     }
 
     public Long getID() {
@@ -43,14 +41,6 @@ public class dtoDetailedConstellation implements IDTOEntity {
 
     public void setIdNode(Long idNode) {
         this.idNode = idNode;
-    }
-
-    public Long getModelSat() {
-        return modelSat;
-    }
-
-    public void setModelSat(Long modelSat) {
-        this.modelSat = modelSat;
     }
 
     public Integer getAltitude() {

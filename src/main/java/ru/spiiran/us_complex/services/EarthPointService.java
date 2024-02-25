@@ -161,8 +161,21 @@ public class EarthPointService {
 
     private void deletePoint(EarthPointEntity earthPointEntity) {
         idNodeRepository.delete(earthPointEntity.getGeneralIdNodeEntity());
+        updateIdNodeOfEarthPoints(earthPointEntity.getGeneralIdNodeEntity().getIdNode());
         earthPointRepository.delete(earthPointEntity);
     }
+
+    private void updateIdNodeOfEarthPoints(Long idNode) {
+        // Получаем список всех записей с idNode >= переданного idNode
+        List<generalIdNodeEntity> idNodeEntities = idNodeRepository.findAllByIdNodeGreaterThanEqual(idNode);
+        // Обновляем значения idNode
+        for (generalIdNodeEntity idNodeEntity : idNodeEntities) {
+            idNodeEntity.setIdNode(idNodeEntity.getIdNode() - 1); // Уменьшаем idNode на единицу
+        }
+        // Сохраняем обновленные записи в базу данных
+        idNodeRepository.saveAll(idNodeEntities);
+    }
+
 
     public Long findMaxIdNode() {
         TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(e.idNode) FROM generalIdNodeEntity e", Long.class);

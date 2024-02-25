@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "constellation_detailed")
-public class ConstellationOverview {
+@Table(name = "constellation_planar")
+public class ConstellationPlanar {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
