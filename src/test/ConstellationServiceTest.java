@@ -6,7 +6,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.entitys.ConstellationEntity;
+import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
 import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
 import ru.spiiran.us_complex.repositories.ConstellationArbitraryRepository;
 import ru.spiiran.us_complex.repositories.ConstellationRepository;
@@ -48,7 +48,7 @@ public class ConstellationServiceTest {
         // Arrange
         dtoConstellation dto = new dtoConstellation();
         dto.setArbitraryFormation(true);
-        dto.setConstellationArbitraryList(new ArrayList<>());
+        dto.setArbitraryConstructions(new ArrayList<>());
 
         when(constellationService.createNewGeneralStatus()).thenReturn(new generalStatusEntity());
         when(constellationRepository.save(any(ConstellationEntity.class))).thenReturn(new ConstellationEntity());

@@ -1,9 +1,9 @@
 package ru.spiiran.us_complex.model.dto.constellation;
 
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
-import ru.spiiran.us_complex.model.entitys.ConstellationArbitrary;
+import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 
-public class dtoConstellationArbitrary implements IDTOEntity {
+public class dtoArbitraryConstruction implements IDTOEntity {
     private Long id;
     private Long idNode;
     private Integer altitude;
@@ -13,18 +13,21 @@ public class dtoConstellationArbitrary implements IDTOEntity {
     private Double perigeeWidthArgument;
     private Double trueAnomaly;
     private Boolean isDeleted;
+    private Long modelSat;
 
-    public dtoConstellationArbitrary(){}
 
-    public dtoConstellationArbitrary(ConstellationArbitrary constellationArbitrary) {
-        this.id = constellationArbitrary.getID();
-        this.altitude = constellationArbitrary.getAltitude();
-        this.eccentricity = constellationArbitrary.getEccentricity();
-        this.incline = constellationArbitrary.getIncline();
-        this.longitudeAscendingNode = constellationArbitrary.getLongitudeAscendingNode();
-        this.perigeeWidthArgument = constellationArbitrary.getPerigeeWidthArgument();
-        this.trueAnomaly = constellationArbitrary.getTrueAnomaly();
-        this.idNode = constellationArbitrary.getDetailedConstellationIdNode();
+    public dtoArbitraryConstruction(){}
+
+    public dtoArbitraryConstruction(coArbitraryConstruction coArbitraryConstruction) {
+        this.id = coArbitraryConstruction.getID();
+        this.modelSat = coArbitraryConstruction.getModelSat();
+        this.altitude = coArbitraryConstruction.getAltitude();
+        this.eccentricity = coArbitraryConstruction.getEccentricity();
+        this.incline = coArbitraryConstruction.getIncline();
+        this.longitudeAscendingNode = coArbitraryConstruction.getLongitudeAscendingNode();
+        this.perigeeWidthArgument = coArbitraryConstruction.getPerigeeWidthArgument();
+        this.trueAnomaly = coArbitraryConstruction.getTrueAnomaly();
+        this.idNode = coArbitraryConstruction.getArbitraryConstructionIdNode();
     }
 
     public Long getID() {
@@ -97,5 +100,13 @@ public class dtoConstellationArbitrary implements IDTOEntity {
 
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Long getModelSat() {
+        return modelSat;
+    }
+
+    public void setModelSat(Long modelSat) {
+        this.modelSat = modelSat;
     }
 }

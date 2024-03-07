@@ -1,16 +1,16 @@
-package ru.spiiran.us_complex.model.entitys;
+package ru.spiiran.us_complex.model.entitys.constellation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import ru.spiiran.us_complex.model.dto.constellation.dtoConstellationArbitrary;
+import ru.spiiran.us_complex.model.dto.constellation.dtoArbitraryConstruction;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
 import ru.spiiran.us_complex.model.entitys.general.IEntityNode;
 import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
 
 @Entity
-@Table(name = "constellation_arbitrary")
-public class ConstellationArbitrary implements IEntity, IEntityNode {
+@Table(name = "co_arbitrary_construction")
+public class coArbitraryConstruction implements IEntity, IEntityNode {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -43,17 +43,21 @@ public class ConstellationArbitrary implements IEntity, IEntityNode {
     @JsonIgnore
     private ConstellationEntity constellation;
 
+    @Column(name="model_sat")
+    private Long modelSat;
+
 
     // Constructors, getters, and setters
-    public ConstellationArbitrary() {}
+    public coArbitraryConstruction() {}
 
-    public ConstellationArbitrary(dtoConstellationArbitrary dtoConstellationArbitrary) {
-        this.altitude = dtoConstellationArbitrary.getAltitude();
-        this.incline = dtoConstellationArbitrary.getIncline();
-        this.eccentricity = dtoConstellationArbitrary.getEccentricity();
-        this.longitudeAscendingNode = dtoConstellationArbitrary.getLongitudeAscendingNode();
-        this.perigeeWidthArgument = dtoConstellationArbitrary.getPerigeeWidthArgument();
-        this.trueAnomaly = dtoConstellationArbitrary.getTrueAnomaly();
+    public coArbitraryConstruction(dtoArbitraryConstruction dtoArbitraryConstruction) {
+        this.altitude = dtoArbitraryConstruction.getAltitude();
+        this.modelSat = dtoArbitraryConstruction.getModelSat();
+        this.incline = dtoArbitraryConstruction.getIncline();
+        this.eccentricity = dtoArbitraryConstruction.getEccentricity();
+        this.longitudeAscendingNode = dtoArbitraryConstruction.getLongitudeAscendingNode();
+        this.perigeeWidthArgument = dtoArbitraryConstruction.getPerigeeWidthArgument();
+        this.trueAnomaly = dtoArbitraryConstruction.getTrueAnomaly();
     }
 
     public generalIdNodeEntity getGeneralIdNodeEntity() {
@@ -117,11 +121,11 @@ public class ConstellationArbitrary implements IEntity, IEntityNode {
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
     }
-    public dtoConstellationArbitrary getDto() {
-        return new dtoConstellationArbitrary(this);
+    public dtoArbitraryConstruction getDto() {
+        return new dtoArbitraryConstruction(this);
     }
 
-    public Long getDetailedConstellationIdNode() {
+    public Long getArbitraryConstructionIdNode() {
         return this.generalIdNodeEntity.getIdNode();
     }
 
@@ -131,5 +135,13 @@ public class ConstellationArbitrary implements IEntity, IEntityNode {
 
     public void setConstellation(ConstellationEntity constellation) {
         this.constellation = constellation;
+    }
+
+    public Long getModelSat() {
+        return modelSat;
+    }
+
+    public void setModelSat(Long modelSat) {
+        this.modelSat = modelSat;
     }
 }

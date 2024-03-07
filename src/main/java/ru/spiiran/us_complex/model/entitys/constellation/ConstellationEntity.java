@@ -1,4 +1,4 @@
-package ru.spiiran.us_complex.model.entitys;
+package ru.spiiran.us_complex.model.entitys.constellation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -20,13 +20,10 @@ public class ConstellationEntity implements IEntity {
     private String constellationName;
     @Column(name = "arbitrary_formation")
     private Boolean isArbitraryFormation;
-
-    @Column(name="model_sat")
-    private Long modelSat;
     @OneToMany(mappedBy = "constellation")
-    private List<ConstellationArbitrary> constellationArbitraryList;
+    private List<coArbitraryConstruction> coArbitraryConstructionList;
     @OneToMany(mappedBy = "constellation", cascade = CascadeType.ALL)
-    private List<ConstellationPlanar> constellationPlanarList;
+    private List<coPlanarConstruction> coPlanarConstructionList;
     @ManyToOne //TODO: данное каскадное взаимодействие - может удалять записи таблицы, из-за связей многие ко многим, аккуратно использовать их!
     @JoinColumn(name = "status_id")
     @JsonIgnore
@@ -37,7 +34,6 @@ public class ConstellationEntity implements IEntity {
     public ConstellationEntity(dtoConstellation dtoConstellation) {
         this.isArbitraryFormation = dtoConstellation.getArbitraryFormation();
         this.constellationName = dtoConstellation.getConstellationName();
-        this.modelSat = dtoConstellation.getModelSat();
     }
     public Boolean getArbitraryFormation() {
         return isArbitraryFormation;
@@ -47,13 +43,6 @@ public class ConstellationEntity implements IEntity {
         isArbitraryFormation = arbitraryFormation;
     }
 
-    public Long getModelSat() {
-        return modelSat;
-    }
-
-    public void setModelSat(Long modelSat) {
-        this.modelSat = modelSat;
-    }
     public void setID(Long ID) {
         this.ID = ID;
     }
@@ -66,20 +55,20 @@ public class ConstellationEntity implements IEntity {
         this.constellationName = constellationName;
     }
 
-    public List<ConstellationArbitrary> getConstellationArbitraryList() {
-        return constellationArbitraryList;
+    public List<coArbitraryConstruction> getArbitraryConstructionList() {
+        return coArbitraryConstructionList;
     }
 
-    public void setConstellationArbitraryList(List<ConstellationArbitrary> constellationArbitraryList) {
-        this.constellationArbitraryList = constellationArbitraryList;
+    public void setArbitraryConstructionList(List<coArbitraryConstruction> coArbitraryConstructions) {
+        this.coArbitraryConstructionList = coArbitraryConstructions;
     }
 
-    public List<ConstellationPlanar> getConstellationPlanarList() {
-        return constellationPlanarList;
+    public List<coPlanarConstruction> getPlanarConstructionList() {
+        return coPlanarConstructionList;
     }
 
-    public void setConstellationPlanarList(List<ConstellationPlanar> constellationPlanarList) {
-        this.constellationPlanarList = constellationPlanarList;
+    public void setPlanarConstructionList(List<coPlanarConstruction> coPlanarConstructionList) {
+        this.coPlanarConstructionList = coPlanarConstructionList;
     }
 
     public generalStatusEntity getGeneralStatus() {

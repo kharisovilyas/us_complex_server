@@ -1,8 +1,8 @@
 package ru.spiiran.us_complex.model.dto.constellation;
 
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
-import ru.spiiran.us_complex.model.entitys.ConstellationEntity;
-import ru.spiiran.us_complex.model.entitys.ConstellationPlanar;
+import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
+import ru.spiiran.us_complex.model.entitys.constellation.coPlanarConstruction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,33 +12,35 @@ public class dtoConstellation implements IDTOEntity {
     private Long ID;
     private String constellationName;
     private Boolean isArbitraryFormation;
-    private Long modelSat;
-    private List<dtoConstellationArbitrary> constellationArbitraryList;
-    private List<dtoConstellationPlanar> constellationPlanarList;
+    private List<dtoArbitraryConstruction> arbitraryConstructions;
+    private List<dtoPlanarConstruction> planarConstructions;
 
-    public dtoConstellation(String constellationName, String typeOfConstellation, Long modelSat, List<dtoConstellationArbitrary> constellationArbitraryList, List<dtoConstellationPlanar> constellationOverviewList) {
+    public dtoConstellation(String constellationName,
+                            Boolean arbitraryFormation,
+                            List<dtoArbitraryConstruction> arbitraryConstructions,
+                            List<dtoPlanarConstruction> planarConstructions
+    ) {
         this.constellationName = constellationName;
-        this.modelSat = modelSat;
-        this.constellationArbitraryList = constellationArbitraryList;
-        this.constellationPlanarList = constellationOverviewList;
+        this.isArbitraryFormation = arbitraryFormation;
+        this.arbitraryConstructions = arbitraryConstructions;
+        this.planarConstructions = planarConstructions;
     }
 
     public dtoConstellation(){}
 
     public dtoConstellation(ConstellationEntity constellationEntity) {
         this.constellationName = constellationEntity.getConstellationName();
-        this.modelSat = constellationEntity.getModelSat();
         this.ID = constellationEntity.getID();
         this.isArbitraryFormation = constellationEntity.getArbitraryFormation();
-        this.constellationArbitraryList = constellationEntity
-                .getConstellationArbitraryList()
+        this.arbitraryConstructions = constellationEntity
+                .getArbitraryConstructionList()
                 .stream()
-                .map(dtoConstellationArbitrary::new) // Преобразование каждого элемента типа ConstellationArbitrary в dtoConstellationArbitrary
+                .map(dtoArbitraryConstruction::new) // Преобразование каждого элемента типа Arbitrary Construction в dtoArbitraryConstruction
                 .collect(Collectors.toList());
-        this.constellationPlanarList = new ArrayList<>();
+        this.planarConstructions = new ArrayList<>();
     }
 
-    private dtoConstellationArbitrary mapToDto(ConstellationPlanar constellationPlanar) {
+    private dtoArbitraryConstruction mapToDto(coPlanarConstruction coPlanarConstruction) {
         return null;
     }
 
@@ -58,20 +60,20 @@ public class dtoConstellation implements IDTOEntity {
         this.constellationName = constellationName;
     }
 
-    public List<dtoConstellationArbitrary> getConstellationArbitraryList() {
-        return constellationArbitraryList;
+    public List<dtoArbitraryConstruction> getArbitraryConstructions() {
+        return arbitraryConstructions;
     }
 
-    public void setConstellationArbitraryList(List<dtoConstellationArbitrary> constellationArbitraryList) {
-        this.constellationArbitraryList = constellationArbitraryList;
+    public void setArbitraryConstructions(List<dtoArbitraryConstruction> arbitraryConstructions) {
+        this.arbitraryConstructions = arbitraryConstructions;
     }
 
-    public List<dtoConstellationPlanar> getConstellationPlanarList() {
-        return constellationPlanarList;
+    public List<dtoPlanarConstruction> getPlanarConstructions() {
+        return planarConstructions;
     }
 
-    public void setConstellationPlanarList(List<dtoConstellationPlanar> constellationOverviewList) {
-        this.constellationPlanarList = constellationOverviewList;
+    public void setPlanarConstructions(List<dtoPlanarConstruction> planarConstructions) {
+        this.planarConstructions = planarConstructions;
     }
 
     public Boolean getArbitraryFormation() {
@@ -82,12 +84,5 @@ public class dtoConstellation implements IDTOEntity {
         isArbitraryFormation = arbitraryFormation;
     }
 
-    public Long getModelSat() {
-        return modelSat;
-    }
-
-    public void setModelSat(Long modelSat) {
-        this.modelSat = modelSat;
-    }
 
 }

@@ -8,12 +8,12 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
-import ru.spiiran.us_complex.model.dto.constellation.dtoConstellationArbitrary;
-import ru.spiiran.us_complex.model.dto.constellation.dtoConstellationPlanar;
+import ru.spiiran.us_complex.model.dto.constellation.dtoArbitraryConstruction;
+import ru.spiiran.us_complex.model.dto.constellation.dtoPlanarConstruction;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.entitys.ConstellationArbitrary;
-import ru.spiiran.us_complex.model.entitys.ConstellationEntity;
-import ru.spiiran.us_complex.model.entitys.ConstellationPlanar;
+import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
+import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
+import ru.spiiran.us_complex.model.entitys.constellation.coPlanarConstruction;
 import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
 import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
 import ru.spiiran.us_complex.repositories.ConstellationArbitraryRepository;
@@ -36,7 +36,8 @@ public class ConstellationService {
     private EntityManager entityManager;
     @Autowired
     private IdNodeRepository idNodeRepository;
-    @Autowired private StatusGeneralRepository statusGeneralRepository;
+    @Autowired
+    private StatusGeneralRepository statusGeneralRepository;
 
     public List<dtoConstellation> getAllConstellations() {
         List<ConstellationEntity> entities = constellationRepository.findAllWithArbitraryList();
@@ -59,134 +60,159 @@ public class ConstellationService {
             statusGeneralRepository.save(generalStatus);
             //Проверка на данные, которые пришли
             if (dtoConstellation.getArbitraryFormation()) { // если пришли данные для создания записи в Constellation Detailed
-                List<ConstellationArbitrary> constellationArbitraryList = //создание списка Constellation Detailed из списка DTO
-                        getConstellationArbitraryList(dtoConstellation.getConstellationArbitraryList());
+                List<coArbitraryConstruction> coArbitraryConstructionList = //создание списка Constellation Detailed из списка DTO
+                        getConstellationArbitraryList(dtoConstellation.getArbitraryConstructions());
                 constellation //инициализация списка в сущности Constellation
-                        .setConstellationArbitraryList(constellationArbitraryList);
+                        .setArbitraryConstructionList(coArbitraryConstructionList);
                 /*
                 добавление, сохранение, инициализация некоторых полей (idNode и generalStatus) списка сущностей Constellation Detailed
                 а так же добавление и сохранения поля Constellation происходит в этом методе
                  */
-                addConstellationArbitrary(dtoConstellation.getConstellationArbitraryList(), constellation);
-                return new dtoMessage("INSERT CONSTELLATION DETAILED SUCCESS", "Constellation Detailed added successfully");
+                addConstellationArbitrary(dtoConstellation.getArbitraryConstructions(), constellation);
+                return new dtoMessage("INSERT SUCCESS", "Arbitrary Construction Constellation added successfully");
 
-            } else { // если пришли данные для создания записи в Constellation Overview
-                List<ConstellationPlanar> constellationPlanarList = getConstellationOverviewList(dtoConstellation.getConstellationPlanarList());
-                constellation.setConstellationPlanarList(constellationPlanarList);
-                addConstellationOverview(dtoConstellation.getConstellationPlanarList());
-                return new dtoMessage("INSERT CONSTELLATION OVERVIEW SUCCESS", "Constellation Overview added successfully");
+            } else { // если пришли данные для создания записи в Planar Construction
+                List<coPlanarConstruction> coPlanarConstructionList = getPlanarConstructionList(dtoConstellation.getPlanarConstructions());
+                constellation.setPlanarConstructionList(coPlanarConstructionList);
+                addPlanarConstruction(dtoConstellation.getPlanarConstructions());
+                return new dtoMessage("INSERT SUCCESS", "Planar Construction Constellation added successfully");
             }
         } catch (Exception exception) {
             exception.printStackTrace();
-            return new dtoMessage("INSERT ERROR", "Failed to add EarthPoint");
+            return new dtoMessage("INSERT ERROR", "Failed to add Constellation");
         }
     }
 
-    private void addConstellationOverview(List<dtoConstellationPlanar> constellationOverviewList) {
+    public dtoMessage updateConstellation(dtoConstellation dtoConstellation, Long id) {
+        try {
+            Optional<ConstellationEntity> optionalConstellation = //нахождение записи с этим id,
+                    // вызов метода репозитория
+                    constellationRepository.findById(id);
+            //Проверка на данные, которые пришли
+            if(optionalConstellation.isPresent()){
+                ConstellationEntity constellation = optionalConstellation.get();
+                if (dtoConstellation.getArbitraryFormation()) { // если пришли данные для создания записи в Constellation Detailed
+                    List<coArbitraryConstruction> coArbitraryConstructionList = //создание списка Constellation Detailed из списка DTO
+                            getConstellationArbitraryList(dtoConstellation.getArbitraryConstructions());
+                    constellation //инициализация списка в сущности Constellation
+                            .setArbitraryConstructionList(coArbitraryConstructionList);
+                /*
+                добавление, сохранение, инициализация некоторых полей (idNode и generalStatus) списка сущностей Constellation Detailed
+                а так же добавление и сохранения поля Constellation происходит в этом методе
+                */
+                    addConstellationArbitrary(dtoConstellation.getArbitraryConstructions(), constellation);
+                    return new dtoMessage("INSERT SUCCESS", "Arbitrary Construction Constellation added successfully");
+
+                } else { // если пришли данные для создания записи в Planar Construction
+                    List<coPlanarConstruction> coPlanarConstructionList = getPlanarConstructionList(dtoConstellation.getPlanarConstructions());
+                    constellation.setPlanarConstructionList(coPlanarConstructionList);
+                    addPlanarConstruction(dtoConstellation.getPlanarConstructions());
+                    return new dtoMessage("INSERT SUCCESS", "Planar Construction Constellation added successfully");
+                }
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new dtoMessage("UPDATE ERROR", "Failed to update Constellation");
+        }
+    }
+
+    private void addPlanarConstruction(List<dtoPlanarConstruction> constellationOverviewList) {
 
     }
 
     //метод, взятый из логики update Earth Point - для обновления и одновременно добавления полей из списка сущностей
-    private void addConstellationArbitrary(List<dtoConstellationArbitrary> dtoConstellationArbitraryList, ConstellationEntity constellation) {
+    private void addConstellationArbitrary(List<dtoArbitraryConstruction> dtoArbitraryConstructionList, ConstellationEntity constellation) {
         // Цикл по списку из DTO
-        for (dtoConstellationArbitrary dtoConstellationArbitrary : dtoConstellationArbitraryList) {
-            try {
-                //Получение id записи из DTO -
-                // если не null - то обновляем запись
-                // если null - то добавляем запись в таблицу
-                Long id = dtoConstellationArbitrary.getID();
-                if (id == null) {
-                    saveNewConstellationArbitrary(dtoConstellationArbitrary, constellation);
-                } else {
-                    updateExistingConstellationArbitrary(dtoConstellationArbitrary, id);
-                }
-            } catch (EntityNotFoundException exception) {
-                saveNewConstellationArbitrary(dtoConstellationArbitrary, constellation);
-            }
+        for (dtoArbitraryConstruction dtoArbitraryConstruction : dtoArbitraryConstructionList) {
+            saveNewConstellationArbitrary(dtoArbitraryConstruction, constellation);
         }
     }
 
-    public List<ConstellationArbitrary> getConstellationArbitraryList(List<dtoConstellationArbitrary> dtoConstellationArbitraries) {
-        List<ConstellationArbitrary> constellationArbitraryList = new ArrayList<>();
-        for (dtoConstellationArbitrary dto : dtoConstellationArbitraries) {
-            ConstellationArbitrary constellationArbitrary = new ConstellationArbitrary(dto);
-            constellationArbitraryList.add(constellationArbitrary);
+    private void updateConstellationArbitrary(List<dtoArbitraryConstruction> dtoArbitraryConstructionList) {
+        // Цикл по списку из DTO
+        for (dtoArbitraryConstruction dtoArbitraryConstruction : dtoArbitraryConstructionList) {
+            Long id = dtoArbitraryConstruction.getID();
+            updateExistingConstellationArbitrary(dtoArbitraryConstruction, id);
         }
-        return constellationArbitraryList;
     }
 
-    private List<ConstellationPlanar> getConstellationOverviewList(List<dtoConstellationPlanar> constellationOverviewList) {
+    public List<coArbitraryConstruction> getConstellationArbitraryList(List<dtoArbitraryConstruction> dtoConstellationArbitraries) {
+        List<coArbitraryConstruction> coArbitraryConstructionList = new ArrayList<>();
+        for (dtoArbitraryConstruction dto : dtoConstellationArbitraries) {
+            coArbitraryConstruction coArbitraryConstruction = new coArbitraryConstruction(dto);
+            coArbitraryConstructionList.add(coArbitraryConstruction);
+        }
+        return coArbitraryConstructionList;
+    }
+
+    private List<coPlanarConstruction> getPlanarConstructionList(List<dtoPlanarConstruction> constellationOverviewList) {
         return null;
     }
 
-    public dtoMessage updateConstellation(dtoConstellation dtoConstellation, Long id) {
-        return null;
-    }
-
-    private void updateExistingConstellationArbitrary(dtoConstellationArbitrary detailedConstellation, Long id) {
-        Optional<ConstellationArbitrary> optionalConstellationArbitrary = constellationArbitraryRepository.findById(id);
+    private void updateExistingConstellationArbitrary(dtoArbitraryConstruction detailedConstellation, Long id) {
+        Optional<coArbitraryConstruction> optionalConstellationArbitrary = constellationArbitraryRepository.findById(id);
         if (optionalConstellationArbitrary.isPresent()) {
-            ConstellationArbitrary existingConstellation = optionalConstellationArbitrary.get();
+            coArbitraryConstruction existingConstellation = optionalConstellationArbitrary.get();
             Boolean isDeleted = detailedConstellation.getDeleted();
             if (isDeleted != null && isDeleted) {
                 deleteConstellationArbitrary(existingConstellation);
             } else {
-                ConstellationArbitrary updateConstellation = getUpdatedConstellationArbitrary(
+                coArbitraryConstruction updateConstellation = getUpdatedConstellationArbitrary(
                         detailedConstellation, existingConstellation
                 );
                 constellationArbitraryRepository.save(updateConstellation);
             }
         } else {
-            throw new EntityNotFoundException("Constellation Arbitrary with id " + id + " not found");
+            throw new EntityNotFoundException("Arbitrary Construction Constellation with id " + id + " not found");
         }
     }
 
-    private ConstellationArbitrary getUpdatedConstellationArbitrary(dtoConstellationArbitrary dtoConstellationArbitrary, ConstellationArbitrary existingConstellation) {
-        existingConstellation.setAltitude(dtoConstellationArbitrary.getAltitude());
-        existingConstellation.setEccentricity(dtoConstellationArbitrary.getEccentricity());
-        existingConstellation.setIncline(dtoConstellationArbitrary.getIncline());
-        existingConstellation.setTrueAnomaly(dtoConstellationArbitrary.getTrueAnomaly());
-        existingConstellation.setLongitudeAscendingNode(dtoConstellationArbitrary.getLongitudeAscendingNode());
-        existingConstellation.setPerigeeWidthArgument(dtoConstellationArbitrary.getPerigeeWidthArgument());
+    private coArbitraryConstruction getUpdatedConstellationArbitrary(dtoArbitraryConstruction dtoArbitraryConstruction, coArbitraryConstruction existingConstellation) {
+        existingConstellation.setAltitude(dtoArbitraryConstruction.getAltitude());
+        existingConstellation.setEccentricity(dtoArbitraryConstruction.getEccentricity());
+        existingConstellation.setIncline(dtoArbitraryConstruction.getIncline());
+        existingConstellation.setTrueAnomaly(dtoArbitraryConstruction.getTrueAnomaly());
+        existingConstellation.setLongitudeAscendingNode(dtoArbitraryConstruction.getLongitudeAscendingNode());
+        existingConstellation.setPerigeeWidthArgument(dtoArbitraryConstruction.getPerigeeWidthArgument());
         return existingConstellation;
     }
 
-    private void deleteConstellationArbitrary(ConstellationArbitrary constellationArbitrary) {
-        idNodeRepository.delete(constellationArbitrary.getGeneralIdNodeEntity());
-        constellationArbitraryRepository.delete(constellationArbitrary);
+    private void deleteConstellationArbitrary(coArbitraryConstruction coArbitraryConstruction) {
+        idNodeRepository.delete(coArbitraryConstruction.getGeneralIdNodeEntity());
+        constellationArbitraryRepository.delete(coArbitraryConstruction);
     }
 
-    private void saveNewConstellationArbitrary(dtoConstellationArbitrary detailedConstellation, ConstellationEntity constellation) {
+    private void saveNewConstellationArbitrary(dtoArbitraryConstruction detailedConstellation, ConstellationEntity constellation) {
         generalIdNodeEntity generalIdNodeEntity = // метод для создания пустой записи general idNode
                 createNewGeneralIdNodeEntity();
-        ConstellationArbitrary constellationArbitrary = //метод для создания записи Constellation Detailed
+        coArbitraryConstruction coArbitraryConstruction = //метод для создания записи Constellation Detailed
                 // с инициализацией полей general idNode и полей из DTO
                 createNewConstellationArbitrary(detailedConstellation, generalIdNodeEntity, constellation);
         //сохранение в базу данных записей
         saveConstellationAndNode(
-                constellationArbitrary, generalIdNodeEntity, constellation
+                coArbitraryConstruction, generalIdNodeEntity, constellation
         );
     }
 
     private void saveConstellationAndNode(
-            ConstellationArbitrary constellationArbitrary,
+            coArbitraryConstruction coArbitraryConstruction,
             generalIdNodeEntity generalIdNodeEntity,
             ConstellationEntity constellation
     ) {
         idNodeRepository.save(generalIdNodeEntity);
         constellationRepository.save(constellation);
-        constellationArbitraryRepository.save(constellationArbitrary);
+        constellationArbitraryRepository.save(coArbitraryConstruction);
     }
 
-    private ConstellationArbitrary createNewConstellationArbitrary(
-            dtoConstellationArbitrary detailedConstellation,
+    private coArbitraryConstruction createNewConstellationArbitrary(
+            dtoArbitraryConstruction detailedConstellation,
             generalIdNodeEntity generalIdNodeEntity,
             ConstellationEntity constellation
     ) {
-        ConstellationArbitrary constellationArbitrary = new ConstellationArbitrary(detailedConstellation);
-        constellationArbitrary.setGeneralIdNodeEntity(generalIdNodeEntity);
-        constellationArbitrary.setConstellation(constellation);
-        return constellationArbitrary;
+        coArbitraryConstruction coArbitraryConstruction = new coArbitraryConstruction(detailedConstellation);
+        coArbitraryConstruction.setGeneralIdNodeEntity(generalIdNodeEntity);
+        coArbitraryConstruction.setConstellation(constellation);
+        return coArbitraryConstruction;
     }
 
     public generalStatusEntity createNewGeneralStatus() {
@@ -219,5 +245,9 @@ public class ConstellationService {
             // Обработка случая, если запись статуса не найдена
             return new dtoMessage("ERROR TO ADD STATUS", "Status entity not found");
         }
+    }
+
+    public dtoMessage deleteConstellation(Long id) {
+        return null;
     }
 }

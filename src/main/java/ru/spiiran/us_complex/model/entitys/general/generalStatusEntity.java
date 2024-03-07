@@ -2,7 +2,7 @@ package ru.spiiran.us_complex.model.entitys.general;
 
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.entitys.ConstellationEntity;
+import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
 import ru.spiiran.us_complex.model.entitys.EarthPointEntity;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 public class generalStatusEntity implements IEntity {
     @Id
     @Column(name = "status_id")
-    private final Long statusId;
+    private Long statusId;
     @Column(name = "status_edit_earth")
     private Boolean statusOfEditEarth;
     @Column(name = "status_edit_constellation")
@@ -24,6 +24,14 @@ public class generalStatusEntity implements IEntity {
 
     public generalStatusEntity(){
         this.statusId = 1L;
+    }
+
+    public Long getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Long statusId) {
+        this.statusId = statusId;
     }
 
     public Boolean getStatusOfEditEarth() {
