@@ -109,6 +109,8 @@ public class ConstellationService {
                     addPlanarConstruction(dtoConstellation.getPlanarConstructions());
                     return new dtoMessage("INSERT SUCCESS", "Planar Construction Constellation added successfully");
                 }
+            }else{
+                return new dtoMessage("UPDATE ERROR", "Failed to update Constellation");
             }
         } catch (Exception exception) {
             exception.printStackTrace();
