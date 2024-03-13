@@ -66,6 +66,11 @@ public class RestConstellationController {
         return ResponseEntity.ok().body(constellationService.updateConstellation(dtoConstellation, id));
     }
 
+    @PostMapping("/updateByList")
+    public ResponseEntity<dtoMessage> updateConstellationByList(@RequestBody List<dtoConstellation> dtoConstellationList, @RequestParam Long id){
+        return ResponseEntity.ok().body(constellationService.updateListConstellation(dtoConstellationList));
+    }
+
     @PostMapping("/add")
     public ResponseEntity<dtoMessage> addConstellation(@RequestBody dtoConstellation dtoConstellation){
         return ResponseEntity.ok().body(constellationService.addConstellation(dtoConstellation));

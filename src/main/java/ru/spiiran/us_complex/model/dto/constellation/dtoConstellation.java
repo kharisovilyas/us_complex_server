@@ -2,7 +2,6 @@ package ru.spiiran.us_complex.model.dto.constellation;
 
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
-import ru.spiiran.us_complex.model.entitys.constellation.coPlanarConstruction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,17 +13,7 @@ public class dtoConstellation implements IDTOEntity {
     private Boolean isArbitraryFormation;
     private List<dtoArbitraryConstruction> arbitraryConstructions;
     private List<dtoPlanarConstruction> planarConstructions;
-
-    public dtoConstellation(String constellationName,
-                            Boolean arbitraryFormation,
-                            List<dtoArbitraryConstruction> arbitraryConstructions,
-                            List<dtoPlanarConstruction> planarConstructions
-    ) {
-        this.constellationName = constellationName;
-        this.isArbitraryFormation = arbitraryFormation;
-        this.arbitraryConstructions = arbitraryConstructions;
-        this.planarConstructions = planarConstructions;
-    }
+    private Boolean isDeleted;
 
     public dtoConstellation(){}
 
@@ -39,11 +28,6 @@ public class dtoConstellation implements IDTOEntity {
                 .collect(Collectors.toList());
         this.planarConstructions = new ArrayList<>();
     }
-
-    private dtoArbitraryConstruction mapToDto(coPlanarConstruction coPlanarConstruction) {
-        return null;
-    }
-
     public Long getID() {
         return ID;
     }
@@ -82,6 +66,14 @@ public class dtoConstellation implements IDTOEntity {
 
     public void setArbitraryFormation(Boolean arbitraryFormation) {
         isArbitraryFormation = arbitraryFormation;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 
 

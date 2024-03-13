@@ -65,8 +65,8 @@ public class ConstellationService {
                 constellation //инициализация списка в сущности Constellation
                         .setArbitraryConstructionList(coArbitraryConstructionList);
                 /*
-                добавление, сохранение, инициализация некоторых полей (idNode и generalStatus) списка сущностей Constellation Detailed
-                а так же добавление и сохранения поля Constellation происходит в этом методе
+                    добавление, сохранение, инициализация некоторых полей (idNode и generalStatus) списка сущностей Constellation Detailed
+                    а так же добавление и сохранения поля Constellation происходит в этом методе
                  */
                 addConstellationArbitrary(dtoConstellation.getArbitraryConstructions(), constellation);
                 return new dtoMessage("INSERT SUCCESS", "Arbitrary Construction Constellation added successfully");
@@ -83,33 +83,38 @@ public class ConstellationService {
         }
     }
 
+    @Transactional
     public dtoMessage updateConstellation(dtoConstellation dtoConstellation, Long id) {
         try {
             Optional<ConstellationEntity> optionalConstellation = //нахождение записи с этим id,
                     // вызов метода репозитория
                     constellationRepository.findById(id);
             //Проверка на данные, которые пришли
-            if(optionalConstellation.isPresent()){
-                ConstellationEntity constellation = optionalConstellation.get();
+            if (optionalConstellation.isPresent()) {
+                ConstellationEntity existingConstellation = optionalConstellation.get();
+                existingConstellation
+                        .setConstellationName(dtoConstellation.getConstellationName());
                 if (dtoConstellation.getArbitraryFormation()) { // если пришли данные для создания записи в Constellation Detailed
-                    List<coArbitraryConstruction> coArbitraryConstructionList = //создание списка Constellation Detailed из списка DTO
-                            getConstellationArbitraryList(dtoConstellation.getArbitraryConstructions());
-                    constellation //инициализация списка в сущности Constellation
-                            .setArbitraryConstructionList(coArbitraryConstructionList);
+                    existingConstellation
+                            .setArbitraryConstructionList(
+                                    dtoConstellation.getArbitraryConstructions()
+                                            .stream().map(coArbitraryConstruction::new)
+                                            .collect(Collectors.toList())
+                            );
+                    updateConstellationArbitrary(dtoConstellation.getArbitraryConstructions(), existingConstellation);
                 /*
-                добавление, сохранение, инициализация некоторых полей (idNode и generalStatus) списка сущностей Constellation Detailed
-                а так же добавление и сохранения поля Constellation происходит в этом методе
+                    добавление, сохранение, инициализация некоторых полей (idNode и generalStatus) списка сущностей Constellation Detailed
+                    а так же добавление и сохранения поля Constellation происходит в этом методе
                 */
-                    addConstellationArbitrary(dtoConstellation.getArbitraryConstructions(), constellation);
-                    return new dtoMessage("INSERT SUCCESS", "Arbitrary Construction Constellation added successfully");
+                    return new dtoMessage("UPDATE SUCCESS", "Arbitrary Construction Constellation added successfully");
 
                 } else { // если пришли данные для создания записи в Planar Construction
                     List<coPlanarConstruction> coPlanarConstructionList = getPlanarConstructionList(dtoConstellation.getPlanarConstructions());
-                    constellation.setPlanarConstructionList(coPlanarConstructionList);
+                    existingConstellation.setPlanarConstructionList(coPlanarConstructionList);
                     addPlanarConstruction(dtoConstellation.getPlanarConstructions());
-                    return new dtoMessage("INSERT SUCCESS", "Planar Construction Constellation added successfully");
+                    return new dtoMessage("UPDATE SUCCESS", "Planar Construction Constellation added successfully");
                 }
-            }else{
+            } else {
                 return new dtoMessage("UPDATE ERROR", "Failed to update Constellation");
             }
         } catch (Exception exception) {
@@ -130,17 +135,25 @@ public class ConstellationService {
         }
     }
 
-    private void updateConstellationArbitrary(List<dtoArbitraryConstruction> dtoArbitraryConstructionList) {
+    private void updateConstellationArbitrary(List<dtoArbitraryConstruction> dtoArbitraryConstructionList, ConstellationEntity constellation) {
         // Цикл по списку из DTO
         for (dtoArbitraryConstruction dtoArbitraryConstruction : dtoArbitraryConstructionList) {
             Long id = dtoArbitraryConstruction.getID();
-            updateExistingConstellationArbitrary(dtoArbitraryConstruction, id);
+            System.out.println(id);
+            System.out.println(dtoArbitraryConstruction.getID());
+            if (id != null) {
+                System.out.println("ЗДЕСЬ 1");
+                updateExistingConstellationArbitrary(dtoArbitraryConstruction, id);
+            } else {
+                System.out.println("ЗДЕСЬ 2");
+                saveNewConstellationArbitrary(dtoArbitraryConstruction, constellation);
+            }
         }
     }
 
-    public List<coArbitraryConstruction> getConstellationArbitraryList(List<dtoArbitraryConstruction> dtoConstellationArbitraries) {
+    public List<coArbitraryConstruction> getConstellationArbitraryList(List<dtoArbitraryConstruction> dtoConstellationArbitrariness) {
         List<coArbitraryConstruction> coArbitraryConstructionList = new ArrayList<>();
-        for (dtoArbitraryConstruction dto : dtoConstellationArbitraries) {
+        for (dtoArbitraryConstruction dto : dtoConstellationArbitrariness) {
             coArbitraryConstruction coArbitraryConstruction = new coArbitraryConstruction(dto);
             coArbitraryConstructionList.add(coArbitraryConstruction);
         }
@@ -157,8 +170,10 @@ public class ConstellationService {
             coArbitraryConstruction existingConstellation = optionalConstellationArbitrary.get();
             Boolean isDeleted = detailedConstellation.getDeleted();
             if (isDeleted != null && isDeleted) {
+                System.out.println("ЗДЕСЬ 3");
                 deleteConstellationArbitrary(existingConstellation);
             } else {
+                System.out.println("ЗДЕСЬ 4");
                 coArbitraryConstruction updateConstellation = getUpdatedConstellationArbitrary(
                         detailedConstellation, existingConstellation
                 );
@@ -251,5 +266,25 @@ public class ConstellationService {
 
     public dtoMessage deleteConstellation(Long id) {
         return null;
+    }
+
+    public dtoMessage updateListConstellation(List<dtoConstellation> dtoConstellationList) {
+        for (dtoConstellation constellation : dtoConstellationList) {
+            try {
+                Long id = constellation.getID();
+                if (id == null) {
+                    addConstellation(constellation);
+                } else {
+                    updateConstellation(constellation, id);
+                }
+            } catch (EntityNotFoundException exception) {
+                addConstellation(constellation);
+                return new dtoMessage("UPDATE SUCCESS", "Constellation updated with id " + constellation.getID());
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                return new dtoMessage("UPDATE ERROR", "An error occurred while updating EarthPoint: " + exception.getMessage());
+            }
+        }
+        return new dtoMessage("UPDATE SUCCESS", "All Constellation updated successfully");
     }
 }
