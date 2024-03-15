@@ -1,7 +1,7 @@
 package ru.spiiran.us_complex.model.dto.modelsat;
 
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
-import ru.spiiran.us_complex.model.entitys.modelsat.ModelEntity;
+import ru.spiiran.us_complex.model.entitys.modelsat.ModelSatEntity;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,10 +15,10 @@ public class dtoModelSat implements IDTOEntity {
 
     public dtoModelSat(){}
 
-    public dtoModelSat(ModelEntity modelEntity){
-        this.description = modelEntity.getDescription();
-        this.modelName = modelEntity.getModelName();
-        this.imageContent = getImageFromPath(modelEntity.getPathToImage());
+    public dtoModelSat(ModelSatEntity modelSatEntity){
+        this.description = modelSatEntity.getDescription();
+        this.modelName = modelSatEntity.getModelName();
+        this.imageContent = getImageFromPath(modelSatEntity.getPathToImage());
     }
 
     private byte[] getImageFromPath(String pathToImage) {

@@ -3,7 +3,7 @@ package ru.spiiran.us_complex.model.entitys.general;
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
-import ru.spiiran.us_complex.model.entitys.EarthPointEntity;
+import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 
 import java.util.List;
 

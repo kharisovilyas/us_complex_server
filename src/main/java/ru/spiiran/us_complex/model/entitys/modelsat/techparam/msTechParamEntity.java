@@ -3,22 +3,54 @@ package ru.spiiran.us_complex.model.entitys.modelsat.techparam;
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
+import ru.spiiran.us_complex.model.entitys.modelsat.ModelSatEntity;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Entity
 @Table(name="ms_tech_param")
 public class msTechParamEntity implements IEntity {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
 
-    @ElementCollection
-    @CollectionTable(name = "additional_columns", joinColumns = @JoinColumn(name = "entity_id"))
-    @MapKeyColumn(name = "column_name")
-    @Column(name = "column_value")
-    private Map<msListOfParam, String> additionalColumns = new HashMap<>();
+    @OneToMany(mappedBy = "msTechParamEntity")
+    private List<msListOfParam> listOfParams;
+
+    @OneToMany(mappedBy = "msTechParamEntity")
+    private List<ModelSatEntity> modelSatEntityList;
+
+    @Column(name = "value_of_prm")
+    private Double valueOfPrm;
+
+    public void setID(Long ID) {
+        this.ID = ID;
+    }
+
+    public List<msListOfParam> getListOfParams() {
+        return listOfParams;
+    }
+
+    public void setListOfParams(List<msListOfParam> listOfParams) {
+        this.listOfParams = listOfParams;
+    }
+
+    public List<ModelSatEntity> getTableBList() {
+        return modelSatEntityList;
+    }
+
+    public void setTableBList(List<ModelSatEntity> tableBList) {
+        this.modelSatEntityList = tableBList;
+    }
+
+    public Double getValueOfPrm() {
+        return valueOfPrm;
+    }
+
+    public void setValueOfPrm(Double valueOfPrm) {
+        this.valueOfPrm = valueOfPrm;
+    }
 
     @Override
     public Long getID() {
@@ -27,6 +59,6 @@ public class msTechParamEntity implements IEntity {
 
     @Override
     public dtoMessage getDtoMessage(String type, String message) {
-        return null;
+        return new dtoMessage(type, message);
     }
 }

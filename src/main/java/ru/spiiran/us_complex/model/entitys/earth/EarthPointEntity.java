@@ -1,8 +1,8 @@
-package ru.spiiran.us_complex.model.entitys;
+package ru.spiiran.us_complex.model.entitys.earth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import ru.spiiran.us_complex.model.dto.dtoEarthPoint;
+import ru.spiiran.us_complex.model.dto.earth.dtoEarthPoint;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
 import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;

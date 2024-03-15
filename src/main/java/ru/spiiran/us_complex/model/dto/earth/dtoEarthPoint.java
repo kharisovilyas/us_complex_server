@@ -1,7 +1,8 @@
-package ru.spiiran.us_complex.model.dto;
+package ru.spiiran.us_complex.model.dto.earth;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import ru.spiiran.us_complex.model.entitys.EarthPointEntity;
+import ru.spiiran.us_complex.model.dto.IDTOEntity;
+import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class dtoEarthPoint implements IDTOEntity {

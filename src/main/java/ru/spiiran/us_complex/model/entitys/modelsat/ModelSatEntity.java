@@ -3,15 +3,17 @@ package ru.spiiran.us_complex.model.entitys.modelsat;
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
+import ru.spiiran.us_complex.model.entitys.modelsat.power.msPowerEntity;
+import ru.spiiran.us_complex.model.entitys.modelsat.techparam.msTechParamEntity;
 
 
 @Entity
-@Table(name = "model")
-public class ModelEntity implements IEntity {
+@Table(name = "model_sat")
+public class ModelSatEntity implements IEntity {
     @Id
-    @Column(name = "id")
+    @Column(name = "model_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
+    private Long modelID;
 
     @Column(name = "model_name")
     private String modelName;
@@ -21,9 +23,17 @@ public class ModelEntity implements IEntity {
 
     @Column(name = "path_to_image")
     private String pathToImage;
+    @ManyToOne
+    @JoinColumn(name = "tech_param_id")
+    private msTechParamEntity msTechParamEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "power_id")
+    private msPowerEntity msPowerEntity;
+
 
     public void setID(Long ID) {
-        this.ID = ID;
+        this.modelID = ID;
     }
 
     public String getModelName() {
@@ -52,7 +62,7 @@ public class ModelEntity implements IEntity {
 
     @Override
     public Long getID() {
-        return ID;
+        return modelID;
     }
 
     @Override
@@ -60,5 +70,4 @@ public class ModelEntity implements IEntity {
         return null;
     }
 
-    // Геттеры и сеттеры
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
-import ru.spiiran.us_complex.model.entitys.EarthPointEntity;
+import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 
 @Entity
 @Table(name = "id_node_general")

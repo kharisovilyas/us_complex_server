@@ -16,8 +16,8 @@ import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
 import ru.spiiran.us_complex.model.entitys.constellation.coPlanarConstruction;
 import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
 import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
-import ru.spiiran.us_complex.repositories.ConstellationArbitraryRepository;
-import ru.spiiran.us_complex.repositories.ConstellationRepository;
+import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
+import ru.spiiran.us_complex.repositories.constellation.ConstellationRepository;
 import ru.spiiran.us_complex.repositories.IdNodeRepository;
 import ru.spiiran.us_complex.repositories.StatusGeneralRepository;
 

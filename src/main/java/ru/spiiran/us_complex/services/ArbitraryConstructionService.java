@@ -11,7 +11,7 @@ import ru.spiiran.us_complex.model.dto.constellation.dtoArbitraryConstruction;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
-import ru.spiiran.us_complex.repositories.ConstellationArbitraryRepository;
+import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
 import ru.spiiran.us_complex.repositories.IdNodeRepository;
 import ru.spiiran.us_complex.repositories.StatusGeneralRepository;
 

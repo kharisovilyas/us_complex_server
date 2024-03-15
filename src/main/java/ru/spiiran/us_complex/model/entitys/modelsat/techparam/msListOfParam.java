@@ -1,29 +1,39 @@
 package ru.spiiran.us_complex.model.entitys.modelsat.techparam;
 
 import jakarta.persistence.*;
+import ru.spiiran.us_complex.model.dto.message.dtoMessage;
+import ru.spiiran.us_complex.model.entitys.general.IEntity;
 
-@Embeddable
-public class msListOfParam {
+@Entity
+@Table(name = "ms_list_of_param")
+public class msListOfParam implements IEntity {
+    @Id
+    @Column(name = "prm_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long prmID;
+    @ManyToOne
+    @JoinColumn(name = "tech_param_id")
+    private msTechParamEntity msTechParamEntity;
     @Column(name = "parameter_1")
-    private final String parameter1 = "Ускорение / замедление КА";
+    private String parameter1;
     @Column(name = "parameter_2")
-    private final String parameter2 = "Максимальная скорость вращения КА";
+    private String parameter2;
     @Column(name = "parameter_3")
-    private final String parameter3 = "Время стабилизации";
+    private String parameter3;
     @Column(name = "parameter_4")
-    private final String parameter4 = "Скорость передачи данных КА - КА";
+    private String parameter4;
     @Column(name = "parameter_5")
-    private final String parameter5 = "Скорость передачи данных КА - НП";
+    private String parameter5;
     @Column(name = "parameter_6")
-    private final String parameter6 = "Крен";
+    private String parameter6;
     @Column(name = "parameter_7")
-    private final String parameter7 = "Тангаж";
+    private String parameter7;
     @Column(name = "parameter_8")
-    private final String parameter8 = "Емкость";
+    private String parameter8;
     @Column(name = "parameter_9")
-    private final String parameter9 = "Минимальный уровень заряда";
+    private String parameter9;
     @Column(name = "parameter_10")
-    private final String parameter10 = "Объем памяти";
+    private String parameter10;
 
     public String getParameter1() {
         return parameter1;
@@ -63,5 +73,15 @@ public class msListOfParam {
 
     public String getParameter10() {
         return parameter10;
+    }
+
+    @Override
+    public Long getID() {
+        return prmID;
+    }
+
+    @Override
+    public dtoMessage getDtoMessage(String type, String message) {
+        return new dtoMessage(type, message);
     }
 }

@@ -1,4 +1,4 @@
-package ru.spiiran.us_complex.repositories;
+package ru.spiiran.us_complex.repositories.constellation;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

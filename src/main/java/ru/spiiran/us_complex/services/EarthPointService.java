@@ -7,12 +7,12 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.spiiran.us_complex.model.dto.dtoEarthPoint;
+import ru.spiiran.us_complex.model.dto.earth.dtoEarthPoint;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.entitys.EarthPointEntity;
+import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
 import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
-import ru.spiiran.us_complex.repositories.EarthPointRepository;
+import ru.spiiran.us_complex.repositories.earth.EarthPointRepository;
 import ru.spiiran.us_complex.repositories.IdNodeRepository;
 import ru.spiiran.us_complex.repositories.StatusGeneralRepository;
 
