@@ -1,31 +1,26 @@
 package ru.spiiran.us_complex.model.entitys.modelsat.equipment;
 
 import jakarta.persistence.*;
-import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.entitys.general.IEntity;
+import ru.spiiran.us_complex.model.dto.modelsat.equipment.dtoEquipmentType;
 
 @Entity
 @Table(name="ms_type_equipment")
-public class msEquipmentTypeEntity implements IEntity {
+public class msEquipmentTypeEntity {
     @Id
-    @Column(name = "equip_id")
+    @Column(name = "dev_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long equipID;
+    private Long devId;
     @ManyToOne
     @JoinColumn(name = "equipment_id")
     private msEquipmentEntity msEquipmentEntity;
-    @Column(name = "type_1")
-    private String type1;
-    @Column(name = "type_2")
-    private String type2;
-    @Column(name = "type_3")
-    private String type3;
-    @Override
-    public Long getID() {
-        return equipID;
+    @Column(name = "type")
+    private String type;
+
+    public msEquipmentTypeEntity() {
     }
-    @Override
-    public dtoMessage getDtoMessage(String type, String message) {
-        return new dtoMessage(type, message);
+
+    public msEquipmentTypeEntity(dtoEquipmentType dto) {
+        this.devId = dto.getDevId();
+        this.type = dto.getType();
     }
 }

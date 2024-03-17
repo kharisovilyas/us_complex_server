@@ -16,4 +16,16 @@ jobs:
           java-version: '17'
       - name: Build project with Maven
         run: mvn clean install
-      # Добавьте дополнительные шаги, такие как тестирование и деплоймент
+      - name: Run tests
+        run: mvn test  # Предполагается, что у вас есть тесты и Maven может их запустить
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            cd /path/to/deploy
+            git pull origin main
+            # Дополнительные команды для деплоя, например, перезапуск сервера

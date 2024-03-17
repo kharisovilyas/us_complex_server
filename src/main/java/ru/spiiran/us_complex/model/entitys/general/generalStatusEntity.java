@@ -1,6 +1,7 @@
 package ru.spiiran.us_complex.model.entitys.general;
 
 import jakarta.persistence.*;
+import ru.spiiran.us_complex.model.dto.general.dtoStatusGeneral;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
 import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
@@ -23,7 +24,14 @@ public class generalStatusEntity implements IEntity {
     private List<ConstellationEntity> constellationEntities;
 
     public generalStatusEntity(){
-        this.statusId = 1L;
+
+    }
+
+    public generalStatusEntity(dtoStatusGeneral dto) {
+        this.statusId = dto.getStatusId();
+        this.statusOfEditConstellation = dto.getStatusOfEditConstellation();
+        this.statusOfEditEarth = dto.getStatusOfEditEarth();
+
     }
 
     public Long getStatusId() {

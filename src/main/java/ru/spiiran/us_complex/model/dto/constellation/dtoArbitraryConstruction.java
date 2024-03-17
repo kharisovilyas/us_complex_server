@@ -1,6 +1,7 @@
 package ru.spiiran.us_complex.model.dto.constellation;
 
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
+import ru.spiiran.us_complex.model.dto.modelsat.equipment.dtoEquipmentType;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 
 public class dtoArbitraryConstruction implements IDTOEntity {

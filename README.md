@@ -64,6 +64,17 @@ $ java -version
 # Первоначальная настройка сервера
 Сервер настраивается редактированием файла [application.properties](https://github.com/kharisovilyas/us_complex_server/blob/main/src/main/resources/application.properties)
 
+# Настройка констант и исходных данных моделирования
+1) Нужно зайти в директорию с параметрами (Например параметры моделей КА)
+```console
+$ cd src/initial/modelsat
+```
+2) Нужно открыть интересующий файл (Например ориентацию КА)
+```console
+$ nano Mode.json
+```
+3) Поменять нужный параметр, сохранить файл, перезапустить сервер
+
 # Запуск сервера
 
 Linux

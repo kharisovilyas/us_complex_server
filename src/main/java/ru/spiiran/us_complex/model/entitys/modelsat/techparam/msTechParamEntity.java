@@ -16,7 +16,7 @@ public class msTechParamEntity implements IEntity {
     private Long ID;
 
     @OneToMany(mappedBy = "msTechParamEntity")
-    private List<msListOfParam> listOfParams;
+    private List<msParameterEntity> parameterEntityList;
 
     @OneToMany(mappedBy = "msTechParamEntity")
     private List<ModelSatEntity> modelSatEntityList;
@@ -28,12 +28,12 @@ public class msTechParamEntity implements IEntity {
         this.ID = ID;
     }
 
-    public List<msListOfParam> getListOfParams() {
-        return listOfParams;
+    public List<msParameterEntity> getListOfParamEntities() {
+        return parameterEntityList;
     }
 
-    public void setListOfParams(List<msListOfParam> listOfParams) {
-        this.listOfParams = listOfParams;
+    public void setListOfParamEntities(List<msParameterEntity> listOfParamEntities) {
+        this.parameterEntityList = listOfParamEntities;
     }
 
     public List<ModelSatEntity> getTableBList() {
