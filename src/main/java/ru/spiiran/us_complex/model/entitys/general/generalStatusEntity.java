@@ -24,7 +24,7 @@ public class generalStatusEntity implements IEntity {
     private List<ConstellationEntity> constellationEntities;
 
     public generalStatusEntity(){
-
+        this.statusId = 1L;
     }
 
     public generalStatusEntity(dtoStatusGeneral dto) {

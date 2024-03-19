@@ -1,33 +1,20 @@
 package ru.spiiran.us_complex.model.dto.modelsat;
 
+import org.springframework.web.multipart.MultipartFile;
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.entitys.modelsat.ModelSatEntity;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 public class dtoModelSat implements IDTOEntity {
     private Long id;
     private String modelName;
     private String description;
-    private byte[] imageContent;
+    private MultipartFile imageFile;
 
     public dtoModelSat(){}
 
     public dtoModelSat(ModelSatEntity modelSatEntity){
         this.description = modelSatEntity.getDescription();
         this.modelName = modelSatEntity.getModelName();
-        this.imageContent = getImageFromPath(modelSatEntity.getPathToImage());
-    }
-
-    private byte[] getImageFromPath(String pathToImage) {
-        try {
-            return Files.readAllBytes(new File(pathToImage).toPath());
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            return null;
-        }
     }
 
     public Long getId() {
@@ -54,11 +41,11 @@ public class dtoModelSat implements IDTOEntity {
         this.description = description;
     }
 
-    public byte[] getImageContent() {
-        return imageContent;
+    public MultipartFile getImageFile() {
+        return imageFile;
     }
 
-    public void setImageContent(byte[] imageContent) {
-        this.imageContent = imageContent;
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
     }
 }

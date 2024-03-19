@@ -2,6 +2,7 @@ package ru.spiiran.us_complex.model.entitys.modelsat;
 
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
+import ru.spiiran.us_complex.model.dto.modelsat.dtoModelSat;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
 import ru.spiiran.us_complex.model.entitys.modelsat.power.msPowerEntity;
 import ru.spiiran.us_complex.model.entitys.modelsat.techparam.msTechParamEntity;
@@ -21,8 +22,8 @@ public class ModelSatEntity implements IEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "path_to_image")
-    private String pathToImage;
+    @Column(name = "image_file_name")
+    private String imageFileName;
     @ManyToOne
     @JoinColumn(name = "tech_param_id")
     private msTechParamEntity msTechParamEntity;
@@ -30,6 +31,14 @@ public class ModelSatEntity implements IEntity {
     @ManyToOne
     @JoinColumn(name = "power_id")
     private msPowerEntity msPowerEntity;
+
+    public ModelSatEntity() {
+    }
+
+    public ModelSatEntity(dtoModelSat dtoModelSat) {
+        this.modelName = dtoModelSat.getModelName();
+        this.description = dtoModelSat.getDescription();
+    }
 
 
     public void setID(Long ID) {
@@ -52,12 +61,12 @@ public class ModelSatEntity implements IEntity {
         this.description = description;
     }
 
-    public String getPathToImage() {
-        return pathToImage;
+    public String getImageFileName() {
+        return imageFileName;
     }
 
-    public void setPathToImage(String pathToImage) {
-        this.pathToImage = pathToImage;
+    public void setImageFileName(String imageFileName) {
+        this.imageFileName = imageFileName;
     }
 
     @Override
