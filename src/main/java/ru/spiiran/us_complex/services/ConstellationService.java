@@ -264,8 +264,31 @@ public class ConstellationService {
         }
     }
 
+    @Transactional
     public dtoMessage deleteConstellation(Long id) {
-        return null;
+        Optional<ConstellationEntity> optionalConstellation = constellationRepository.findById(id);
+        if (optionalConstellation.isPresent()) {
+            ConstellationEntity constellation = optionalConstellation.get();
+
+            if (constellation.getArbitraryFormation()) {
+                constellation.getArbitraryConstructionList()
+                        .forEach(
+                                this::deleteConstellationArbitrary
+                        );
+            } else {
+                constellation.getPlanarConstructionList()
+                        .forEach(
+                                this::deleteConstellationPlanar
+                        );
+            }
+            constellationRepository.delete(constellation);
+            return new dtoMessage("SUCCESS", "Constellation with id: " + id + " delete");
+        } else {
+            return new dtoMessage("ERROR", "Constellation with id: " + id + " not found");
+        }
+    }
+
+    private void deleteConstellationPlanar(coPlanarConstruction coPlanarConstruction) {
     }
 
     public dtoMessage updateListConstellation(List<dtoConstellation> dtoConstellationList) {

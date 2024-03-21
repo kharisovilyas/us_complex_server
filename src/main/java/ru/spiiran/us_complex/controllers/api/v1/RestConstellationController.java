@@ -76,8 +76,8 @@ public class RestConstellationController {
         return ResponseEntity.ok().body(constellationService.addConstellation(dtoConstellation));
     }
 
-    @PostMapping("/delete")
-    public ResponseEntity<dtoMessage> deleteConstellation(@RequestBody Long id){
+    @PostMapping("/delete/byId")
+    public ResponseEntity<dtoMessage> deleteConstellation(@RequestParam Long id){
         return ResponseEntity.ok().body(constellationService.deleteConstellation(id));
     }
 
