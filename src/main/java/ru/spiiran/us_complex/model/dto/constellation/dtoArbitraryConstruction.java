@@ -1,7 +1,6 @@
 package ru.spiiran.us_complex.model.dto.constellation;
 
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
-import ru.spiiran.us_complex.model.dto.modelsat.equipment.dtoEquipmentType;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 
 public class dtoArbitraryConstruction implements IDTOEntity {
@@ -15,6 +14,7 @@ public class dtoArbitraryConstruction implements IDTOEntity {
     private Double trueAnomaly;
     private Boolean isDeleted;
     private Long modelSat;
+    private Long tableId;
 
 
     public dtoArbitraryConstruction(){}
@@ -29,6 +29,7 @@ public class dtoArbitraryConstruction implements IDTOEntity {
         this.perigeeWidthArgument = coArbitraryConstruction.getPerigeeWidthArgument();
         this.trueAnomaly = coArbitraryConstruction.getTrueAnomaly();
         this.idNode = coArbitraryConstruction.getArbitraryConstructionIdNode();
+        this.tableId = coArbitraryConstruction.getConstellation().getID();
     }
 
     public Long getID() {
@@ -109,5 +110,13 @@ public class dtoArbitraryConstruction implements IDTOEntity {
 
     public void setModelSat(Long modelSat) {
         this.modelSat = modelSat;
+    }
+
+    public Long getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(Long tableId) {
+        this.tableId = tableId;
     }
 }

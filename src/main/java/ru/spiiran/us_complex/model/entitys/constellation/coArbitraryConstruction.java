@@ -40,9 +40,7 @@ public class coArbitraryConstruction implements IEntity, IEntityNode {
     private generalIdNodeEntity generalIdNodeEntity;
     @ManyToOne
     @JoinColumn(name = "table_id")
-    @JsonIgnore
     private ConstellationEntity constellation;
-
     @Column(name="model_sat")
     private Long modelSat;
 

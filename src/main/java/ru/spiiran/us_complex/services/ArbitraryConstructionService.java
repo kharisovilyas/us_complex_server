@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.constellation.dtoArbitraryConstruction;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
+import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
-import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
 import ru.spiiran.us_complex.repositories.IdNodeRepository;
 import ru.spiiran.us_complex.repositories.StatusGeneralRepository;
+import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
+import ru.spiiran.us_complex.repositories.constellation.ConstellationRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +24,8 @@ import java.util.Optional;
 public class ArbitraryConstructionService {
     @Autowired
     private ConstellationArbitraryRepository constellationArbitraryRepository;
+    @Autowired
+    private ConstellationRepository constellationRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -51,19 +55,22 @@ public class ArbitraryConstructionService {
 
     @Transactional
     public dtoMessage updateConstellationArbitraryByList(List<dtoArbitraryConstruction> detailedConstellations) {
-        for (dtoArbitraryConstruction dtoArbitraryConstruction : detailedConstellations) {
-            try {
-                Long id = dtoArbitraryConstruction.getID();
-                if (id == null) {
-                    saveNewConstellationArbitrary(dtoArbitraryConstruction);
-                } else {
-                    updateExistingConstellationArbitrary(dtoArbitraryConstruction, id);
+        Optional<ConstellationEntity> optionalConstellation = constellationRepository.findById(detailedConstellations.get(0).getTableId());
+        if(optionalConstellation.isPresent()){
+            for (dtoArbitraryConstruction dtoArbitraryConstruction : detailedConstellations) {
+                try {
+                    Long id = dtoArbitraryConstruction.getID();
+                    if (id == null) {
+                        saveNewConstellationArbitrary(dtoArbitraryConstruction, optionalConstellation.get());
+                    } else {
+                        updateExistingConstellationArbitrary(dtoArbitraryConstruction, id);
+                    }
+                } catch (EntityNotFoundException exception) {
+                    saveNewConstellationArbitrary(dtoArbitraryConstruction, optionalConstellation.get());
+                    return new dtoMessage("UPDATE SUCCESS", "Arbitrary Construction update with id " + dtoArbitraryConstruction.getID());
+                } catch (Exception exception) {
+                    return new dtoMessage("UPDATE ERROR", "An error occurred while updating Arbitrary Construction: " + exception.getMessage());
                 }
-            } catch (EntityNotFoundException exception) {
-                saveNewConstellationArbitrary(dtoArbitraryConstruction);
-                return new dtoMessage("UPDATE SUCCESS", "Arbitrary Construction update with id " + dtoArbitraryConstruction.getID());
-            } catch (Exception exception) {
-                return new dtoMessage("UPDATE ERROR", "An error occurred while updating Arbitrary Construction: " + exception.getMessage());
             }
         }
         return new dtoMessage("UPDATE SUCCESS", "All Arbitrary Construction updated successfully");
@@ -92,10 +99,10 @@ public class ArbitraryConstructionService {
         constellationArbitraryRepository.delete(coArbitraryConstruction);
     }
 
-    private void saveNewConstellationArbitrary(dtoArbitraryConstruction detailedConstellation) {
+    private void saveNewConstellationArbitrary(dtoArbitraryConstruction detailedConstellation, ConstellationEntity constellation) {
         generalIdNodeEntity generalIdNodeEntity = createNewGeneralIdNodeEntity();
         coArbitraryConstruction coArbitraryConstruction = createNewConstellationArbitrary(
-                detailedConstellation, generalIdNodeEntity
+                detailedConstellation, generalIdNodeEntity, constellation
         );
         saveConstellationAndStatus(
                 coArbitraryConstruction, generalIdNodeEntity
@@ -112,10 +119,11 @@ public class ArbitraryConstructionService {
 
     private coArbitraryConstruction createNewConstellationArbitrary(
             dtoArbitraryConstruction detailedConstellation,
-            generalIdNodeEntity generalIdNodeEntity
-    ) {
+            generalIdNodeEntity generalIdNodeEntity,
+            ConstellationEntity constellation) {
         coArbitraryConstruction coArbitraryConstruction = new coArbitraryConstruction(detailedConstellation);
         coArbitraryConstruction.setGeneralIdNodeEntity(generalIdNodeEntity);
+        coArbitraryConstruction.setConstellation(constellation);
         return coArbitraryConstruction;
     }
 
