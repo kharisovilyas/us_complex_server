@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.services.FlightModelService;
 
@@ -13,7 +14,8 @@ import ru.spiiran.us_complex.services.FlightModelService;
 public class RestFlightModelController {
     @Autowired private FlightModelService flightModelService;
     @PostMapping("start/modelling")
+    @ResponseBody
     public ResponseEntity<dtoMessage> startModelling(){
-        return flightModelService.startModelling();
+        return ResponseEntity.ok().body(flightModelService.startModelling());
     }
 }

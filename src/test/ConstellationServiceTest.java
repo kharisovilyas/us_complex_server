@@ -69,7 +69,6 @@ public class ConstellationServiceTest {
         // Arrange
         dtoConstellation dto = new dtoConstellation();
         dto.setArbitraryFormation(false);
-        dto.setConstellationOverviewList(new ArrayList<>());
 
         when(constellationService.createNewGeneralStatus()).thenReturn(new generalStatusEntity());
         when(constellationRepository.save(any(ConstellationEntity.class))).thenReturn(new ConstellationEntity());
