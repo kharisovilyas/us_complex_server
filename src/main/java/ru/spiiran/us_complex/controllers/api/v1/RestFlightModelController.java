@@ -13,7 +13,7 @@ import ru.spiiran.us_complex.services.FlightModelService;
 @RequestMapping("/api/v1/bridge")
 public class RestFlightModelController {
     @Autowired private FlightModelService flightModelService;
-    @PostMapping("start/modelling")
+    @PostMapping("/modelling/start")
     @ResponseBody
     public ResponseEntity<dtoMessage> startModelling(){
         return ResponseEntity.ok().body(flightModelService.startModelling());
