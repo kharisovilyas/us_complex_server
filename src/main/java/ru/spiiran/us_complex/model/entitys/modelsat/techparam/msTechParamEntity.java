@@ -2,6 +2,7 @@ package ru.spiiran.us_complex.model.entitys.modelsat.techparam;
 
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
+import ru.spiiran.us_complex.model.dto.modelsat.techparam.dtoTechParameter;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
 import ru.spiiran.us_complex.model.entitys.modelsat.ModelSatEntity;
 
@@ -30,6 +31,10 @@ public class msTechParamEntity implements IEntity {
 
     public List<msParameterEntity> getListOfParamEntities() {
         return parameterEntityList;
+    }
+
+    public msTechParamEntity(dtoTechParameter dtoTechParam) {
+        this.valueOfPrm = dtoTechParam.getValueOfPrm();
     }
 
     public void setListOfParamEntities(List<msParameterEntity> listOfParamEntities) {

@@ -16,8 +16,6 @@ jobs:
           java-version: '17'
       - name: Build project with Maven
         run: mvn clean install
-      - name: Run tests
-        run: mvn test  # Предполагается, что у вас есть тесты и Maven может их запустить
       - name: Deploy to server
         uses: appleboy/ssh-action@master
         with:
@@ -26,6 +24,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd /path/to/deploy
+            tmux attach-session -t us_complex_web
+            cd /us_complex/us_complex_server/us_complex_server
             git pull origin main
-            # Дополнительные команды для деплоя, например, перезапуск сервера
+            mvn spring-boot:run

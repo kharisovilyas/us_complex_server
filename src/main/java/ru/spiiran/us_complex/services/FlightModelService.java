@@ -18,9 +18,11 @@ public class FlightModelService {
     private Integer smaoPort;
     @Value("${smao.api.url.modelling.start}") // Путь к директории для загружаемых изображений
     private String smaoStartModellingURL;
+
     public dtoMessage startModelling() {
         try {
             connectionToSMAO();
+
             return new dtoMessage("SUCCESS", "Connection established ");
         } catch (IOException e) {
             e.printStackTrace();
@@ -41,7 +43,6 @@ public class FlightModelService {
     }
 
     public ResponseEntity<dtoMessage> pauseModelling(){
-
         return null;
     }
 }

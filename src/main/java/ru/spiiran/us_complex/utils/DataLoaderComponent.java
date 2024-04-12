@@ -14,9 +14,9 @@ import ru.spiiran.us_complex.model.entitys.modelsat.equipment.msEquipmentTypeEnt
 import ru.spiiran.us_complex.model.entitys.modelsat.power.msModeEntity;
 import ru.spiiran.us_complex.model.entitys.modelsat.techparam.msParameterEntity;
 import ru.spiiran.us_complex.repositories.StatusGeneralRepository;
-import ru.spiiran.us_complex.repositories.modelsat.msEquipmentTypeRepository;
-import ru.spiiran.us_complex.repositories.modelsat.msListParamRepository;
-import ru.spiiran.us_complex.repositories.modelsat.msModeRepository;
+import ru.spiiran.us_complex.repositories.modelsat.equipment.msEquipmentTypeRepository;
+import ru.spiiran.us_complex.repositories.modelsat.techparam.msListParamRepository;
+import ru.spiiran.us_complex.repositories.modelsat.power.msModeRepository;
 
 import java.nio.file.Paths;
 import java.util.List;
