@@ -29,3 +29,15 @@ jobs:
             cd us_complex/us_complex_server/us_complex_server
             git pull origin main
             mvn spring-boot:run
+      - name: Cancel workflow if deploy fails
+        if: failure()
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.MGITHUB_TOKEN }}
+          script: |
+            const response = await github.actions.cancelWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId
+            });
+            console.log(response);
