@@ -25,7 +25,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            tmux attach-session -t us_complex_web
+            tmux attach-session -t us_complex_server
             cd us_complex/us_complex_server/us_complex_server
             git pull origin main
             mvn spring-boot:run
