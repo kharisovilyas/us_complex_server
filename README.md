@@ -90,5 +90,5 @@ Windows
 
 После успешного старта сервера документация по API доступна по адресу
 ```console
-http://82.179.36.248/swagger-ui/index.html
+http://82.179.36.248:8081/swagger-ui/index.html
 ```
