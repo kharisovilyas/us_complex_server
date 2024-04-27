@@ -26,6 +26,30 @@ public class msModeEntity implements IEntity {
         this.mode = dto.getMode();
     }
 
+    public Long getModeID() {
+        return modeID;
+    }
+
+    public void setModeID(Long modeID) {
+        this.modeID = modeID;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public ru.spiiran.us_complex.model.entitys.modelsat.power.msPowerEntity getMsPowerEntity() {
+        return msPowerEntity;
+    }
+
+    public void setMsPowerEntity(ru.spiiran.us_complex.model.entitys.modelsat.power.msPowerEntity msPowerEntity) {
+        this.msPowerEntity = msPowerEntity;
+    }
+
     @Override
     public Long getID() {
         return modeID;

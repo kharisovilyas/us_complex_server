@@ -15,10 +15,12 @@ public class EarthPointEntity implements IEntity {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long ID;
+    @Column(name = "name_earth_point")
     private String nameEarthPoint;
+    @Column(name = "longitude")
     private Double longitude;
+    @Column(name = "latitude")
     private Double latitude;
-
     @OneToOne
     @JoinColumn(name = "node_id")
     @JsonIgnore

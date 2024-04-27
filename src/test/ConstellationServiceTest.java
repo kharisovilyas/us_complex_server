@@ -12,7 +12,7 @@ import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRe
 import ru.spiiran.us_complex.repositories.constellation.ConstellationRepository;
 import ru.spiiran.us_complex.repositories.IdNodeRepository;
 import ru.spiiran.us_complex.repositories.StatusGeneralRepository;
-import ru.spiiran.us_complex.services.ConstellationService;
+import ru.spiiran.us_complex.services.constellation.ConstellationService;
 
 import java.util.ArrayList;
 

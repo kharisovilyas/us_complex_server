@@ -34,4 +34,28 @@ public class msParameterEntity implements IEntity {
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
     }
+
+    public Long getPrmID() {
+        return prmID;
+    }
+
+    public void setPrmID(Long prmID) {
+        this.prmID = prmID;
+    }
+
+    public String getParameter() {
+        return parameter;
+    }
+
+    public void setParameter(String parameter) {
+        this.parameter = parameter;
+    }
+
+    public ru.spiiran.us_complex.model.entitys.modelsat.techparam.msTechParamEntity getMsTechParamEntity() {
+        return msTechParamEntity;
+    }
+
+    public void setMsTechParamEntity(ru.spiiran.us_complex.model.entitys.modelsat.techparam.msTechParamEntity msTechParamEntity) {
+        this.msTechParamEntity = msTechParamEntity;
+    }
 }

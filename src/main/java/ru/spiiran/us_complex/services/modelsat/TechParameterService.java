@@ -11,8 +11,11 @@ import ru.spiiran.us_complex.model.entitys.modelsat.techparam.msTechParamEntity;
 import ru.spiiran.us_complex.repositories.modelsat.ModelSatRepository;
 import ru.spiiran.us_complex.repositories.modelsat.techparam.msListParamRepository;
 import ru.spiiran.us_complex.repositories.modelsat.techparam.msTechParamRepository;
+import ru.spiiran.us_complex.model.dto.modelsat.techparam.dtoParameter;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,9 +33,17 @@ public class TechParameterService {
         if (optionalParameterEntity.isPresent() && optionalModelSatEntity.isPresent()) {
             return msTechPrmRepository.saveAndFlush(
                     new msTechParamEntity(dtoTechParameter)
-            ).getDtoMessage("SUCCESS", "");
+            ).getDtoMessage("SUCCESS", "Parameter update success");
         } else {
             return new dtoMessage("ERROR", "");
         }
+    }
+
+    public List<dtoParameter> getAllTechPrm() {
+        return msListParamRepository
+                .findAll()
+                .stream()
+                .map(dtoParameter::new)
+                .collect(Collectors.toList());
     }
 }

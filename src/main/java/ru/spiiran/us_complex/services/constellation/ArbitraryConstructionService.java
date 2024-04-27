@@ -1,4 +1,4 @@
-package ru.spiiran.us_complex.services;
+package ru.spiiran.us_complex.services.constellation;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;

@@ -23,4 +23,46 @@ public class EarthSatEntity {
     @Column(name = "end_time")
     private String endTime;
 
+    public EarthSatEntity() {
+    }
+
+    public Long getID() {
+        return ID;
+    }
+
+    public void setID(Long ID) {
+        this.ID = ID;
+    }
+
+    public Long getIdNode() {
+        return idNode;
+    }
+
+    public void setIdNode(Long idNode) {
+        this.idNode = idNode;
+    }
+
+    public Long getSatelliteId() {
+        return satelliteId;
+    }
+
+    public void setSatelliteId(Long satelliteId) {
+        this.satelliteId = satelliteId;
+    }
+
+    public String getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 }

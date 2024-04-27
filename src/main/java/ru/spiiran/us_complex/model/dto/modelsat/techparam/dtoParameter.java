@@ -1,6 +1,7 @@
 package ru.spiiran.us_complex.model.dto.modelsat.techparam;
 
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
+import ru.spiiran.us_complex.model.entitys.modelsat.techparam.msParameterEntity;
 
 public class dtoParameter implements IDTOEntity {
     private Long prmId;
@@ -23,5 +24,10 @@ public class dtoParameter implements IDTOEntity {
     }
 
     public dtoParameter() {}
+
+    public dtoParameter(msParameterEntity msParameterEntity) {
+        this.parameter = msParameterEntity.getParameter();
+        this.prmId = msParameterEntity.getPrmID();
+    }
 
 }

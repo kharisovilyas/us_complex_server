@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<div class="section">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h2>ОГ (Определенное Где)</h2>
+    <p>1) POST запрос к <code>http://localhost:8081/api/v1/constellation/add</code> позволяет добавить запись (только
+        добавить) в таблице Constellation и одновременно отредактировать связанную таблицу ArbitratyConstraction или
+        связанную таблицу PlanarConstraction – удалить, обновить или добавить в них запись.</p>
+    <pre>{
+  "constellationName": "Orion",
+  "arbitraryFormation": true,
+  "arbitraryConstructions": [
+    {
+      "altitude": 234,
+      "eccentricity": 0.123,
+      "incline": 40.443,
+      "longitudeAscendingNode": 5125,
+      "perigeeWidthArgument": 704.7,
+      "trueAnomaly": 1305.3,
+      "modelSat": 457
+    },
+    {
+      "altitude": 500,
+      "eccentricity": 0.1,
+      "incline": 30.5,
+      "longitudeAscendingNode": 45,
+      "perigeeWidthArgument": 60.7,
+      "trueAnomaly": 120.3,
+      "modelSat": 456
+    },
+    {
+      "altitude": 600,
+      "eccentricity": 0.2,
+      "incline": 40.5,
+      "longitudeAscendingNode": 55,
+      "perigeeWidthArgument": 70.7,
+      "trueAnomaly": 130.3,
+      "modelSat": 457
+    }
+  ],
+  "planarConstructions": []
+}</pre>
+    <p>Добавление сущностей Constellation происходит не списком, а по одному, update происходит при запросе на другой
+        url.</p>
+    <p>2) GET запрос к <code>http://localhost:8081/api/v1/constellation/get/list</code> для получения всех записей в
+        таблице Constellation и связанные таблицы: Arbitrary Construction, Planar Construction</p>
+    <pre>[
+    {
+        "constellationName": "Orion",
+        "arbitraryConstructions": [],
+        "planarConstructions": [],
+        "id": 2902,
+        "arbitraryFormation": true
+    },
+    {
+        "constellationName": "Orion",
+        "arbitraryConstructions": [
+            {
+                "id": 3,
+                "idNode": 5,
+                "altitude": 600,
+                "eccentricity": 0.2,
+                "incline": 40.5,
+                "longitudeAscendingNode": 55,
+                "perigeeWidthArgument": 70.7,
+                "trueAnomaly": 130.3,
+                "modelSat": 457,
+                "deleted": null
+            },
+            {
+                "id": 2,
+                "idNode": 4,
+                "altitude": 500,
+                "eccentricity": 0.1,
+                "incline": 30.5,
+                "longitudeAscendingNode": 45,
+                "perigeeWidthArgument": 60.7,
+                "trueAnomaly": 120.3,
+                "modelSat": 456,
+                "deleted": null
+            }
+        ],
+        "planarConstructions": [],
+        "id": 3002,
+        "arbitraryFormation": true
+    }
+]</pre>
+    <p>3) POST запрос к <code>http://localhost:8081/api/v1/constellation/arbitrary/update/byList</code> для обновления
+        сущностей в таблице Arbitrary Construction:</p>
+    <pre>[
+  {
+    "modelSat": 444444444,
+    "altitude": 5030,
+    "eccentricity": 0.1233,
+    "incline": 45.637,
+    "longitudeAscendingNode": 930,
+    "perigeeWidthArgument": 1.2334,
+    "trueAnomaly": 13332.345,
+    "id": 1904
+  },
+  {
+    "modelSat": 789,
+    "altitude": 700,
+    "eccentricity": 0.456,
+    "incline": 89.01,
+    "longitudeAscendingNode": 180,
+    "perigeeWidthArgument": 2.345,
+    "trueAnomaly": 23.456,
+    "id": 1905,
+    "deleted": true
+  }
+]</pre>
+    <p>- если флаг deleted установлен в true – запись с данным id будет удалена</p>
+    <p>- если false или поле отсутствует – то запись будет обновлена.</p>
+    <p>- если id не указан – то запись в таблицу добаляется</p>
+    <p>4) POST Запрос на <code>http://localhost:8081/api/v1/constellation/delete/byId?id=420</code> для удаления записей
+        в таблице Constellation и связанных с ними записями в таблицах Arbitrary Construction, Planar Construction. –
+        удаление не каскадное.</p>
+    <p>5) POST запрос на <code>http://localhost:8081/api/v1/constellation/set/status?status=true</code> для установки
+        статуса «утверждено» для таблицы Constellation.</p>
+</div>
+</html>

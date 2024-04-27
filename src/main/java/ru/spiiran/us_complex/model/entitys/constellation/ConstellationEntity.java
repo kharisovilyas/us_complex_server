@@ -35,6 +35,7 @@ public class ConstellationEntity implements IEntity {
         this.isArbitraryFormation = dtoConstellation.getArbitraryFormation();
         this.constellationName = dtoConstellation.getConstellationName();
     }
+
     public Boolean getArbitraryFormation() {
         return isArbitraryFormation;
     }

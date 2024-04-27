@@ -8,8 +8,8 @@ import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.constellation.dtoArbitraryConstruction;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
-import ru.spiiran.us_complex.services.ArbitraryConstructionService;
-import ru.spiiran.us_complex.services.ConstellationService;
+import ru.spiiran.us_complex.services.constellation.ArbitraryConstructionService;
+import ru.spiiran.us_complex.services.constellation.ConstellationService;
 
 import java.util.ArrayList;
 import java.util.List;

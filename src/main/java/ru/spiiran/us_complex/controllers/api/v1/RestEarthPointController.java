@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.spiiran.us_complex.model.dto.earth.dtoEarthPoint;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
-import ru.spiiran.us_complex.services.EarthPointService;
+import ru.spiiran.us_complex.services.earth.EarthPointService;
 
 import java.util.ArrayList;
 import java.util.List;

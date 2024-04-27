@@ -13,8 +13,10 @@ public class dtoModelSat implements IDTOEntity {
     public dtoModelSat(){}
 
     public dtoModelSat(ModelSatEntity modelSatEntity){
+        this.id = modelSatEntity.getID();
         this.description = modelSatEntity.getDescription();
         this.modelName = modelSatEntity.getModelName();
+        this.description = modelSatEntity.getDescription();
     }
 
     public Long getId() {

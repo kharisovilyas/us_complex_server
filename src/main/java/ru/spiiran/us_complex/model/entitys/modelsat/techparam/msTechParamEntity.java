@@ -29,6 +29,9 @@ public class msTechParamEntity implements IEntity {
         this.ID = ID;
     }
 
+    public msTechParamEntity() {
+    }
+
     public List<msParameterEntity> getListOfParamEntities() {
         return parameterEntityList;
     }

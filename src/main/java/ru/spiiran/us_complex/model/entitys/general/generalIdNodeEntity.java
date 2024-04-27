@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
+import ru.spiiran.us_complex.model.entitys.satrequest.RequestEntity;
+
+import java.util.List;
 
 @Entity
 @Table(name = "id_node_general")
@@ -24,6 +27,16 @@ public class generalIdNodeEntity implements IEntity{
     @OneToOne(mappedBy = "generalIdNodeEntity", cascade = CascadeType.ALL)
     @JsonIgnore
     private coArbitraryConstruction coArbitraryConstruction;
+
+    @OneToMany(mappedBy = "generalIdNodeEntity")
+    private List<RequestEntity> requestEntityList;
+
+    public generalIdNodeEntity(Long idNode) {
+        this.idNode = idNode;
+    }
+
+    public generalIdNodeEntity() {
+    }
 
     @Override
     public Long getID() {

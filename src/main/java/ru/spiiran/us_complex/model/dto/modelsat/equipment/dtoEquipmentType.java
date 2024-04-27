@@ -1,13 +1,15 @@
 package ru.spiiran.us_complex.model.dto.modelsat.equipment;
 
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
+import ru.spiiran.us_complex.model.entitys.modelsat.equipment.msEquipmentTypeEntity;
 
 public class dtoEquipmentType implements IDTOEntity {
     private Long devId;
     private String type;
 
-    public dtoEquipmentType(dtoEquipmentType dtoEquipmentType) {
-
+    public dtoEquipmentType(msEquipmentTypeEntity msEquipmentTypeEntity) {
+        this.devId = msEquipmentTypeEntity.getID();
+        this.type = msEquipmentTypeEntity.getType();
     }
 
     public Long getDevId() {

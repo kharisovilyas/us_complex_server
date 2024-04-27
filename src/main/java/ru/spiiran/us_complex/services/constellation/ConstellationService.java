@@ -1,4 +1,4 @@
-package ru.spiiran.us_complex.services;
+package ru.spiiran.us_complex.services.constellation;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -7,19 +7,19 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.constellation.dtoArbitraryConstruction;
+import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.constellation.dtoPlanarConstruction;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
+import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.model.entitys.constellation.coPlanarConstruction;
 import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
 import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
-import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
-import ru.spiiran.us_complex.repositories.constellation.ConstellationRepository;
 import ru.spiiran.us_complex.repositories.IdNodeRepository;
 import ru.spiiran.us_complex.repositories.StatusGeneralRepository;
+import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
+import ru.spiiran.us_complex.repositories.constellation.ConstellationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,10 +142,8 @@ public class ConstellationService {
             System.out.println(id);
             System.out.println(dtoArbitraryConstruction.getID());
             if (id != null) {
-                System.out.println("ЗДЕСЬ 1");
                 updateExistingConstellationArbitrary(dtoArbitraryConstruction, id);
             } else {
-                System.out.println("ЗДЕСЬ 2");
                 saveNewConstellationArbitrary(dtoArbitraryConstruction, constellation);
             }
         }
@@ -248,6 +246,12 @@ public class ConstellationService {
 
     public Long findMaxIdNode() {
         TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(e.idNode) FROM generalIdNodeEntity e", Long.class);
+        return query.getSingleResult() != null ? query.getSingleResult() : 0L;
+    }
+
+    public Long findMaxIdNodeForConstellation() {
+        TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(e.idNode) FROM generalIdNodeEntity e JOIN e.coArbitraryConstruction ep WHERE type(ep) = :entityType", Long.class);
+        query.setParameter("entityType", coArbitraryConstruction.class);
         return query.getSingleResult() != null ? query.getSingleResult() : 0L;
     }
 

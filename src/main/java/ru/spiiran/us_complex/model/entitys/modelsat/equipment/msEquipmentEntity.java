@@ -4,49 +4,56 @@ import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
 
-import java.util.List;
-
 @Entity
 @Table(name = "ms_equipment")
 public class msEquipmentEntity implements IEntity {
     @Id
-    @Column(name = "dev_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long devID;
+    private Long ID;
 
-    @OneToMany(mappedBy = "msEquipmentEntity")
-    private List<msEquipmentTypeEntity> equipmentTypeEntityList;
+    @ManyToOne
+    @JoinColumn(name = "equipment_type_id") // имя столбца для связи
+    private msEquipmentTypeEntity typeEntity;
 
     @Column(name = "dev_name")
     private String devName;
 
+    public msEquipmentEntity(msEquipmentTypeEntity typeEntity, String devName) {
+        this.typeEntity = typeEntity;
+        this.devName = devName;
+    }
+
     public void setID(Long devID) {
-        this.devID = devID;
+        this.ID = devID;
     }
 
-    public List<msEquipmentTypeEntity> getEquipmentTypeEntityList() {
-        return equipmentTypeEntityList;
+    public msEquipmentTypeEntity getTypeEntity() {
+        return typeEntity;
     }
 
-    public void setEquipmentTypeEntityList(List<msEquipmentTypeEntity> equipmentTypeEntityList) {
-        this.equipmentTypeEntityList = equipmentTypeEntityList;
+    public void setTypeEntity(msEquipmentTypeEntity typeEntity) {
+        this.typeEntity = typeEntity;
     }
 
-    public String getDevDescription() {
+    public String getDevName() {
         return devName;
     }
 
-    public void setDevDescription(String devDescription) {
-        this.devName = devDescription;
+    public void setDevName(String devName) {
+        this.devName = devName;
     }
 
     @Override
     public Long getID() {
-        return devID;
+        return ID;
     }
 
     @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
+    }
+
+    public msEquipmentEntity() {
     }
 }

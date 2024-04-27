@@ -1,6 +1,7 @@
 package ru.spiiran.us_complex.model.dto.modelsat.power;
 
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
+import ru.spiiran.us_complex.model.entitys.modelsat.power.msModeEntity;
 
 public class dtoMode implements IDTOEntity {
     private Long modeId;
@@ -23,4 +24,9 @@ public class dtoMode implements IDTOEntity {
     }
 
     public dtoMode() {}
+
+    public dtoMode(msModeEntity msModeEntity) {
+        this.mode = msModeEntity.getMode();
+        this.modeId = msModeEntity.getModeID();
+    }
 }
