@@ -73,13 +73,19 @@ public class ArbitraryConstructionService {
                 }
             }
         }
+        recalculationIdNodeConstellation();
         return new dtoMessage("UPDATE SUCCESS", "All Arbitrary Construction updated successfully");
+    }
+
+    private void recalculationIdNodeConstellation() {
+
     }
 
     private void updateExistingConstellationArbitrary(dtoArbitraryConstruction detailedConstellation, Long id) {
         Optional<coArbitraryConstruction> optionalConstellationDetailed = constellationArbitraryRepository.findById(id);
         if (optionalConstellationDetailed.isPresent()) {
             coArbitraryConstruction existingConstellation = optionalConstellationDetailed.get();
+
             Boolean isDeleted = detailedConstellation.getDeleted();
             if (isDeleted != null && isDeleted) {
                 deleteConstellationArbitrary(existingConstellation);
@@ -94,9 +100,23 @@ public class ArbitraryConstructionService {
         }
     }
 
+
+
     private void deleteConstellationArbitrary(coArbitraryConstruction coArbitraryConstruction) {
         idNodeRepository.delete(coArbitraryConstruction.getGeneralIdNodeEntity());
+        updateIdNodeOfArbitraryConstruction(coArbitraryConstruction.getArbitraryConstructionIdNode());
         constellationArbitraryRepository.delete(coArbitraryConstruction);
+    }
+
+    private void updateIdNodeOfArbitraryConstruction(Long idNode) {
+        // Получаем список всех записей с idNode >= переданного idNode
+        List<generalIdNodeEntity> idNodeEntities = idNodeRepository.findAllByIdNodeGreaterThanEqual(idNode);
+        // Обновляем значения idNode
+        for (generalIdNodeEntity idNodeEntity : idNodeEntities) {
+            idNodeEntity.setIdNode(idNodeEntity.getIdNode() - 1); // Уменьшаем idNode на единицу
+        }
+        // Сохраняем обновленные записи в базу данных
+        idNodeRepository.saveAll(idNodeEntities);
     }
 
     private void saveNewConstellationArbitrary(dtoArbitraryConstruction detailedConstellation, ConstellationEntity constellation) {
