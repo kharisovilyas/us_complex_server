@@ -5,7 +5,8 @@ import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.system.dtoSystem;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sr_system")
@@ -27,11 +28,11 @@ public class SystemEntity implements IEntity {
     @Column(name = "time_modeling_horizon")
     private String timeModelingHorizon;
     @Column(name = "start_time")
-    private Timestamp startTime;
+    private LocalDateTime startTime;
     @Column(name = "modeling_begin")
-    private Timestamp modelingBegin;
+    private LocalDateTime modelingBegin;
     @Column(name = "modeling_end")
-    private Timestamp modelingEnd;
+    private LocalDateTime modelingEnd;
     @Column(name = "inter_satellite_communication")
     private Boolean interSatelliteCommunication;
     @Column(name = "control_system")
@@ -116,30 +117,6 @@ public class SystemEntity implements IEntity {
         this.timeModelingHorizon = timeModelingHorizon;
     }
 
-    public Timestamp getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Timestamp startTime) {
-        this.startTime = startTime;
-    }
-
-    public Timestamp getModelingBegin() {
-        return modelingBegin;
-    }
-
-    public void setModelingBegin(Timestamp modelingBegin) {
-        this.modelingBegin = modelingBegin;
-    }
-
-    public Timestamp getModelingEnd() {
-        return modelingEnd;
-    }
-
-    public void setModelingEnd(Timestamp modelingEnd) {
-        this.modelingEnd = modelingEnd;
-    }
-
     public Boolean getInterSatelliteCommunication() {
         return interSatelliteCommunication;
     }
@@ -154,5 +131,29 @@ public class SystemEntity implements IEntity {
 
     public void setControlSystem(String controlSystem) {
         this.controlSystem = controlSystem;
+    }
+
+    public LocalDateTime getModelingBegin() {
+        return modelingBegin;
+    }
+
+    public void setModelingBegin(LocalDateTime modelingBegin) {
+        this.modelingBegin = modelingBegin;
+    }
+
+    public LocalDateTime getModelingEnd() {
+        return modelingEnd;
+    }
+
+    public void setModelingEnd(LocalDateTime modelingEnd) {
+        this.modelingEnd = modelingEnd;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 }

@@ -37,7 +37,11 @@ public class RequestService {
 
     public dtoMessage updateCatalogByList(List<dtoCatalog> catalogList) {
         for (dtoCatalog catalog : catalogList) {
-            catalogRepository.saveAndFlush(new CatalogEntity(catalog));
+            if (catalog.getDeleted() != null && catalog.getDeleted()) {
+                catalogRepository.delete(new CatalogEntity(catalog));
+            } else {
+                catalogRepository.saveAndFlush(new CatalogEntity(catalog));
+            }
         }
         return new dtoMessage("SUCCESS", "All catalog update");
     }
@@ -52,18 +56,22 @@ public class RequestService {
     public dtoMessage updateRequestByList(List<dtoRequest> requests) {
         try {
             for (dtoRequest request : requests) {
-                RequestEntity requestEntity = new RequestEntity(request);
-                generalIdNodeEntity generalIdNode = findGeneralIdNode(request.getIdNode());
-                CatalogEntity catalogEntity = findCatalogEntity(request.getCatalog());
-                requestEntity.setGeneralIdNodeEntity(generalIdNode);
-                requestEntity.setCatalogEntity(catalogEntity);
-                requestRepository.saveAndFlush(requestEntity);
+                if (request.getDeleted() != null && request.getDeleted()) {
+                    requestRepository.delete(new RequestEntity(request));
+                } else {
+                    RequestEntity requestEntity = new RequestEntity(request);
+                    generalIdNodeEntity generalIdNode = findGeneralIdNode(request.getIdNode());
+                    CatalogEntity catalogEntity = findCatalogEntity(request.getCatalog());
+                    requestEntity.setGeneralIdNodeEntity(generalIdNode);
+                    requestEntity.setCatalogEntity(catalogEntity);
+                    requestRepository.saveAndFlush(requestEntity);
+                }
+
             }
             return new dtoMessage("SUCCESS", "All requests update");
         } catch (EntityNotFoundException exception) {
             return new dtoMessage("ERROR", exception.getMessage());
         }
-
     }
 
     private CatalogEntity findCatalogEntity(dtoCatalog catalog) throws EntityNotFoundException {

@@ -137,8 +137,10 @@ public class EarthPointService {
         List<coArbitraryConstruction> arbitraryConstructions = arbitraryRepository.findAll();
 
         for (coArbitraryConstruction arbitraryConstruction : arbitraryConstructions) {
-            generalIdNodeEntity generalIdNodeEntity = new generalIdNodeEntity();
+
+            generalIdNodeEntity generalIdNodeEntity = arbitraryConstruction.getGeneralIdNodeEntity();
             generalIdNodeEntity.setIdNode(findMaxIdNode() + 1L);
+            arbitraryConstruction.setGeneralIdNodeEntity(generalIdNodeEntity);
             // Сохранить generalIdNodeEntity сначала
             entityManager.persist(generalIdNodeEntity);
             arbitraryConstruction.setGeneralIdNodeEntity(generalIdNodeEntity);

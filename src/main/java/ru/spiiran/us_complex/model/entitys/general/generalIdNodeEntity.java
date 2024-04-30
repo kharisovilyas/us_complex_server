@@ -28,7 +28,7 @@ public class generalIdNodeEntity implements IEntity{
     @JsonIgnore
     private coArbitraryConstruction coArbitraryConstruction;
 
-    @OneToMany(mappedBy = "generalIdNodeEntity")
+    @OneToMany(mappedBy = "generalIdNodeEntity", cascade = CascadeType.ALL)
     private List<RequestEntity> requestEntityList;
 
     public generalIdNodeEntity(Long idNode) {

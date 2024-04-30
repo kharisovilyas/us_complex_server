@@ -8,6 +8,7 @@ public class dtoCatalog {
     private Double lat;
     private Double lon;
     private Double alt;
+    private Boolean deleted;
 
     public dtoCatalog() {
     }
@@ -56,5 +57,13 @@ public class dtoCatalog {
 
     public void setAlt(Double alt) {
         this.alt = alt;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

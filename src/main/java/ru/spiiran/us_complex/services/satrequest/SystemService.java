@@ -22,7 +22,9 @@ public class SystemService {
     public dtoMessage updateSystem(dtoSystem dtoSystem) {
         Optional<SystemEntity> optionalSystemEntity = systemRepository.findById(1L);
         if (optionalSystemEntity.isPresent()) {
-            systemRepository.save(new SystemEntity(dtoSystem));
+            SystemEntity existingSystem = new SystemEntity(dtoSystem);
+            existingSystem.setID(1L);
+            systemRepository.save(existingSystem);
             return new dtoMessage("SUCCESS", "All system update");
         } else {
             systemRepository.save(new SystemEntity(dtoSystem));

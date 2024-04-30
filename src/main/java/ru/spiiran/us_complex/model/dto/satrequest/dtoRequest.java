@@ -26,6 +26,7 @@ public class dtoRequest {
     private LocalDateTime time;
     private dtoIdNode idNode;
     private Boolean filter;
+    private Boolean deleted;
 
 
     public dtoIdNode getIdNode() {
@@ -90,5 +91,13 @@ public class dtoRequest {
 
     public void setFilter(Boolean filter) {
         this.filter = filter;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

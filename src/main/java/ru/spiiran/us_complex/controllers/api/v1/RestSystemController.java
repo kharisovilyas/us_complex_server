@@ -1,5 +1,6 @@
 package ru.spiiran.us_complex.controllers.api.v1;
 
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ public class RestSystemController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<dtoMessage> updateSystem(dtoSystem dtoSystem){
+    public ResponseEntity<dtoMessage> updateSystem(@RequestBody dtoSystem dtoSystem){
         return ResponseEntity.ok().body(systemService.updateSystem(dtoSystem));
     }
 }

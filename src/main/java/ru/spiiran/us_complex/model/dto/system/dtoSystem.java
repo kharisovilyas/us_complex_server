@@ -3,7 +3,7 @@ package ru.spiiran.us_complex.model.dto.system;
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
 
-import java.security.Timestamp;
+import java.time.LocalDateTime;
 
 public class dtoSystem implements IDTOEntity {
 
@@ -14,14 +14,15 @@ public class dtoSystem implements IDTOEntity {
     private Boolean satSatStatus;
     private Boolean gridStatus;
     private String timeModelingHorizon;
-    private Timestamp startTime;
-    private Timestamp modelingBegin;
-    private Timestamp modelingEnd;
+    private LocalDateTime startTime;
+    private LocalDateTime modelingBegin;
+    private LocalDateTime modelingEnd;
     private Boolean interSatelliteCommunication;
     private String controlSystem;
 
     public dtoSystem() {}
     public dtoSystem(SystemEntity systemEntity) {
+        this.systemId = systemEntity.getID();
         this.earthStatus = systemEntity.getEarthStatus();
         this.constellationStatus = systemEntity.getConstellationStatus();
         this.earthSatStatus = systemEntity.getEarthSatStatus();
@@ -83,30 +84,6 @@ public class dtoSystem implements IDTOEntity {
         this.timeModelingHorizon = timeModelingHorizon;
     }
 
-    public Timestamp getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Timestamp startTime) {
-        this.startTime = startTime;
-    }
-
-    public Timestamp getModelingBegin() {
-        return modelingBegin;
-    }
-
-    public void setModelingBegin(Timestamp modelingBegin) {
-        this.modelingBegin = modelingBegin;
-    }
-
-    public Timestamp getModelingEnd() {
-        return modelingEnd;
-    }
-
-    public void setModelingEnd(Timestamp modelingEnd) {
-        this.modelingEnd = modelingEnd;
-    }
-
     public Boolean getInterSatelliteCommunication() {
         return interSatelliteCommunication;
     }
@@ -129,5 +106,29 @@ public class dtoSystem implements IDTOEntity {
 
     public void setSystemId(Long systemId) {
         this.systemId = systemId;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getModelingBegin() {
+        return modelingBegin;
+    }
+
+    public void setModelingBegin(LocalDateTime modelingBegin) {
+        this.modelingBegin = modelingBegin;
+    }
+
+    public LocalDateTime getModelingEnd() {
+        return modelingEnd;
+    }
+
+    public void setModelingEnd(LocalDateTime modelingEnd) {
+        this.modelingEnd = modelingEnd;
     }
 }
