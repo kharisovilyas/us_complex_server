@@ -176,12 +176,10 @@ public class ConnectPro42Service {
         if (optionalSystemEntity.isPresent()) {
             SystemEntity systemEntity = optionalSystemEntity.get();
 
-            String simulationControlLine = String.format(
-                    "%-60s",
-                    (systemEntity.getModelingEnd() - systemEntity.getStartTime())
-                            + " " + systemEntity.getStep().toString()
-                            + " !  Sim Duration, Step Size [sec]"
-            );
+            //10000.0   0.1                   !  Sim Duration, Step Size [sec]
+            String simulationControlLine = (systemEntity.getModelingEnd() - systemEntity.getStartTime())
+                            + "   " + systemEntity.getStep().toString()
+                            + "                   !  Sim Duration, Step Size [sec]";
 
             List<coArbitraryConstruction> arbitraryConstructions = constellationArbitraryRepository.findAll();
 
