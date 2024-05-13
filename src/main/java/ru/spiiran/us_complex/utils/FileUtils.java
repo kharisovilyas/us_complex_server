@@ -18,10 +18,6 @@ public class FileUtils {
 
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                if (!dir.equals(directory)) {
-                    // Не удаляем саму целевую директорию, а только её содержимое
-                    Files.delete(dir);
-                }
                 return FileVisitResult.CONTINUE;
             }
         });
