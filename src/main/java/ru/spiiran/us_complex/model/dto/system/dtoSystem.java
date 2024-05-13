@@ -3,8 +3,6 @@ package ru.spiiran.us_complex.model.dto.system;
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
 
-import java.time.LocalDateTime;
-
 public class dtoSystem implements IDTOEntity {
 
     private Long systemId;
@@ -14,11 +12,13 @@ public class dtoSystem implements IDTOEntity {
     private Boolean satSatStatus;
     private Boolean gridStatus;
     private String timeModelingHorizon;
-    private LocalDateTime startTime;
-    private LocalDateTime modelingBegin;
-    private LocalDateTime modelingEnd;
+    private Long startTime;
+    private Long modelingBegin;
+    private Long modelingEnd;
     private Boolean interSatelliteCommunication;
     private String controlSystem;
+    private Long step;
+    private Long duration;
 
     public dtoSystem() {}
     public dtoSystem(SystemEntity systemEntity) {
@@ -108,27 +108,45 @@ public class dtoSystem implements IDTOEntity {
         this.systemId = systemId;
     }
 
-    public LocalDateTime getStartTime() {
+
+
+    public Long getStep() {
+        return step;
+    }
+
+    public void setStep(Long step) {
+        this.step = step;
+    }
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
+    }
+
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getModelingBegin() {
+    public Long getModelingBegin() {
         return modelingBegin;
     }
 
-    public void setModelingBegin(LocalDateTime modelingBegin) {
+    public void setModelingBegin(Long modelingBegin) {
         this.modelingBegin = modelingBegin;
     }
 
-    public LocalDateTime getModelingEnd() {
+    public Long getModelingEnd() {
         return modelingEnd;
     }
 
-    public void setModelingEnd(LocalDateTime modelingEnd) {
+    public void setModelingEnd(Long modelingEnd) {
         this.modelingEnd = modelingEnd;
     }
 }

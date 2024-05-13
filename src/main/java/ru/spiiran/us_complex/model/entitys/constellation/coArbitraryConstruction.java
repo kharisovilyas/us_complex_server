@@ -1,6 +1,5 @@
 package ru.spiiran.us_complex.model.entitys.constellation;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.constellation.dtoArbitraryConstruction;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
@@ -15,28 +14,20 @@ public class coArbitraryConstruction implements IEntity, IEntityNode {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long ID;
-
     @Column(name = "altitude")
-    private Integer altitude;
-
+    private Double altitude;
     @Column(name = "eccentricity")
     private Double eccentricity;
-
     @Column(name = "incline")
     private Double incline;
-
     @Column(name = "longitude_ascending_node")
-    private Integer longitudeAscendingNode;
-
+    private Double longitudeAscendingNode;
     @Column(name = "perigee_width_argument")
     private Double perigeeWidthArgument;
-
     @Column(name = "true_anomaly")
     private Double trueAnomaly;
-
     @OneToOne
     @JoinColumn(name = "node_id")
-    @JsonIgnore
     private generalIdNodeEntity generalIdNodeEntity;
     @ManyToOne
     @JoinColumn(name = "table_id")
@@ -66,13 +57,6 @@ public class coArbitraryConstruction implements IEntity, IEntityNode {
         this.generalIdNodeEntity = generalIdNodeEntity;
     }
 
-    public Integer getAltitude() {
-        return altitude;
-    }
-
-    public void setAltitude(Integer altitude) {
-        this.altitude = altitude;
-    }
 
     public Double getEccentricity() {
         return eccentricity;
@@ -89,13 +73,7 @@ public class coArbitraryConstruction implements IEntity, IEntityNode {
     public void setIncline(Double incline) {
         this.incline = incline;
     }
-    public Integer getLongitudeAscendingNode() {
-        return longitudeAscendingNode;
-    }
 
-    public void setLongitudeAscendingNode(Integer longitudeAscendingNode) {
-        this.longitudeAscendingNode = longitudeAscendingNode;
-    }
     public Double getPerigeeWidthArgument() {
         return perigeeWidthArgument;
     }
@@ -141,5 +119,21 @@ public class coArbitraryConstruction implements IEntity, IEntityNode {
 
     public void setModelSat(Long modelSat) {
         this.modelSat = modelSat;
+    }
+
+    public Double getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(Double altitude) {
+        this.altitude = altitude;
+    }
+
+    public Double getLongitudeAscendingNode() {
+        return longitudeAscendingNode;
+    }
+
+    public void setLongitudeAscendingNode(Double longitudeAscendingNode) {
+        this.longitudeAscendingNode = longitudeAscendingNode;
     }
 }

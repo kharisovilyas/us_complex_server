@@ -33,7 +33,6 @@ public class EarthPointService {
     private IdNodeRepository idNodeRepository;
     @PersistenceContext
     private EntityManager entityManager;
-
     @Transactional
     public dtoMessage addEarthPoint(dtoEarthPoint earthPoint) {
         try {
@@ -130,6 +129,7 @@ public class EarthPointService {
         generalIdNodeEntity generalIdNodeEntity = new generalIdNodeEntity();
         Long maxIdNode = findMaxIdNodeForEarthPoint();
         generalIdNodeEntity.setIdNode(maxIdNode + 1);
+        generalIdNodeEntity.setNodeType("GS");
         return generalIdNodeEntity;
     }
 
@@ -141,12 +141,11 @@ public class EarthPointService {
             generalIdNodeEntity generalIdNodeEntity = arbitraryConstruction.getGeneralIdNodeEntity();
             generalIdNodeEntity.setIdNode(findMaxIdNode() + 1L);
             arbitraryConstruction.setGeneralIdNodeEntity(generalIdNodeEntity);
-            // Сохранить generalIdNodeEntity сначала
+
             entityManager.persist(generalIdNodeEntity);
             arbitraryConstruction.setGeneralIdNodeEntity(generalIdNodeEntity);
         }
 
-        // Сохранить все обновленные конструкции
         arbitraryRepository.saveAll(arbitraryConstructions);
     }
 
@@ -194,17 +193,32 @@ public class EarthPointService {
         earthPointRepository.delete(earthPointEntity);
     }
 
+    @Transactional
     private void updateIdNodeOfEarthPoints(Long idNode) {
+        // Удаление записей из таблицы
+        idNodeRepository.deleteById(idNode);
+
         // Получаем список всех записей с idNode >= переданного idNode
         List<generalIdNodeEntity> idNodeEntities = idNodeRepository.findAllByIdNodeGreaterThanEqual(idNode);
+
         // Обновляем значения idNode
         for (generalIdNodeEntity idNodeEntity : idNodeEntities) {
             idNodeEntity.setIdNode(idNodeEntity.getIdNode() - 1); // Уменьшаем idNode на единицу
         }
-        // Сохраняем обновленные записи в базу данных
+
+        // Обновляем соответствующие записи в таблице coArbitraryConstructions
+        for (generalIdNodeEntity idNodeEntity : idNodeEntities) {
+            List<coArbitraryConstruction> arbitraryConstructions = arbitraryRepository.findByGeneralIdNodeEntity(idNodeEntity);
+            for (coArbitraryConstruction arbitraryConstruction : arbitraryConstructions) {
+                arbitraryConstruction.setGeneralIdNodeEntity(idNodeEntity);
+            }
+            // Сохраняем обновленные записи в таблице coArbitraryConstraction
+            arbitraryRepository.saveAll(arbitraryConstructions);
+        }
+
+        // Сохраняем обновленные записи в базе данных
         idNodeRepository.saveAll(idNodeEntities);
     }
-
 
     public Long findMaxIdNodeForEarthPoint() {
         TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(e.idNode) FROM generalIdNodeEntity e JOIN e.earthPointEntity ep WHERE type(ep) = :entityType", Long.class);

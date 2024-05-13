@@ -5,10 +5,12 @@ import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
 public class dtoIdNode {
     private Long entryId;
     private Long idNode;
+    private String nodeType;
 
     public dtoIdNode(generalIdNodeEntity generalIdNode) {
         this.idNode = generalIdNode.getIdNode();
         this.entryId = generalIdNode.getID();
+        this.nodeType = generalIdNode.getNodeType();
     }
 
     public dtoIdNode() {
@@ -28,5 +30,13 @@ public class dtoIdNode {
 
     public void setEntryId(Long entryId) {
         this.entryId = entryId;
+    }
+
+    public String getNodeType() {
+        return nodeType;
+    }
+
+    public void setNodeType(String nodeType) {
+        this.nodeType = nodeType;
     }
 }

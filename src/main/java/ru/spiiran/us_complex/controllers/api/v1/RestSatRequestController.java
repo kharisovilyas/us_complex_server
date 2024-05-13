@@ -11,6 +11,8 @@ import ru.spiiran.us_complex.model.dto.general.dtoIdNode;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.satrequest.dtoCatalog;
 import ru.spiiran.us_complex.model.dto.satrequest.dtoRequest;
+import ru.spiiran.us_complex.services.satrequest.connect.ConnectPro42Service;
+import ru.spiiran.us_complex.services.satrequest.connect.ConnectSMAOService;
 import ru.spiiran.us_complex.services.satrequest.RequestService;
 
 import java.util.List;
@@ -19,6 +21,8 @@ import java.util.List;
 @RequestMapping("/api/v1/satrequest")
 public class RestSatRequestController {
     @Autowired private RequestService requestService;
+    @Autowired private ConnectSMAOService connectSMAOService;
+    @Autowired private ConnectPro42Service connectPro42Service;
 
     @GetMapping("/request/get/all")
     public ResponseEntity<List<dtoRequest>> getAllRequests(){
@@ -43,5 +47,15 @@ public class RestSatRequestController {
     @PostMapping("/request/update")
     public ResponseEntity<dtoMessage> updateCatalogByList(@RequestBody List<dtoRequest> requests){
         return ResponseEntity.ok().body(requestService.updateRequestByList(requests));
+    }
+
+    @PostMapping("/connect/smao/startmodelling")
+    public ResponseEntity<dtoMessage> connectSMAO(@RequestBody dtoRequest request){
+        return ResponseEntity.ok().body(connectSMAOService.startModelling(request));
+    }
+
+    @PostMapping("connect/pro42/startmodelling")
+    public ResponseEntity<dtoMessage> connectPro42(){
+        return ResponseEntity.ok().body(connectPro42Service.startModelling());
     }
 }

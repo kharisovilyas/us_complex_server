@@ -6,10 +6,10 @@ import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction
 public class dtoArbitraryConstruction implements IDTOEntity {
     private Long id;
     private Long idNode;
-    private Integer altitude;
+    private Double altitude;
     private Double eccentricity;
     private Double incline;
-    private Integer longitudeAscendingNode;
+    private Double longitudeAscendingNode;
     private Double perigeeWidthArgument;
     private Double trueAnomaly;
     private Boolean isDeleted;
@@ -48,13 +48,6 @@ public class dtoArbitraryConstruction implements IDTOEntity {
         this.idNode = idNode;
     }
 
-    public Integer getAltitude() {
-        return altitude;
-    }
-
-    public void setAltitude(Integer altitude) {
-        this.altitude = altitude;
-    }
 
     public Double getEccentricity() {
         return eccentricity;
@@ -72,13 +65,6 @@ public class dtoArbitraryConstruction implements IDTOEntity {
         this.incline = incline;
     }
 
-    public Integer getLongitudeAscendingNode() {
-        return longitudeAscendingNode;
-    }
-
-    public void setLongitudeAscendingNode(Integer longitudeAscendingNode) {
-        this.longitudeAscendingNode = longitudeAscendingNode;
-    }
 
     public Double getPerigeeWidthArgument() {
         return perigeeWidthArgument;
@@ -118,5 +104,21 @@ public class dtoArbitraryConstruction implements IDTOEntity {
 
     public void setTableId(Long tableId) {
         this.tableId = tableId;
+    }
+
+    public Double getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(Double altitude) {
+        this.altitude = altitude;
+    }
+
+    public Double getLongitudeAscendingNode() {
+        return longitudeAscendingNode;
+    }
+
+    public void setLongitudeAscendingNode(Double longitudeAscendingNode) {
+        this.longitudeAscendingNode = longitudeAscendingNode;
     }
 }

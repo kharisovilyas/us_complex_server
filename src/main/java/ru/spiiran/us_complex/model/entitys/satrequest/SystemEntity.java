@@ -5,7 +5,6 @@ import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.system.dtoSystem;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,18 +20,22 @@ public class SystemEntity implements IEntity {
     private Boolean constellationStatus;
     @Column(name = "earth_sat_status")
     private Boolean earthSatStatus;
-    @Column(name = "satS_sat_status")
+    @Column(name = "sat_sat_status")
     private Boolean satSatStatus;
     @Column(name = "grid_status")
     private Boolean gridStatus;
     @Column(name = "time_modeling_horizon")
     private String timeModelingHorizon;
     @Column(name = "start_time")
-    private LocalDateTime startTime;
+    private Long startTime;
     @Column(name = "modeling_begin")
-    private LocalDateTime modelingBegin;
+    private Long modelingBegin;
     @Column(name = "modeling_end")
-    private LocalDateTime modelingEnd;
+    private Long modelingEnd;
+    @Column(name = "modeling_step")
+    private Long step;
+    @Column(name = "duration")
+    private Long duration;
     @Column(name = "inter_satellite_communication")
     private Boolean interSatelliteCommunication;
     @Column(name = "control_system")
@@ -58,6 +61,8 @@ public class SystemEntity implements IEntity {
         this.modelingEnd = dtoSystem.getModelingEnd();
         this.satSatStatus = dtoSystem.getSatSatStatus();
         this.timeModelingHorizon = dtoSystem.getTimeModelingHorizon();
+        this.duration = dtoSystem.getDuration();
+        this.step = dtoSystem.getStep();
     }
 
     @Override
@@ -133,27 +138,45 @@ public class SystemEntity implements IEntity {
         this.controlSystem = controlSystem;
     }
 
-    public LocalDateTime getModelingBegin() {
-        return modelingBegin;
+
+
+    public Long getStep() {
+        return step;
     }
 
-    public void setModelingBegin(LocalDateTime modelingBegin) {
-        this.modelingBegin = modelingBegin;
+    public void setStep(Long step) {
+        this.step = step;
     }
 
-    public LocalDateTime getModelingEnd() {
-        return modelingEnd;
+    public Long getDuration() {
+        return duration;
     }
 
-    public void setModelingEnd(LocalDateTime modelingEnd) {
-        this.modelingEnd = modelingEnd;
+    public void setDuration(Long duration) {
+        this.duration = duration;
     }
 
-    public LocalDateTime getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
+    }
+
+    public Long getModelingBegin() {
+        return modelingBegin;
+    }
+
+    public void setModelingBegin(Long modelingBegin) {
+        this.modelingBegin = modelingBegin;
+    }
+
+    public Long getModelingEnd() {
+        return modelingEnd;
+    }
+
+    public void setModelingEnd(Long modelingEnd) {
+        this.modelingEnd = modelingEnd;
     }
 }

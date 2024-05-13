@@ -199,7 +199,7 @@ public class ConstellationService {
 
     private void saveNewConstellationArbitrary(dtoArbitraryConstruction detailedConstellation, ConstellationEntity constellation) {
         generalIdNodeEntity generalIdNodeEntity = // метод для создания пустой записи general idNode
-                createNewGeneralIdNodeEntity();
+                createNewGeneralIdNodeEntity(constellation.getConstellationName());
         coArbitraryConstruction coArbitraryConstruction = //метод для создания записи Constellation Detailed
                 // с инициализацией полей general idNode и полей из DTO
                 createNewConstellationArbitrary(detailedConstellation, generalIdNodeEntity, constellation);
@@ -237,21 +237,16 @@ public class ConstellationService {
         return generalStatus;
     }
 
-    private generalIdNodeEntity createNewGeneralIdNodeEntity() {
+    private generalIdNodeEntity createNewGeneralIdNodeEntity(String constellationName) {
         generalIdNodeEntity generalIdNodeEntity = new generalIdNodeEntity();
         Long maxIdNode = findMaxIdNode();
         generalIdNodeEntity.setIdNode(maxIdNode + 1);
+        generalIdNodeEntity.setNodeType(constellationName);
         return generalIdNodeEntity;
     }
 
     public Long findMaxIdNode() {
         TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(e.idNode) FROM generalIdNodeEntity e", Long.class);
-        return query.getSingleResult() != null ? query.getSingleResult() : 0L;
-    }
-
-    public Long findMaxIdNodeForConstellation() {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(e.idNode) FROM generalIdNodeEntity e JOIN e.coArbitraryConstruction ep WHERE type(ep) = :entityType", Long.class);
-        query.setParameter("entityType", coArbitraryConstruction.class);
         return query.getSingleResult() != null ? query.getSingleResult() : 0L;
     }
 
