@@ -92,7 +92,7 @@ public class ConnectPro42Service {
         List<coArbitraryConstruction> arbitraryConstructionList = constellationArbitraryRepository.findAll();
         for (coArbitraryConstruction arbitraryConstruction : arbitraryConstructionList) {
             //"S/C"                         !  Label
-            String label = arbitraryConstruction.getID() + "                         !  Label";
+            String label = "\"" + arbitraryConstruction.getID() + "\"" + "                         !  Label";
 
             // Чтение файла
             File file = new File(fileSC);
