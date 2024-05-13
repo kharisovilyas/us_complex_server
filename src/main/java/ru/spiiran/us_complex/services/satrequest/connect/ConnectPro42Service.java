@@ -42,7 +42,7 @@ public class ConnectPro42Service {
         try {
             //Удаление предыдущих файлов из директории модуля моделирования
 
-            FileUtils.deleteDirectory(Paths.get(targetDirectoryPath));
+            FileUtils.deleteDirectoryContents(Paths.get(targetDirectoryPath));
 
             // Создание уникальной директории
             String directoryName = generateUniqueDirectoryName();

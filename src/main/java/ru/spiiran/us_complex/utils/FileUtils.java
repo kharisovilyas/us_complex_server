@@ -8,7 +8,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 public class FileUtils {
-    public static void deleteDirectory(Path directory) throws IOException {
+    public static void deleteDirectoryContents(Path directory) throws IOException {
         Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -18,7 +18,10 @@ public class FileUtils {
 
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
+                if (!dir.equals(directory)) {
+                    // Не удаляем саму целевую директорию, а только её содержимое
+                    Files.delete(dir);
+                }
                 return FileVisitResult.CONTINUE;
             }
         });
