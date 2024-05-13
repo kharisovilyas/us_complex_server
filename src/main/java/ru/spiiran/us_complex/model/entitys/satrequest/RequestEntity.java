@@ -29,10 +29,10 @@ public class RequestEntity implements IEntity {
     private Long priory;
 
     @Column(name = "term")
-    private LocalDateTime term;
+    private Long term;
 
     @Column(name = "time")
-    private LocalDateTime time;
+    private Long time;
 
     @ManyToOne
     @JoinColumn(name = "id_node")
@@ -86,19 +86,20 @@ public class RequestEntity implements IEntity {
         this.priory = priory;
     }
 
-    public LocalDateTime getTerm() {
+
+    public Long getTerm() {
         return term;
     }
 
-    public void setTerm(LocalDateTime term) {
+    public void setTerm(Long term) {
         this.term = term;
     }
 
-    public LocalDateTime getTime() {
+    public Long getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(Long time) {
         this.time = time;
     }
 

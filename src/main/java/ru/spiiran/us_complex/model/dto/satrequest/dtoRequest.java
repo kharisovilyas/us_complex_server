@@ -3,8 +3,6 @@ package ru.spiiran.us_complex.model.dto.satrequest;
 import ru.spiiran.us_complex.model.dto.general.dtoIdNode;
 import ru.spiiran.us_complex.model.entitys.satrequest.RequestEntity;
 
-import java.time.LocalDateTime;
-
 public class dtoRequest {
     public dtoRequest() {
     }
@@ -22,8 +20,8 @@ public class dtoRequest {
     private dtoCatalog catalog;
     private Long orderId;
     private Long priory;
-    private LocalDateTime term;
-    private LocalDateTime time;
+    private Long term;
+    private Long time;
     private dtoIdNode idNode;
     private Boolean filter;
     private Boolean deleted;
@@ -69,19 +67,19 @@ public class dtoRequest {
         this.priory = priory;
     }
 
-    public LocalDateTime getTerm() {
+    public Long getTerm() {
         return term;
     }
 
-    public void setTerm(LocalDateTime term) {
+    public void setTerm(Long term) {
         this.term = term;
     }
 
-    public LocalDateTime getTime() {
+    public Long getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(Long time) {
         this.time = time;
     }
 
