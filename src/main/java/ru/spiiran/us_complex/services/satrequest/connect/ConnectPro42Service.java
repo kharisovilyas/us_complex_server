@@ -74,10 +74,39 @@ public class ConnectPro42Service {
                 }
             });
 
+            startModellingFlight();
+
             return new dtoMessage("SUCCESS", "Connect success");
-        } catch (IOException | EntityNotFoundException e) {
+        } catch (IOException | EntityNotFoundException | InterruptedException e) {
             return new dtoMessage("ERROR", e.getMessage());
         }
+    }
+
+    private void startModellingFlight() throws InterruptedException, IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder("cd ../../42_complex/42-Complex/Pro42 && ./42-Complex ../Ballistic");
+
+        // Запуск команды
+        Process process = processBuilder.start();
+
+        // Получение вывода команды
+        InputStream inputStream = process.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+        // Список для хранения JSON-строк
+        List<String> jsonList = new ArrayList<>();
+
+        // Переменная для хранения текущей строки вывода
+        String line;
+
+        // Чтение вывода построчно
+        while ((line = reader.readLine()) != null) {
+            // Проверяем, содержит ли текущая строка JSON
+            if (line.trim().startsWith("{")) {
+                // Добавляем JSON-строку в список
+                jsonList.add(line);
+            }
+        }
+        System.out.println(jsonList);
     }
 
     // Метод для создания уникальной директории на основе текущего времени
