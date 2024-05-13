@@ -170,7 +170,7 @@ public class ConnectPro42Service {
 
     private void createSimFile(String fileSim) throws IOException, EntityNotFoundException {
         // Ключевые фразы для поиска
-        String[] keywords = {"Simulation Control", "Reference Orbits", "Spacecraft", "Environment"};
+        String[] keywords = {"Simulation Control", "Reference Orbits", "Spacecraft", "* Environment  *"};
 
         Optional<SystemEntity> optionalSystemEntity = systemRepository.findById(1L);
         if (optionalSystemEntity.isPresent()) {
