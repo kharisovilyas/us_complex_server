@@ -9,13 +9,6 @@ public class Event {
     Parameters parameters;
 
     FlightData flightData;
-    public FlightData getFlightData() {
-        return flightData;
-    }
-
-    public void setFlightData(FlightData flightData) {
-        this.flightData = flightData;
-    }
 
     boolean sendLogs;
 
@@ -25,5 +18,13 @@ public class Event {
         this.satellites = satellites;
         this.parameters = parameters;
         this.sendLogs = sendLogs;
+    }
+    public Event(String event_type, Node node, List<Satellite> satellites, Parameters parameters, boolean sendLogs, FlightData flightData) {
+        this.event_type = event_type;
+        this.node = node;
+        this.satellites = satellites;
+        this.parameters = parameters;
+        this.sendLogs = sendLogs;
+        this.flightData = flightData;
     }
 }

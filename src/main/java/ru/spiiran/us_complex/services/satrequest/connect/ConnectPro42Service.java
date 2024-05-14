@@ -185,15 +185,14 @@ public class ConnectPro42Service {
                 Integer.parseInt(satellite.getGeneralIdNodeEntity().getIdNode().toString()),
                 satellite.getGeneralIdNodeEntity().getNodeType()
         );
-        System.out.println(resultJSON);
+
         // Создаем экземпляр класса FlightData из JSON-строки resultJSON
         Gson gson = new Gson();
-        FlightData flightData = gson.fromJson(resultJSON, FlightData.class);
+        FlightData flightData = gson.fromJson(resultJSON.trim(), FlightData.class);
+
 
         // Создаем объект Event и добавляем к нему flightData
-        Event event = new Event("E00", node, satellites, parameters, true);
-        event.setFlightData(flightData);
-        return event;
+        return new Event("E00", node, satellites, parameters, true, flightData);
     }
 
     private Parameters createParameters() throws EntityNotFoundException {
