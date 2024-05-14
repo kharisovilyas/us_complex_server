@@ -15,7 +15,7 @@ import ru.spiiran.us_complex.model.dto.satrequest.dto_smao.*;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
 import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
-import ru.spiiran.us_complex.repositories.satrequest.CatalogRepository;
+import ru.spiiran.us_complex.repositories.satrequest.SystemRepository;
 import ru.spiiran.us_complex.utils.FileUtils;
 
 import java.io.*;
@@ -37,7 +37,7 @@ public class ConnectPro42Service {
     @Value("${generic.modelling.start.pro42}")
     private String genericDir;
     @Autowired
-    private CatalogRepository catalogRepository;
+    private SystemRepository systemRepository;
 
     @Autowired
     private ConstellationArbitraryRepository constellationArbitraryRepository;
