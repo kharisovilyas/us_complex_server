@@ -3,7 +3,6 @@ package ru.spiiran.us_complex.services.satrequest.connect;
 import com.google.gson.Gson;
 import jakarta.persistence.EntityNotFoundException;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -196,10 +195,10 @@ public class ConnectPro42Service {
         return new Event("E00", node, satellites, parameters, true, flightData);
     }
 
-    private FlightData parseJSON(String resultJSON) throws JSONException {
-        JSONObject json = new JSONObject(resultJSON);
+    private FlightData parseJSON(String resultJSON) {
+        // Используем Gson для преобразования JSON-строки в объект FlightData
         Gson gson = new Gson();
-        return gson.fromJson(String.valueOf(json), FlightData.class);
+        return gson.fromJson(resultJSON, FlightData.class);
     }
 
     private Parameters createParameters() throws EntityNotFoundException {
