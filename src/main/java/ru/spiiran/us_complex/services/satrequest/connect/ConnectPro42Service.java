@@ -159,7 +159,7 @@ public class ConnectPro42Service {
             String jsonEventRequest = gson.toJson(eventRequest);
 
             // Склеиваем две JSON строки
-            String json = jsonEvent + jsonEventSat + eventRequest;
+            String json = jsonEvent + "\n" + jsonEventSat + "\n" + jsonEventRequest;
 
             // Получаем текущую директорию
             String currentDirectory = System.getProperty("user.dir");
