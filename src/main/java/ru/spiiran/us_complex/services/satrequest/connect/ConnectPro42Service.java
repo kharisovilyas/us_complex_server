@@ -83,20 +83,14 @@ public class ConnectPro42Service {
     }
 
     private void startModellingFlight() throws InterruptedException, IOException {
-        // Путь к директории с исполняемым файлом
-        String directory = "/home/integration-sg/us_complex/42_complex/42-Complex/Pro42";
+        // Создаем список команд для выполнения
+        List<String> command = new ArrayList<>();
+        // Добавляем команду cd для изменения рабочей директории
+        command.add("cd /home/integration-sg/us_complex/42_complex/42-Complex/Pro42 && ./42-Complex ../Ballistic");
 
-        // Команда для смены рабочей директории
-        ProcessBuilder cdProcessBuilder = new ProcessBuilder("cd", directory);
-        // Выполняем команду смены директории
-        Process cdProcess = cdProcessBuilder.start();
-        // Ждем завершения выполнения команды смены директории
-        cdProcess.waitFor();
+        // Создаем процесс с указанными командами
+        ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", "-c", String.join(" ", command));
 
-        // Команда для выполнения исполняемого файла
-        ProcessBuilder processBuilder = new ProcessBuilder("./42-Complex", "../Ballistic");
-        // Устанавливаем рабочую директорию для процесса
-        processBuilder.directory(new File(directory));
         // Запуск команды
         Process process = processBuilder.start();
 
@@ -120,6 +114,7 @@ public class ConnectPro42Service {
         }
         System.out.println(jsonList);
     }
+
 
 
     // Метод для создания уникальной директории на основе текущего времени
