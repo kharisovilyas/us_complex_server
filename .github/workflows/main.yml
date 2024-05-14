@@ -16,6 +16,18 @@ jobs:
           java-version: '17'
       - name: Build project with Maven
         run: mvn clean install
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            tmux attach-session -t us_complex_server
+            cd us_complex/us_complex_server/us_complex_server
+            git pull origin main
       - name: Cancel workflow if deploy fails
         if: failure()
         uses: actions/github-script@v4
