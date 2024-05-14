@@ -2,8 +2,6 @@ package ru.spiiran.us_complex.services.satrequest.connect;
 
 import com.google.gson.Gson;
 import jakarta.persistence.EntityNotFoundException;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,12 +173,12 @@ public class ConnectPro42Service {
             writer.close();
         }catch (EntityNotFoundException exception){
             throw new EntityNotFoundException("Некоторые сущности не были найдены");
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Event createSat(List<Satellite> satellites, Parameters parameters, String resultJSON) {
+    private Event createSat(List<Satellite> satellites, Parameters parameters, String resultJSON) throws JSONException {
         // Получаем данные о спутнике из репозитория (пример)
         coArbitraryConstruction satellite = constellationArbitraryRepository.findAll().get(0);
 
@@ -198,49 +196,11 @@ public class ConnectPro42Service {
         return new Event("E00", node, satellites, parameters, true, flightData);
     }
 
-    private FlightData parseJSON(String json) {
-        try {
-            // Удаляем кавычки из начала и конца строки
-            json = json.replaceAll("^\"|\"$", "");
-
-            // Удаляем экранированные символы Java
-            json = StringEscapeUtils.unescapeJava(json);
-
-            // Создаем объект FlightData для заполнения данными
-            FlightData flightData = new FlightData();
-
-            // Создаем JSONArray из JSON строки
-            JSONArray jsonArray = new JSONArray("[" + json + "]");
-
-            // Получаем только первый элемент из массива
-            JSONObject jsonObject = jsonArray.getJSONObject(0);
-
-            // Получаем данные из объекта и устанавливаем их в объект FlightData
-            flightData.setnRev(jsonObject.getInt("nRev"));
-            flightData.setRevTime(parseIntArray(jsonObject.getJSONArray("revTime")));
-            flightData.setSunTime(parseIntArray(jsonObject.getJSONArray("sunTime")));
-            flightData.setEclTime(parseIntArray(jsonObject.getJSONArray("eclTime")));
-
-            return flightData;
-        } catch (JSONException e) {
-            // Обработка исключения, если формат JSON неверный
-            e.printStackTrace();
-            return null;
-        }
+    private FlightData parseJSON(String resultJSON) throws JSONException {
+        JSONObject json = new JSONObject(resultJSON);
+        Gson gson = new Gson();
+        return gson.fromJson(String.valueOf(json), FlightData.class);
     }
-
-    // Метод для парсинга массива целых чисел из JSON
-    private List<Long> parseIntArray(JSONArray jsonArray) throws JSONException {
-        List<Long> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            list.add(jsonArray.getLong(i));
-        }
-        return list;
-    }
-
-
-
-
 
     private Parameters createParameters() throws EntityNotFoundException {
         Optional<SystemEntity> optionalSystemEntity = systemRepository.findById(1L);
