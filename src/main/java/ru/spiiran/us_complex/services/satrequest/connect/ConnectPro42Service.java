@@ -185,7 +185,7 @@ public class ConnectPro42Service {
                 Integer.parseInt(satellite.getGeneralIdNodeEntity().getIdNode().toString()),
                 satellite.getGeneralIdNodeEntity().getNodeType()
         );
-
+        System.out.println(resultJSON);
         // Создаем экземпляр класса FlightData из JSON-строки resultJSON
         Gson gson = new Gson();
         FlightData flightData = gson.fromJson(resultJSON, FlightData.class);
