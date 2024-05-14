@@ -9,12 +9,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.general.dtoIdNode;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
+import ru.spiiran.us_complex.model.dto.satrequest.dtoCatalog;
 import ru.spiiran.us_complex.model.dto.satrequest.dtoRequest;
 import ru.spiiran.us_complex.model.dto.satrequest.dto_smao.*;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
 import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
-import ru.spiiran.us_complex.repositories.satrequest.SystemRepository;
+import ru.spiiran.us_complex.repositories.satrequest.CatalogRepository;
 import ru.spiiran.us_complex.utils.FileUtils;
 
 import java.io.*;
@@ -36,7 +37,8 @@ public class ConnectPro42Service {
     @Value("${generic.modelling.start.pro42}")
     private String genericDir;
     @Autowired
-    private SystemRepository systemRepository;
+    private CatalogRepository catalogRepository;
+
     @Autowired
     private ConstellationArbitraryRepository constellationArbitraryRepository;
     private static final String targetDirectoryPath = "../../42_complex/42-Complex/Ballistic";
@@ -148,14 +150,16 @@ public class ConnectPro42Service {
 
             Event event = new Event("E00", node, satellites, parameters, true);
             Event eventSat = createSat(satellites, parameters, resultsFromPro42.get(0));
+            EventRequest eventRequest = createEventRequest(request);
 
             // Преобразование объектов Event в JSON строки
             Gson gson = new Gson();
             String jsonEvent = gson.toJson(event);
             String jsonEventSat = gson.toJson(eventSat);
+            String jsonEventRequest = gson.toJson(eventRequest);
 
             // Склеиваем две JSON строки
-            String json = jsonEvent + jsonEventSat;
+            String json = jsonEvent + jsonEventSat + eventRequest;
 
             // Получаем текущую директорию
             String currentDirectory = System.getProperty("user.dir");
@@ -176,6 +180,27 @@ public class ConnectPro42Service {
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private EventRequest createEventRequest(dtoRequest request) {
+        dtoCatalog catalog = request.getCatalog();
+        Order order = new Order(
+                catalog.getGoalId(),
+                catalog.getGoalName(),
+                catalog.getLat(),
+                catalog.getLon(),
+                catalog.getAlt(),
+                request.getPriory(),
+                request.getTerm()
+        );
+        Params params = new Params(order);
+        EventRequest eventRequest = new EventRequest(
+                request.getTime(),
+                params,
+                "E20",
+                request.getRequestId()
+        );
+        return eventRequest;
     }
 
     private Event createSat(List<Satellite> satellites, Parameters parameters, String resultJSON) throws JSONException {
