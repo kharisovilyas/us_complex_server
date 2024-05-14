@@ -83,7 +83,7 @@ public class ConnectPro42Service {
     }
 
     private void startModellingFlight() throws InterruptedException, IOException {
-        ProcessBuilder processBuilder = new ProcessBuilder("cd ../../42_complex/42-Complex/Pro42 && ./42-Complex ../Ballistic");
+        ProcessBuilder processBuilder = new ProcessBuilder("cd /home/integration-sg/us_complex/42_complex/42-Complex/Pro42 && ./42-Complex ../Ballistic");
 
         // Запуск команды
         Process process = processBuilder.start();
