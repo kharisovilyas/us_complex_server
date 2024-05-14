@@ -104,12 +104,24 @@ public class ConnectPro42Service {
         // Переменная для хранения текущей строки вывода
         String line;
 
+        // Строка для хранения текущего JSON-объекта
+        StringBuilder jsonBuilder = new StringBuilder();
+        
         // Чтение вывода построчно
         while ((line = reader.readLine()) != null) {
-            // Проверяем, содержит ли текущая строка JSON
-            if (line.trim().startsWith("{")) {
-                // Добавляем JSON-строку в список
-                jsonList.add(line);
+            // Проверяем, содержит ли текущая строка открывающую скобку
+            if (line.contains("{")) {
+                // Начинается новый JSON-объект
+                jsonBuilder.setLength(0); // Очищаем буфер
+            }
+
+            // Добавляем текущую строку к текущему JSON-объекту
+            jsonBuilder.append(line);
+
+            // Проверяем, содержит ли текущая строка закрывающую скобку
+            if (line.contains("}")) {
+                // JSON-объект завершен, добавляем его в список
+                jsonList.add(jsonBuilder.toString());
             }
         }
         System.out.println(jsonList);
