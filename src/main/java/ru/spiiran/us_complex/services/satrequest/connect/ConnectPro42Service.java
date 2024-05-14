@@ -2,6 +2,7 @@ package ru.spiiran.us_complex.services.satrequest.connect;
 
 import com.google.gson.Gson;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -196,9 +197,24 @@ public class ConnectPro42Service {
     }
 
     private FlightData parseJSON(String resultJSON) {
+        // Удаляем "flightData": из строки JSON
+        String cleanedJSON = resultJSON.replace("\"flightData\":", "");
+
+        // Удаляем кавычки из начала и конца строки и убираем экранирование символов
+        String unescapedJSON = removeQuotesAndUnescape(cleanedJSON);
+
         // Используем Gson для преобразования JSON-строки в объект FlightData
         Gson gson = new Gson();
-        return gson.fromJson(resultJSON, FlightData.class);
+
+        return gson.fromJson(unescapedJSON, FlightData.class);
+    }
+
+    private String removeQuotesAndUnescape(String uncleanJson) {
+        // Удаляем кавычки из начала и конца строки
+        String noQuotes = uncleanJson.replaceAll("^\"|\"$", "");
+
+        // Убираем экранирование символов
+        return StringEscapeUtils.unescapeJson(noQuotes);
     }
 
     private Parameters createParameters() throws EntityNotFoundException {
