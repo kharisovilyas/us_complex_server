@@ -1,10 +1,14 @@
 package ru.spiiran.us_complex.services.satrequest.connect;
 
+import com.google.gson.Gson;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.spiiran.us_complex.model.dto.general.dtoIdNode;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
+import ru.spiiran.us_complex.model.dto.satrequest.dtoRequest;
+import ru.spiiran.us_complex.model.dto.satrequest.dto_smao.*;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
 import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
@@ -35,7 +39,7 @@ public class ConnectPro42Service {
     private ConstellationArbitraryRepository constellationArbitraryRepository;
     private static final String targetDirectoryPath = "../../42_complex/42-Complex/Ballistic";
 
-    public dtoMessage startModelling() {
+    public dtoMessage startModelling(dtoRequest dtoRequest) {
         String fileSim = templateDir + "/Inp_Sim.txt";
         String fileOrb = templateDir + "/Orb_XXi.txt";
         String fileSC = templateDir + "/SC_XXi.txt";
@@ -74,7 +78,7 @@ public class ConnectPro42Service {
                 }
             });
 
-            startModellingFlight();
+            startModellingFlight(dtoRequest);
 
             return new dtoMessage("SUCCESS", "Connect success");
         } catch (IOException | EntityNotFoundException | InterruptedException e) {
@@ -82,7 +86,7 @@ public class ConnectPro42Service {
         }
     }
 
-    private void startModellingFlight() throws InterruptedException, IOException {
+    private void startModellingFlight(dtoRequest dtoRequest) throws InterruptedException, IOException, EntityNotFoundException {
         // Создаем список команд для выполнения
         List<String> command = new ArrayList<>();
         // Добавляем команду cd для изменения рабочей директории
@@ -106,7 +110,7 @@ public class ConnectPro42Service {
 
         // Строка для хранения текущего JSON-объекта
         StringBuilder jsonBuilder = new StringBuilder();
-        
+
         // Чтение вывода построчно
         while ((line = reader.readLine()) != null) {
             // Проверяем, содержит ли текущая строка открывающую скобку
@@ -124,9 +128,117 @@ public class ConnectPro42Service {
                 jsonList.add(jsonBuilder.toString());
             }
         }
+        //TODO: удалить!
         System.out.println(jsonList);
+        startModelling(dtoRequest, jsonList);
     }
 
+    public void startModelling(dtoRequest request, List<String> resultsFromPro42) throws EntityNotFoundException {
+        try{
+            Node node = createNode(request.getIdNode());
+            List<Satellite> satellites =
+                    constellationArbitraryRepository
+                            .findAll()
+                            .stream()
+                            .map(this::createSatellite)
+                            .collect(Collectors.toList());
+            Parameters parameters = createParameters();
+
+            Event event = new Event("E00", node, satellites, parameters, true);
+            Event eventSat = createSat(satellites, parameters, resultsFromPro42.get(0));
+
+            // Преобразование объектов Event в JSON строки
+            Gson gson = new Gson();
+            String jsonEvent = gson.toJson(event);
+            String jsonEventSat = gson.toJson(eventSat);
+
+            // Склеиваем две JSON строки
+            String json = jsonEvent + jsonEventSat;
+
+            // Получаем текущую директорию
+            String currentDirectory = System.getProperty("user.dir");
+
+            // Создаем путь к файлу в текущей директории
+            String filePath = currentDirectory + "/event.json";
+
+            // Создаем объект FileWriter для записи в файл
+            FileWriter writer = new FileWriter(filePath);
+
+            // Записываем JSON-строку в файл
+            writer.write(json);
+
+            // Закрываем FileWriter после использования
+            writer.close();
+        }catch (EntityNotFoundException exception){
+            throw new EntityNotFoundException("Некоторые сущности не были найдены");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Event createSat(List<Satellite> satellites, Parameters parameters, String resultJSON) {
+        // Получаем данные о спутнике из репозитория (пример)
+        coArbitraryConstruction satellite = constellationArbitraryRepository.findAll().get(0);
+
+        // Создаем узел
+        Node node = new Node(
+                Integer.parseInt(satellite.getGeneralIdNodeEntity().getIdNode().toString()),
+                satellite.getGeneralIdNodeEntity().getNodeType()
+        );
+
+        // Создаем экземпляр класса FlightData из JSON-строки resultJSON
+        Gson gson = new Gson();
+        FlightData flightData = gson.fromJson(resultJSON, FlightData.class);
+
+        // Создаем объект Event и добавляем к нему flightData
+        Event event = new Event("E00", node, satellites, parameters, true);
+        event.setFlightData(flightData);
+        return event;
+    }
+
+    private Parameters createParameters() throws EntityNotFoundException {
+        Optional<SystemEntity> optionalSystemEntity = systemRepository.findById(1L);
+        if (optionalSystemEntity.isPresent()) {
+            SystemEntity system = optionalSystemEntity.get();
+            return new Parameters(
+                    System.currentTimeMillis() / 1000,
+                    system.getModelingBegin(),
+                    system.getModelingEnd(),
+                    system.getStep(),
+                    system.getInterSatelliteCommunication(),
+                    system.getControlSystem(),
+                    system.getDuration()
+
+            );
+        } else {
+            throw new EntityNotFoundException("System parameters not exist");
+        }
+
+    }
+
+    private Satellite createSatellite(coArbitraryConstruction satellite) {
+        return new Satellite(
+                satellite.getID(),
+                satellite.getConstellation().getID(),
+                satellite.getModelSat(),
+                1, //TODO:
+                1, //TODO:
+                satellite.getAltitude(),
+                satellite.getEccentricity(),
+                satellite.getIncline(),
+                satellite.getLongitudeAscendingNode(),
+                satellite.getPerigeeWidthArgument(),
+                satellite.getTrueAnomaly(),
+                satellite.getGeneralIdNodeEntity().getNodeType()
+        );
+    }
+
+    private Node createNode(dtoIdNode idNode) {
+        return new Node(
+                Integer.parseInt(idNode.getIdNode().toString()),
+                idNode.getNodeType()
+        );
+    }
 
 
     // Метод для создания уникальной директории на основе текущего времени

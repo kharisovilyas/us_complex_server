@@ -7,6 +7,16 @@ public class Event {
     Node node;
     List<Satellite> satellites;
     Parameters parameters;
+
+    FlightData flightData;
+    public FlightData getFlightData() {
+        return flightData;
+    }
+
+    public void setFlightData(FlightData flightData) {
+        this.flightData = flightData;
+    }
+
     boolean sendLogs;
 
     public Event(String event_type, Node node, List<Satellite> satellites, Parameters parameters, boolean sendLogs) {

@@ -55,7 +55,7 @@ public class RestSatRequestController {
     }
 
     @PostMapping("connect/pro42/startmodelling")
-    public ResponseEntity<dtoMessage> connectPro42(){
-        return ResponseEntity.ok().body(connectPro42Service.startModelling());
+    public ResponseEntity<dtoMessage> connectPro42(@RequestBody dtoRequest request){
+        return ResponseEntity.ok().body(connectPro42Service.startModelling(request));
     }
 }
