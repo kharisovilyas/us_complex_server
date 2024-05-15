@@ -1,31 +1,31 @@
 package ru.spiiran.us_complex.model.dto.satrequest.dto_smao;
 
 public class Satellite {
-    Long satelliteId;
+    Long id;
     Long constellation;
-    Long modelSatellite;
+    Long model;
     Integer plane;
-    Integer position;
-    Double altitude;
-    Double eccentricity;
-    Double incline;
-    Double longitudeAscendingNode;
-    Double perigeeWidthArgument;
-    Double trueAnomaly;
-    String nodeType;
+    Integer pos;
+    Double a;
+    Double e;
+    Double i;
+    Double Q;
+    Double w;
+    Double u;
+    String nodetype;
 
-    public Satellite(Long satelliteId, Long constellation, Long modelSatellite, Integer plane, Integer position, Double altitude, Double eccentricity, Double incline, Double longitudeAscendingNode, Double perigeeWidthArgument, Double trueAnomaly, String nodeType) {
-        this.satelliteId = satelliteId;
-        this.constellation = constellation;
-        this.modelSatellite = modelSatellite;
+    public Satellite(Long id, Long constellation, Long model, Integer plane, Integer pos, Double a, Double e, Double i, Double Q, Double w, Double u, String nodetype) {
+        this.id = id;
         this.plane = plane;
-        this.position = position;
-        this.altitude = altitude;
-        this.eccentricity = eccentricity;
-        this.incline = incline;
-        this.longitudeAscendingNode = longitudeAscendingNode;
-        this.perigeeWidthArgument = perigeeWidthArgument;
-        this.trueAnomaly = trueAnomaly;
-        this.nodeType = nodeType;
+        this.pos = pos;
+        this.constellation = constellation;
+        this.model = model;
+        this.a = a;
+        this.e = e;
+        this.i = i;
+        this.Q = Q;
+        this.w = w;
+        this.u = u;
+        this.nodetype = nodetype;
     }
 }
