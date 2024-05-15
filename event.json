@@ -119,7 +119,7 @@
     }
   ],
   "parameters": {
-    "t0": 1715712245,
+    "t0": 1715714374,
     "H_begin": 1715621329,
     "H_end": 1715707728,
     "modelingTimeStep": 100,
@@ -128,7 +128,8 @@
     "duration": 100
   },
   "sendLogs": true
-}{
+}
+{
   "event_type": "E00",
   "node": {
     "id": 1,
@@ -249,7 +250,7 @@
     }
   ],
   "parameters": {
-    "t0": 1715712245,
+    "t0": 1715714374,
     "H_begin": 1715621329,
     "H_end": 1715707728,
     "modelingTimeStep": 100,
@@ -307,4 +308,20 @@
     ]
   },
   "sendLogs": true
+}
+{
+  "time": 213525235234,
+  "params": {
+    "order": {
+      "id": 552,
+      "name": "Москва",
+      "lat": 12.334,
+      "lon": 98.123,
+      "alt": -12.341,
+      "priority": 3,
+      "term": 123256216123
+    }
+  },
+  "event_type": "E20",
+  "targetId": 602
 }

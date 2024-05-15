@@ -1,11 +1,11 @@
 package ru.spiiran.us_complex.model.dto.satrequest.dto_smao;
 
 public class Node {
-    Integer id;
-    String nodetype;
+    Integer nodeId;
+    String nodeType;
 
-    public Node(Integer id, String nodetype) {
-        this.id = id;
-        this.nodetype = nodetype;
+    public Node(Integer nodeId, String nodeType) {
+        this.nodeId = nodeId;
+        this.nodeType = nodeType;
     }
 }

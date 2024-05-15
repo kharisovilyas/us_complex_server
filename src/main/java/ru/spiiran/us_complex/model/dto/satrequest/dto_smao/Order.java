@@ -1,20 +1,20 @@
 package ru.spiiran.us_complex.model.dto.satrequest.dto_smao;
 
 public class Order {
-    Long id;
+    Long orderId;
     String name;
-    Double lat;
-    Double lon;
-    Double alt;
+    Double latitude;
+    Double longitude;
+    Double altitude;
     Long priority;
     Long term;
 
-    public Order(Long id, String name, Double lat, Double lon, Double alt, Long priority, Long term) {
-        this.id = id;
+    public Order(Long orderId, String name, Double latitude, Double longitude, Double altitude, Long priority, Long term) {
+        this.orderId = orderId;
         this.name = name;
-        this.lat = lat;
-        this.lon = lon;
-        this.alt = alt;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.altitude = altitude;
         this.priority = priority;
         this.term = term;
     }

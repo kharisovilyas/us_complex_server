@@ -3,28 +3,28 @@ package ru.spiiran.us_complex.model.dto.satrequest.dto_smao;
 import java.util.List;
 
 public class Event {
-    String event_type;
+    String eventType;
     Node node;
     List<Satellite> satellites;
     Parameters parameters;
 
     FlightData flightData;
 
-    boolean sendLogs;
+    boolean isSendingLogs;
 
-    public Event(String event_type, Node node, List<Satellite> satellites, Parameters parameters, boolean sendLogs) {
-        this.event_type = event_type;
+    public Event(String eventType, Node node, List<Satellite> satellites, Parameters parameters, boolean isSendingLogs) {
+        this.eventType = eventType;
         this.node = node;
         this.satellites = satellites;
         this.parameters = parameters;
-        this.sendLogs = sendLogs;
+        this.isSendingLogs = isSendingLogs;
     }
-    public Event(String event_type, Node node, List<Satellite> satellites, Parameters parameters, boolean sendLogs, FlightData flightData) {
-        this.event_type = event_type;
+    public Event(String eventType, Node node, List<Satellite> satellites, Parameters parameters, boolean isSendingLogs, FlightData flightData) {
+        this.eventType = eventType;
         this.node = node;
         this.satellites = satellites;
         this.parameters = parameters;
-        this.sendLogs = sendLogs;
+        this.isSendingLogs = isSendingLogs;
         this.flightData = flightData;
     }
 }

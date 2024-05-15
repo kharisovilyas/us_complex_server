@@ -1,14 +1,14 @@
 package ru.spiiran.us_complex.model.dto.satrequest.dto_smao;
 
 public class EventRequest {
-    Long time;
-    Params params;
-    String event_type;
+    Long timeEventOccurred;
+    Params eventParameters;
+    String eventType;
     Long targetId;
-    public EventRequest(Long time, Params params, String event_type, Long targetId) {
-        this.time = time;
-        this.params = params;
-        this.event_type = event_type;
+    public EventRequest(Long timeEventOccurred, Params eventParameters, String eventType, Long targetId) {
+        this.timeEventOccurred = timeEventOccurred;
+        this.eventParameters = eventParameters;
+        this.eventType = eventType;
         this.targetId = targetId;
     }
 }
