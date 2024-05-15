@@ -12,9 +12,9 @@ public class Satellite {
     Double Q;
     Double w;
     Double u;
-    String nodetype;
+    String type;
 
-    public Satellite(Long id, Long constellation, Long model, Integer plane, Integer pos, Double a, Double e, Double i, Double Q, Double w, Double u, String nodetype) {
+    public Satellite(Long id, Long constellation, Long model, Integer plane, Integer pos, Double a, Double e, Double i, Double Q, Double w, Double u, String type) {
         this.id = id;
         this.plane = plane;
         this.pos = pos;
@@ -26,6 +26,6 @@ public class Satellite {
         this.Q = Q;
         this.w = w;
         this.u = u;
-        this.nodetype = nodetype;
+        this.type = type;
     }
 }
