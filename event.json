@@ -17,7 +17,7 @@
       "Q": 45.0,
       "w": 60.7,
       "u": 120.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 403,
@@ -31,7 +31,7 @@
       "Q": 55.0,
       "w": 70.7,
       "u": 130.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 404,
@@ -45,7 +45,7 @@
       "Q": 45.0,
       "w": 60.7,
       "u": 120.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 405,
@@ -59,7 +59,7 @@
       "Q": 55.0,
       "w": 70.7,
       "u": 130.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 406,
@@ -73,7 +73,7 @@
       "Q": 45.0,
       "w": 60.7,
       "u": 120.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 407,
@@ -87,7 +87,7 @@
       "Q": 55.0,
       "w": 70.7,
       "u": 130.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 408,
@@ -101,7 +101,7 @@
       "Q": 45.0,
       "w": 60.7,
       "u": 120.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 409,
@@ -115,11 +115,11 @@
       "Q": 55.0,
       "w": 70.7,
       "u": 130.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     }
   ],
   "parameters": {
-    "t0": 1715768175,
+    "t0": 1715768428,
     "modelingBegin": 1715621329,
     "modelingEnd": 1715707728,
     "modelingTimeStep": 100,
@@ -148,7 +148,7 @@
       "Q": 45.0,
       "w": 60.7,
       "u": 120.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 403,
@@ -162,7 +162,7 @@
       "Q": 55.0,
       "w": 70.7,
       "u": 130.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 404,
@@ -176,7 +176,7 @@
       "Q": 45.0,
       "w": 60.7,
       "u": 120.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 405,
@@ -190,7 +190,7 @@
       "Q": 55.0,
       "w": 70.7,
       "u": 130.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 406,
@@ -204,7 +204,7 @@
       "Q": 45.0,
       "w": 60.7,
       "u": 120.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 407,
@@ -218,7 +218,7 @@
       "Q": 55.0,
       "w": 70.7,
       "u": 130.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 408,
@@ -232,7 +232,7 @@
       "Q": 45.0,
       "w": 60.7,
       "u": 120.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     },
     {
       "id": 409,
@@ -246,11 +246,11 @@
       "Q": 55.0,
       "w": 70.7,
       "u": 130.3,
-      "nodetype": "Orion"
+      "type": "Orion"
     }
   ],
   "parameters": {
-    "t0": 1715768175,
+    "t0": 1715768428,
     "modelingBegin": 1715621329,
     "modelingEnd": 1715707728,
     "modelingTimeStep": 100,
