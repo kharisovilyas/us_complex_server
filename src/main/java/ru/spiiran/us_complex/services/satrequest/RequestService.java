@@ -7,10 +7,10 @@ import ru.spiiran.us_complex.model.dto.general.dtoIdNode;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.satrequest.dtoCatalog;
 import ru.spiiran.us_complex.model.dto.satrequest.dtoRequest;
-import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
+import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
 import ru.spiiran.us_complex.model.entitys.satrequest.CatalogEntity;
 import ru.spiiran.us_complex.model.entitys.satrequest.RequestEntity;
-import ru.spiiran.us_complex.repositories.IdNodeRepository;
+import ru.spiiran.us_complex.repositories.NodeIdRepository;
 import ru.spiiran.us_complex.repositories.satrequest.CatalogRepository;
 import ru.spiiran.us_complex.repositories.satrequest.RequestRepository;
 
@@ -25,7 +25,7 @@ public class RequestService {
     @Autowired
     private CatalogRepository catalogRepository;
     @Autowired
-    private IdNodeRepository idNodeRepository;
+    private NodeIdRepository nodeRepository;
 
     public List<dtoRequest> getAllRequests() {
         return requestRepository
@@ -60,9 +60,9 @@ public class RequestService {
                     requestRepository.delete(new RequestEntity(request));
                 } else {
                     RequestEntity requestEntity = new RequestEntity(request);
-                    generalIdNodeEntity generalIdNode = findGeneralIdNode(request.getIdNode());
+                    IdNodeEntity idNodeEntity = findGeneralIdNode(request.getIdNode());
                     CatalogEntity catalogEntity = findCatalogEntity(request.getCatalog());
-                    requestEntity.setGeneralIdNodeEntity(generalIdNode);
+                    requestEntity.setNodeEntity(idNodeEntity);
                     requestEntity.setCatalogEntity(catalogEntity);
                     requestRepository.saveAndFlush(requestEntity);
                 }
@@ -83,8 +83,8 @@ public class RequestService {
         }
     }
 
-    private generalIdNodeEntity findGeneralIdNode(dtoIdNode dtoIdNode) throws EntityNotFoundException {
-        Optional<generalIdNodeEntity> optionalGeneralIdNode = idNodeRepository.findById(dtoIdNode.getEntryId());
+    private IdNodeEntity findGeneralIdNode(dtoIdNode dtoIdNode) throws EntityNotFoundException {
+        Optional<IdNodeEntity> optionalGeneralIdNode = nodeRepository.findById(dtoIdNode.getEntryId());
         if (optionalGeneralIdNode.isPresent()) {
             return optionalGeneralIdNode.get();
         } else {
@@ -93,7 +93,7 @@ public class RequestService {
     }
 
     public List<dtoIdNode> getAllIdNode() {
-        return idNodeRepository
+        return nodeRepository
                 .findAll()
                 .stream()
                 .map(dtoIdNode::new)

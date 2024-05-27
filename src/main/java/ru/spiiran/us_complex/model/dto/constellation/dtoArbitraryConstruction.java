@@ -28,7 +28,7 @@ public class dtoArbitraryConstruction implements IDTOEntity {
         this.longitudeAscendingNode = coArbitraryConstruction.getLongitudeAscendingNode();
         this.perigeeWidthArgument = coArbitraryConstruction.getPerigeeWidthArgument();
         this.trueAnomaly = coArbitraryConstruction.getTrueAnomaly();
-        this.idNode = coArbitraryConstruction.getArbitraryConstructionIdNode();
+        this.idNode = coArbitraryConstruction.getIdNodeEntity().getNodeId();
         this.tableId = coArbitraryConstruction.getConstellation().getID();
     }
 

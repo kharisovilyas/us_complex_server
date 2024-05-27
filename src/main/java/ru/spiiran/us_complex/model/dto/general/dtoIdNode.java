@@ -1,18 +1,17 @@
 package ru.spiiran.us_complex.model.dto.general;
 
-import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
+import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
 
 public class dtoIdNode {
     private Long entryId;
     private Long idNode;
     private String nodeType;
 
-    public dtoIdNode(generalIdNodeEntity generalIdNode) {
-        this.idNode = generalIdNode.getIdNode();
-        this.entryId = generalIdNode.getID();
+    public dtoIdNode(IdNodeEntity generalIdNode) {
+        this.idNode = generalIdNode.getNodeId();
+        this.entryId = generalIdNode.getEntryId();
         this.nodeType = generalIdNode.getNodeType();
     }
-
     public dtoIdNode() {
     }
 

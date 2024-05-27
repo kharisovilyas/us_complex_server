@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.satrequest.dtoRequest;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
-import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
-
-import java.time.LocalDateTime;
+import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
 
 @Entity
 @Table(name = "sr_request")
@@ -37,7 +35,7 @@ public class RequestEntity implements IEntity {
     @ManyToOne
     @JoinColumn(name = "id_node")
     @JsonIgnore
-    private generalIdNodeEntity generalIdNodeEntity;
+    private IdNodeEntity nodeEntity;
 
     @Column(name = "filter")
     private Boolean filter;
@@ -103,13 +101,7 @@ public class RequestEntity implements IEntity {
         this.time = time;
     }
 
-    public ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity getGeneralIdNodeEntity() {
-        return generalIdNodeEntity;
-    }
 
-    public void setGeneralIdNodeEntity(ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity generalIdNodeEntity) {
-        this.generalIdNodeEntity = generalIdNodeEntity;
-    }
 
     public Boolean getFilter() {
         return filter;
@@ -127,5 +119,13 @@ public class RequestEntity implements IEntity {
     @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
+    }
+
+    public IdNodeEntity getNodeEntity() {
+        return nodeEntity;
+    }
+
+    public void setNodeEntity(IdNodeEntity nodeEntity) {
+        this.nodeEntity = nodeEntity;
     }
 }

@@ -1,9 +1,6 @@
 package ru.spiiran.us_complex.services.constellation;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,12 +11,12 @@ import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.model.entitys.constellation.coPlanarConstruction;
-import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
-import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
-import ru.spiiran.us_complex.repositories.IdNodeRepository;
-import ru.spiiran.us_complex.repositories.StatusGeneralRepository;
+import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
+import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
+import ru.spiiran.us_complex.repositories.NodeIdRepository;
 import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
 import ru.spiiran.us_complex.repositories.constellation.ConstellationRepository;
+import ru.spiiran.us_complex.repositories.satrequest.SystemRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +29,11 @@ public class ConstellationService {
     private ConstellationRepository constellationRepository;
     @Autowired
     private ConstellationArbitraryRepository constellationArbitraryRepository;
-    @PersistenceContext
-    private EntityManager entityManager;
     @Autowired
-    private IdNodeRepository idNodeRepository;
+    private NodeIdRepository nodeRepository;
     @Autowired
-    private StatusGeneralRepository statusGeneralRepository;
+    private SystemRepository systemRepository;
+
 
     public List<dtoConstellation> getAllConstellations() {
         List<ConstellationEntity> entities = constellationRepository.findAllWithArbitraryList();
@@ -50,14 +46,9 @@ public class ConstellationService {
     @Transactional
     public dtoMessage addConstellation(dtoConstellation dtoConstellation) {
         try {
-            generalStatusEntity generalStatus = //создание пустой записи в таблицу general Status
-                    createNewGeneralStatus();
             ConstellationEntity constellation = //создание пустой записи Constellation,
                     // вызов конструктора, для инициализации некоторых полей из DTO
                     new ConstellationEntity(dtoConstellation);
-            //Инициализация поля general Status в записи Constellation
-            constellation.setGeneralStatus(generalStatus);
-            statusGeneralRepository.save(generalStatus);
             //Проверка на данные, которые пришли
             if (dtoConstellation.getArbitraryFormation()) { // если пришли данные для создания записи в Constellation Detailed
                 List<coArbitraryConstruction> coArbitraryConstructionList = //создание списка Constellation Detailed из списка DTO
@@ -93,17 +84,21 @@ public class ConstellationService {
             if (optionalConstellation.isPresent()) {
                 ConstellationEntity existingConstellation = optionalConstellation.get();
                 existingConstellation
-                        .setConstellationName(dtoConstellation.getConstellationName());
-                if (dtoConstellation.getArbitraryFormation()) { // если пришли данные для создания записи в Constellation Detailed
+                        .setConstellationName(
+                                dtoConstellation.getConstellationName()
+                        );
+                if (dtoConstellation.getArbitraryFormation()) { // если пришли данные для создания записи в Arbitrary Construction
                     existingConstellation
                             .setArbitraryConstructionList(
-                                    dtoConstellation.getArbitraryConstructions()
-                                            .stream().map(coArbitraryConstruction::new)
+                                    dtoConstellation
+                                            .getArbitraryConstructions()
+                                            .stream()
+                                            .map(coArbitraryConstruction::new)
                                             .collect(Collectors.toList())
                             );
                     updateConstellationArbitrary(dtoConstellation.getArbitraryConstructions(), existingConstellation);
                 /*
-                    добавление, сохранение, инициализация некоторых полей (idNode и generalStatus) списка сущностей Constellation Detailed
+                    добавление, сохранение, инициализация idNode для списка сущностей Constellation Detailed
                     а так же добавление и сохранения поля Constellation происходит в этом методе
                 */
                     return new dtoMessage("UPDATE SUCCESS", "Arbitrary Construction Constellation added successfully");
@@ -139,8 +134,6 @@ public class ConstellationService {
         // Цикл по списку из DTO
         for (dtoArbitraryConstruction dtoArbitraryConstruction : dtoArbitraryConstructionList) {
             Long id = dtoArbitraryConstruction.getID();
-            System.out.println(id);
-            System.out.println(dtoArbitraryConstruction.getID());
             if (id != null) {
                 updateExistingConstellationArbitrary(dtoArbitraryConstruction, id);
             } else {
@@ -149,32 +142,29 @@ public class ConstellationService {
         }
     }
 
-    public List<coArbitraryConstruction> getConstellationArbitraryList(List<dtoArbitraryConstruction> dtoConstellationArbitrariness) {
+    public List<coArbitraryConstruction> getConstellationArbitraryList(List<dtoArbitraryConstruction> dtoArbitraryConstructionList) {
         List<coArbitraryConstruction> coArbitraryConstructionList = new ArrayList<>();
-        for (dtoArbitraryConstruction dto : dtoConstellationArbitrariness) {
+        for (dtoArbitraryConstruction dto : dtoArbitraryConstructionList) {
             coArbitraryConstruction coArbitraryConstruction = new coArbitraryConstruction(dto);
             coArbitraryConstructionList.add(coArbitraryConstruction);
         }
         return coArbitraryConstructionList;
     }
 
-    private List<coPlanarConstruction> getPlanarConstructionList(List<dtoPlanarConstruction> constellationOverviewList) {
+    private List<coPlanarConstruction> getPlanarConstructionList(List<dtoPlanarConstruction> planarConstructionList) {
         return null;
     }
 
-    private void updateExistingConstellationArbitrary(dtoArbitraryConstruction detailedConstellation, Long id) {
+    private void updateExistingConstellationArbitrary(dtoArbitraryConstruction arbitraryConstruction, Long id) {
         Optional<coArbitraryConstruction> optionalConstellationArbitrary = constellationArbitraryRepository.findById(id);
         if (optionalConstellationArbitrary.isPresent()) {
             coArbitraryConstruction existingConstellation = optionalConstellationArbitrary.get();
-            Boolean isDeleted = detailedConstellation.getDeleted();
+            Boolean isDeleted = arbitraryConstruction.getDeleted();
             if (isDeleted != null && isDeleted) {
-                System.out.println("ЗДЕСЬ 3");
                 deleteConstellationArbitrary(existingConstellation);
             } else {
-                System.out.println("ЗДЕСЬ 4");
-                coArbitraryConstruction updateConstellation = getUpdatedConstellationArbitrary(
-                        detailedConstellation, existingConstellation
-                );
+                coArbitraryConstruction updateConstellation =
+                        new coArbitraryConstruction(existingConstellation, arbitraryConstruction);
                 constellationArbitraryRepository.save(updateConstellation);
             }
         } else {
@@ -182,85 +172,68 @@ public class ConstellationService {
         }
     }
 
-    private coArbitraryConstruction getUpdatedConstellationArbitrary(dtoArbitraryConstruction dtoArbitraryConstruction, coArbitraryConstruction existingConstellation) {
-        existingConstellation.setAltitude(dtoArbitraryConstruction.getAltitude());
-        existingConstellation.setEccentricity(dtoArbitraryConstruction.getEccentricity());
-        existingConstellation.setIncline(dtoArbitraryConstruction.getIncline());
-        existingConstellation.setTrueAnomaly(dtoArbitraryConstruction.getTrueAnomaly());
-        existingConstellation.setLongitudeAscendingNode(dtoArbitraryConstruction.getLongitudeAscendingNode());
-        existingConstellation.setPerigeeWidthArgument(dtoArbitraryConstruction.getPerigeeWidthArgument());
-        return existingConstellation;
-    }
-
     private void deleteConstellationArbitrary(coArbitraryConstruction coArbitraryConstruction) {
-        idNodeRepository.delete(coArbitraryConstruction.getGeneralIdNodeEntity());
+        nodeRepository.delete(coArbitraryConstruction.getIdNodeEntity());
         constellationArbitraryRepository.delete(coArbitraryConstruction);
+        // Обновляем nodeId у последующих записей:
+        constellationArbitraryRepository
+                .findAllByNodeIdGreaterThan(
+                        coArbitraryConstruction.getIdNodeEntity().getNodeId()
+                ).forEach(this::decrementNodeId);
     }
 
-    private void saveNewConstellationArbitrary(dtoArbitraryConstruction detailedConstellation, ConstellationEntity constellation) {
-        generalIdNodeEntity generalIdNodeEntity = // метод для создания пустой записи general idNode
-                createNewGeneralIdNodeEntity(constellation.getConstellationName());
-        coArbitraryConstruction coArbitraryConstruction = //метод для создания записи Constellation Detailed
+    private void decrementNodeId(coArbitraryConstruction coArbitraryConstruction) {
+        IdNodeEntity idNodeEntity = coArbitraryConstruction.getIdNodeEntity();
+        idNodeEntity.setNodeId(idNodeEntity.getNodeId() - 1);
+        nodeRepository.save(idNodeEntity); // Сохраняем изменения
+    }
+
+    private void saveNewConstellationArbitrary(dtoArbitraryConstruction arbitraryConstruction, ConstellationEntity constellation) {
+        // создание новой записи в таблице node
+        IdNodeEntity nodeEntity = new IdNodeEntity(
+                findMaxIdNode(),
+                constellation.getConstellationName()
+        );
+
+        coArbitraryConstruction coArbitraryConstruction = // метод для создания записи Arbitrary Construction
                 // с инициализацией полей general idNode и полей из DTO
-                createNewConstellationArbitrary(detailedConstellation, generalIdNodeEntity, constellation);
+                createNewArbitraryConstruction(arbitraryConstruction, nodeEntity, constellation);
+
         //сохранение в базу данных записей
         saveConstellationAndNode(
-                coArbitraryConstruction, generalIdNodeEntity, constellation
+                coArbitraryConstruction, nodeEntity, constellation
         );
     }
 
     private void saveConstellationAndNode(
             coArbitraryConstruction coArbitraryConstruction,
-            generalIdNodeEntity generalIdNodeEntity,
+            IdNodeEntity nodeEntity,
             ConstellationEntity constellation
     ) {
-        idNodeRepository.save(generalIdNodeEntity);
+        // 1. Сначала сохраняем ConstellationEntity:
         constellationRepository.save(constellation);
+
+        // 2. Теперь сохраняем IdNodeEntity:
+        nodeRepository.save(nodeEntity);
+
+        // 3. И только потом сохраняем coArbitraryConstruction:
         constellationArbitraryRepository.save(coArbitraryConstruction);
     }
 
-    private coArbitraryConstruction createNewConstellationArbitrary(
+    private coArbitraryConstruction createNewArbitraryConstruction(
             dtoArbitraryConstruction detailedConstellation,
-            generalIdNodeEntity generalIdNodeEntity,
+            IdNodeEntity nodeEntity,
             ConstellationEntity constellation
     ) {
         coArbitraryConstruction coArbitraryConstruction = new coArbitraryConstruction(detailedConstellation);
-        coArbitraryConstruction.setGeneralIdNodeEntity(generalIdNodeEntity);
+        coArbitraryConstruction.setIdNodeEntity(nodeEntity);
         coArbitraryConstruction.setConstellation(constellation);
         return coArbitraryConstruction;
     }
 
-    public generalStatusEntity createNewGeneralStatus() {
-        generalStatusEntity generalStatus = new generalStatusEntity();
-        generalStatus.setStatusOfEditEarth(false);
-        generalStatus.setStatusOfEditConstellation(false);
-        return generalStatus;
-    }
-
-    private generalIdNodeEntity createNewGeneralIdNodeEntity(String constellationName) {
-        generalIdNodeEntity generalIdNodeEntity = new generalIdNodeEntity();
-        Long maxIdNode = findMaxIdNode();
-        generalIdNodeEntity.setIdNode(maxIdNode + 1);
-        generalIdNodeEntity.setNodeType(constellationName);
-        return generalIdNodeEntity;
-    }
-
     public Long findMaxIdNode() {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(e.idNode) FROM generalIdNodeEntity e", Long.class);
-        return query.getSingleResult() != null ? query.getSingleResult() : 0L;
-    }
-
-    @Transactional
-    public dtoMessage setTableStatusOfEdit(Boolean status) {
-        generalStatusEntity statusEntity = statusGeneralRepository.findSingleStatus();
-        if (statusEntity != null) {
-            statusEntity.setStatusOfEditConstellation(status);
-            statusGeneralRepository.save(statusEntity);
-            return new dtoMessage("SUCCESS TO ADD STATUS", "Table status updated successfully");
-        } else {
-            // Обработка случая, если запись статуса не найдена
-            return new dtoMessage("ERROR TO ADD STATUS", "Status entity not found");
-        }
+        Long maxIdNode = nodeRepository.findMaxIdNode();
+        return maxIdNode == null ? 0L : maxIdNode;
     }
 
     @Transactional
@@ -308,5 +281,20 @@ public class ConstellationService {
             }
         }
         return new dtoMessage("UPDATE SUCCESS", "All Constellation updated successfully");
+    }
+
+    public dtoMessage setSystemParams(Boolean status) {
+        Optional<SystemEntity> optionalSystemEntity = systemRepository.findById(1L);
+        if (optionalSystemEntity.isPresent()) {
+            SystemEntity systemEntity = optionalSystemEntity.get();
+            systemEntity.setConstellationStatus(status);
+            systemRepository.save(systemEntity);
+            return new dtoMessage("APPROVE SUCCESS", "System update");
+        } else {
+            SystemEntity systemEntity =  new SystemEntity();
+            systemEntity.setConstellationStatus(status);
+            systemRepository.save(systemEntity);
+            return new dtoMessage("APPROVE ERROR", "System not exist");
+        }
     }
 }

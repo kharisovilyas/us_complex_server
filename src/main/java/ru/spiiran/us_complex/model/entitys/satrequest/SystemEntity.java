@@ -5,8 +5,6 @@ import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.system.dtoSystem;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "sr_system")
 public class SystemEntity implements IEntity {
@@ -25,7 +23,7 @@ public class SystemEntity implements IEntity {
     @Column(name = "grid_status")
     private Boolean gridStatus;
     @Column(name = "time_modeling_horizon")
-    private String timeModelingHorizon;
+    private Long timeModelingHorizon;
     @Column(name = "start_time")
     private Long startTime;
     @Column(name = "modeling_begin")
@@ -114,11 +112,11 @@ public class SystemEntity implements IEntity {
         this.gridStatus = gridStatus;
     }
 
-    public String getTimeModelingHorizon() {
+    public Long getTimeModelingHorizon() {
         return timeModelingHorizon;
     }
 
-    public void setTimeModelingHorizon(String timeModelingHorizon) {
+    public void setTimeModelingHorizon(Long timeModelingHorizon) {
         this.timeModelingHorizon = timeModelingHorizon;
     }
 

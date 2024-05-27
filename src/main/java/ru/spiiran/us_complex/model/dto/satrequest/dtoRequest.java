@@ -10,7 +10,7 @@ public class dtoRequest {
         this.catalog = new dtoCatalog(requestEntity.getCatalogEntity());
         this.filter = requestEntity.getFilter();
         this.term = requestEntity.getTerm();
-        this.idNode = new dtoIdNode(requestEntity.getGeneralIdNodeEntity());
+        this.idNode = new dtoIdNode(requestEntity.getNodeEntity());
         this.requestId = requestEntity.getRequestId();
         this.orderId = requestEntity.getOrderId();
         this.priory = requestEntity.getPriory();

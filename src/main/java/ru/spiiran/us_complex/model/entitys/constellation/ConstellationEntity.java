@@ -1,11 +1,9 @@
 package ru.spiiran.us_complex.model.entitys.constellation;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
-import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
 
 import java.util.List;
 
@@ -24,10 +22,6 @@ public class ConstellationEntity implements IEntity {
     private List<coArbitraryConstruction> coArbitraryConstructionList;
     @OneToMany(mappedBy = "constellation", cascade = CascadeType.ALL)
     private List<coPlanarConstruction> coPlanarConstructionList;
-    @ManyToOne //TODO: данное каскадное взаимодействие - может удалять записи таблицы, из-за связей многие ко многим, аккуратно использовать их!
-    @JoinColumn(name = "status_id")
-    @JsonIgnore
-    private generalStatusEntity generalStatus;
 
     public ConstellationEntity(){}
 
@@ -70,14 +64,6 @@ public class ConstellationEntity implements IEntity {
 
     public void setPlanarConstructionList(List<coPlanarConstruction> coPlanarConstructionList) {
         this.coPlanarConstructionList = coPlanarConstructionList;
-    }
-
-    public generalStatusEntity getGeneralStatus() {
-        return generalStatus;
-    }
-
-    public void setGeneralStatus(generalStatusEntity generalStatus) {
-        this.generalStatus = generalStatus;
     }
 
     @Override

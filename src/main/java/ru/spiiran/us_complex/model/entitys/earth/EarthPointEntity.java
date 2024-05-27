@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.earth.dtoEarthPoint;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
-import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
-import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
+import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
 
 @Entity
 @Table(name= "earth_point")
@@ -24,24 +23,26 @@ public class EarthPointEntity implements IEntity {
     @OneToOne
     @JoinColumn(name = "node_id")
     @JsonIgnore
-    private generalIdNodeEntity generalIdNodeEntity;
+    private IdNodeEntity idNodeEntity;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id")
-    @JsonIgnore
-    private generalStatusEntity generalStatus;
 
     public EarthPointEntity(dtoEarthPoint earthPoint) {
         this.nameEarthPoint = earthPoint.getNameEarthPoint();
         this.longitude = earthPoint.getLongitude();
         this.latitude = earthPoint.getLatitude();
     }
-    public EarthPointEntity() {}
 
-    public generalIdNodeEntity getGeneralIdNodeEntity() {
-        return generalIdNodeEntity;
+    public EarthPointEntity(EarthPointEntity earthPointEntity, dtoEarthPoint dtoEarthPoint) {
+        this.ID = earthPointEntity.ID;
+        this.nameEarthPoint = dtoEarthPoint.getNameEarthPoint();
+        this.longitude = dtoEarthPoint.getLongitude();
+        this.latitude = dtoEarthPoint.getLatitude();
+        if (earthPointEntity.idNodeEntity != null) {
+            this.idNodeEntity = earthPointEntity.idNodeEntity;
+        }
     }
 
+    public EarthPointEntity() {}
     public dtoEarthPoint getDto() {
         return new dtoEarthPoint(this);
     }
@@ -83,18 +84,12 @@ public class EarthPointEntity implements IEntity {
         this.latitude = latitude;
     }
 
-    public Long getEarthIdNode() {
-        return generalIdNodeEntity.getIdNode();
-    }
-    public void setGeneralIdNodeEntity(generalIdNodeEntity generalIdNodeEntity) {
-        this.generalIdNodeEntity = generalIdNodeEntity;
+    public IdNodeEntity getIdNodeEntity() {
+        return idNodeEntity;
     }
 
-    public generalStatusEntity getGeneralStatus() {
-        return generalStatus;
+    public void setIdNodeEntity(IdNodeEntity idNodeEntity) {
+        this.idNodeEntity = idNodeEntity;
     }
 
-    public void setGeneralStatus(generalStatusEntity generalStatus) {
-        this.generalStatus = generalStatus;
-    }
 }

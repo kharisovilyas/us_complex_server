@@ -1,9 +1,6 @@
 package ru.spiiran.us_complex.services.earth;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,15 +8,16 @@ import ru.spiiran.us_complex.model.dto.earth.dtoEarthPoint;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
-import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
-import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
-import ru.spiiran.us_complex.repositories.IdNodeRepository;
-import ru.spiiran.us_complex.repositories.StatusGeneralRepository;
+import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
+import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
+import ru.spiiran.us_complex.repositories.NodeIdRepository;
 import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
 import ru.spiiran.us_complex.repositories.earth.EarthPointRepository;
+import ru.spiiran.us_complex.repositories.satrequest.SystemRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EarthPointService {
@@ -28,62 +26,16 @@ public class EarthPointService {
     @Autowired
     private ConstellationArbitraryRepository arbitraryRepository;
     @Autowired
-    private StatusGeneralRepository statusRepository;
+    private SystemRepository systemRepository;
     @Autowired
-    private IdNodeRepository idNodeRepository;
-    @PersistenceContext
-    private EntityManager entityManager;
-    @Transactional
-    public dtoMessage addEarthPoint(dtoEarthPoint earthPoint) {
-        try {
-            EarthPointEntity earthPointEntity = new EarthPointEntity(earthPoint);
-            generalIdNodeEntity generalIdNodeEntity = new generalIdNodeEntity();
-            earthPointEntity.setGeneralIdNodeEntity(generalIdNodeEntity);
-            idNodeRepository.save(generalIdNodeEntity);
-            return earthPointRepository.saveAndFlush(earthPointEntity)
-                    .getDtoMessage("INSERT SUCCESS", "EarthPoint added successfully");
-        } catch (Exception exception) {
-            return new dtoMessage("INSERT ERROR", "Failed to add EarthPoint");
-        }
-    }
+    private NodeIdRepository nodeRepository;
 
-    public dtoEarthPoint getEarthPointById(Long id) {
-        return earthPointRepository.findById(id).orElse(new EarthPointEntity()).getDto();
-    }
-
-    public List<EarthPointEntity> getAllEarthPoints() {
-        return earthPointRepository.findAll();
-    }
-
-
-    public dtoMessage updatePointById(Long id, dtoEarthPoint updateEarthPoint) {
-        Optional<EarthPointEntity> optionalEarthPointEntity = earthPointRepository.findById(id);
-        if (optionalEarthPointEntity.isPresent()) {
-            EarthPointEntity existingPoint = optionalEarthPointEntity.get();
-            existingPoint.setNameEarthPoint(updateEarthPoint.getNameEarthPoint());
-            existingPoint.setLongitude(updateEarthPoint.getLongitude());
-            existingPoint.setLatitude(updateEarthPoint.getLatitude());
-            return
-                    earthPointRepository.saveAndFlush(
-                            existingPoint
-                    ).getDtoMessage("UPDATE SUCCESS", "EarthPoint with id " + id + " updated successfully");
-
-        } else {
-            return new dtoMessage("UPDATE ERROR", "EarthPoint with id " + id + " not found");
-        }
-    }
-
-    @Transactional
-    public dtoMessage deletePointById(Long id) {
-        Optional<EarthPointEntity> optionalEarthPointEntity = earthPointRepository.findById(id);
-        if (optionalEarthPointEntity.isPresent()) {
-            EarthPointEntity earthPointEntity = optionalEarthPointEntity.get();
-            idNodeRepository.delete(earthPointEntity.getGeneralIdNodeEntity());
-            earthPointRepository.delete(earthPointEntity);
-            return new dtoMessage("DELETE SUCCESS", "EarthPoint with id " + id + " deleted successfully");
-        } else {
-            return new dtoMessage("DELETE ERROR", "EarthPoint with id " + id + " not found");
-        }
+    public List<dtoEarthPoint> getAllEarthPoints() {
+        return earthPointRepository
+                .findAll()
+                .stream()
+                .map(dtoEarthPoint::new)
+                .collect(Collectors.toList());
     }
 
 
@@ -106,69 +58,38 @@ public class EarthPointService {
                 return new dtoMessage("UPDATE ERROR", "An error occurred while updating EarthPoint: " + exception.getMessage());
             }
         }
-        recalculationIdNodeForConstellation();
+
         return new dtoMessage("UPDATE SUCCESS", "All EarthPoints updated successfully");
     }
 
     private void saveNewEarthPoint(dtoEarthPoint earthPoint) {
-        generalIdNodeEntity generalIdNodeEntity = createNewGeneralIdNodeEntity();
-        generalStatusEntity generalStatus = createNewGeneralStatusEntity();
-        EarthPointEntity earthPointEntity = createNewEarthPointEntity(earthPoint, generalIdNodeEntity, generalStatus);
-        saveEarthPointNodeStatus(earthPointEntity, generalIdNodeEntity, generalStatus);
-    }
-
-    private generalStatusEntity createNewGeneralStatusEntity() {
-        generalStatusEntity generalStatus = new generalStatusEntity();
-        generalStatus.setStatusOfEditEarth(false);
-        generalStatus.setStatusOfEditConstellation(false);
-        return generalStatus;
-    }
-
-    //Метод для задания id Node каждому НП, происходит перерасчёт всей таблицы idNode для того, чтобы они шли по порядку, если есть ОГ.
-    private generalIdNodeEntity createNewGeneralIdNodeEntity() {
-        generalIdNodeEntity generalIdNodeEntity = new generalIdNodeEntity();
-        Long maxIdNode = findMaxIdNodeForEarthPoint();
-        generalIdNodeEntity.setIdNode(maxIdNode + 1);
-        generalIdNodeEntity.setNodeType("GS");
-        return generalIdNodeEntity;
-    }
-
-    private void recalculationIdNodeForConstellation() {
-        List<coArbitraryConstruction> arbitraryConstructions = arbitraryRepository.findAll();
-
-        for (coArbitraryConstruction arbitraryConstruction : arbitraryConstructions) {
-
-            generalIdNodeEntity generalIdNodeEntity = arbitraryConstruction.getGeneralIdNodeEntity();
-            generalIdNodeEntity.setIdNode(findMaxIdNode() + 1L);
-            arbitraryConstruction.setGeneralIdNodeEntity(generalIdNodeEntity);
-
-            entityManager.persist(generalIdNodeEntity);
-            arbitraryConstruction.setGeneralIdNodeEntity(generalIdNodeEntity);
-        }
-
-        arbitraryRepository.saveAll(arbitraryConstructions);
-    }
-
-    public Long findMaxIdNode() {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(e.idNode) FROM generalIdNodeEntity e", Long.class);
-        return query.getSingleResult() != null ? query.getSingleResult() : 0L;
-    }
-
-    private EarthPointEntity createNewEarthPointEntity(dtoEarthPoint earthPoint, generalIdNodeEntity generalIdNodeEntity, generalStatusEntity generalStatus) {
         EarthPointEntity earthPointEntity = new EarthPointEntity(earthPoint);
-        earthPointEntity.setGeneralIdNodeEntity(generalIdNodeEntity);
-        earthPointEntity.setGeneralStatus(generalStatus);
-        return earthPointEntity;
+        IdNodeEntity idNodeEntity = new IdNodeEntity(
+                findMaxEarthNode(),
+                "GS"
+        );
+        earthPointEntity.setIdNodeEntity(
+                idNodeEntity
+        );
+        nodeRepository.save(
+                idNodeEntity
+        );
+        earthPointRepository.save(
+                earthPointEntity
+        );
+        arbitraryRepository.findAllByOrderByNodeIdAsc()
+                .forEach(this::incrementNodeId);
     }
 
-    private void saveEarthPointNodeStatus(
-            EarthPointEntity earthPointEntity,
-            generalIdNodeEntity generalIdNodeEntity,
-            generalStatusEntity generalStatusEntity
-    ) {
-        idNodeRepository.save(generalIdNodeEntity);
-        statusRepository.save(generalStatusEntity);
-        earthPointRepository.save(earthPointEntity);
+    private void incrementNodeId(coArbitraryConstruction coArbitraryConstruction) {
+        IdNodeEntity idNodeEntity = coArbitraryConstruction.getIdNodeEntity();
+        idNodeEntity.setNodeId(idNodeEntity.getNodeId() + 1);
+        nodeRepository.save(idNodeEntity);
+    }
+
+    private Long findMaxEarthNode() {
+        Long maxEarthPointNode = nodeRepository.findMaxNodeIdWithEarthPoint();
+        return maxEarthPointNode == null? 0L : maxEarthPointNode;
     }
 
     private void updateExistingEarthPoint(dtoEarthPoint earthPoint) {
@@ -179,8 +100,9 @@ public class EarthPointService {
             if (isDeleted != null && isDeleted) {
                 deletePoint(existingPoint);
             } else {
-                EarthPointEntity updatedPoint = getUpdatedEarthPoint(earthPoint, existingPoint);
-                earthPointRepository.saveAndFlush(updatedPoint);
+                earthPointRepository.saveAndFlush(
+                        new EarthPointEntity(existingPoint, earthPoint)
+                );
             }
         } else {
             throw new EntityNotFoundException("EarthPoint with id " + earthPoint.getID() + " not found");
@@ -188,64 +110,46 @@ public class EarthPointService {
     }
 
     private void deletePoint(EarthPointEntity earthPointEntity) {
-        idNodeRepository.delete(earthPointEntity.getGeneralIdNodeEntity());
-        updateIdNodeOfEarthPoints(earthPointEntity.getGeneralIdNodeEntity().getIdNode());
+        nodeRepository.delete(earthPointEntity.getIdNodeEntity());
         earthPointRepository.delete(earthPointEntity);
+
+        Long deletedNodeId = earthPointEntity.getIdNodeEntity().getNodeId();
+
+        // Обновляем nodeId у EarthPointEntity:
+        earthPointRepository.findAllByNodeIdGreaterThan(deletedNodeId)
+                .forEach(this::decrementEarthPointNodeId);
+
+        // Обновляем nodeId у coArbitraryConstruction:
+        arbitraryRepository.findAllByNodeIdGreaterThan(deletedNodeId)
+                .forEach(this::decrementArbitraryConstructionNodeId);
     }
 
-    @Transactional
-    private void updateIdNodeOfEarthPoints(Long idNode) {
-        // Удаление записей из таблицы
-        idNodeRepository.deleteById(idNode);
-
-        // Получаем список всех записей с idNode >= переданного idNode
-        List<generalIdNodeEntity> idNodeEntities = idNodeRepository.findAllByIdNodeGreaterThanEqual(idNode);
-
-        // Обновляем значения idNode
-        for (generalIdNodeEntity idNodeEntity : idNodeEntities) {
-            idNodeEntity.setIdNode(idNodeEntity.getIdNode() - 1); // Уменьшаем idNode на единицу
-        }
-
-        // Обновляем соответствующие записи в таблице coArbitraryConstructions
-        for (generalIdNodeEntity idNodeEntity : idNodeEntities) {
-            List<coArbitraryConstruction> arbitraryConstructions = arbitraryRepository.findByGeneralIdNodeEntity(idNodeEntity);
-            for (coArbitraryConstruction arbitraryConstruction : arbitraryConstructions) {
-                arbitraryConstruction.setGeneralIdNodeEntity(idNodeEntity);
-            }
-            // Сохраняем обновленные записи в таблице coArbitraryConstraction
-            arbitraryRepository.saveAll(arbitraryConstructions);
-        }
-
-        // Сохраняем обновленные записи в базе данных
-        idNodeRepository.saveAll(idNodeEntities);
+    private void decrementEarthPointNodeId(EarthPointEntity earthPointEntity) {
+        IdNodeEntity idNodeEntity = earthPointEntity.getIdNodeEntity();
+        idNodeEntity.setNodeId(idNodeEntity.getNodeId() - 1);
+        nodeRepository.save(idNodeEntity);
+        earthPointRepository.save(earthPointEntity); // Сохраняем EarthPointEntity
     }
 
-    public Long findMaxIdNodeForEarthPoint() {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(e.idNode) FROM generalIdNodeEntity e JOIN e.earthPointEntity ep WHERE type(ep) = :entityType", Long.class);
-        query.setParameter("entityType", EarthPointEntity.class);
-        return query.getSingleResult() != null ? query.getSingleResult() : 0L;
+    private void decrementArbitraryConstructionNodeId(coArbitraryConstruction coArbitraryConstruction) {
+        IdNodeEntity idNodeEntity = coArbitraryConstruction.getIdNodeEntity();
+        idNodeEntity.setNodeId(idNodeEntity.getNodeId() - 1);
+        nodeRepository.save(idNodeEntity);
+        arbitraryRepository.save(coArbitraryConstruction); // Сохраняем coArbitraryConstruction
     }
 
-
-    private EarthPointEntity getUpdatedEarthPoint(dtoEarthPoint earthPoint, EarthPointEntity existingPoint) {
-        existingPoint.setNameEarthPoint(earthPoint.getNameEarthPoint());
-        existingPoint.setLongitude(earthPoint.getLongitude());
-        existingPoint.setLatitude(earthPoint.getLatitude());
-        return existingPoint;
-    }
-
-
-    @Transactional
-    public dtoMessage setTableStatusOfEdit(Boolean status) {
-        generalStatusEntity statusEntity = statusRepository.findSingleStatus();
-        if (statusEntity != null) {
-            statusEntity.setStatusOfEditEarth(status);
-            statusRepository.save(statusEntity);
-            return new dtoMessage("SUCCESS TO ADD STATUS", "Table status updated successfully");
+    public dtoMessage setSystemParams(Boolean status) {
+        Optional<SystemEntity> optionalSystemEntity = systemRepository.findById(1L);
+        if (optionalSystemEntity.isPresent()) {
+            SystemEntity systemEntity = optionalSystemEntity.get();
+            systemEntity.setEarthStatus(status);
+            systemRepository.save(systemEntity);
+            return new dtoMessage("APPROVE SUCCESS", "System update");
         } else {
-            // Обработка случая, если запись статуса не найдена
-            return new dtoMessage("ERROR TO ADD STATUS", "Status entity not found");
+            SystemEntity systemEntity = new SystemEntity();
+            systemEntity.setEarthStatus(status);
+            systemRepository.save(systemEntity);
+            return new dtoMessage("APPROVE SUCCESS", "System added");
         }
     }
-
 }

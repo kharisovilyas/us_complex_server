@@ -1,14 +1,14 @@
 {
-  "eventType": "E00",
+  "event": "E00",
   "node": {
-    "nodeId": 1,
-    "nodeType": "GS"
+    "id": 1,
+    "typeName": "GS"
   },
   "satellites": [
     {
-      "id": 402,
-      "constellation": 302,
-      "model": 456,
+      "id": 4452,
+      "groupId": 7102,
+      "modelId": 456,
       "plane": 1,
       "pos": 1,
       "a": 500.0,
@@ -20,9 +20,9 @@
       "type": "Orion"
     },
     {
-      "id": 403,
-      "constellation": 302,
-      "model": 457,
+      "id": 4453,
+      "groupId": 7102,
+      "modelId": 457,
       "plane": 1,
       "pos": 1,
       "a": 600.0,
@@ -34,9 +34,9 @@
       "type": "Orion"
     },
     {
-      "id": 404,
-      "constellation": 303,
-      "model": 456,
+      "id": 4454,
+      "groupId": 7103,
+      "modelId": 456,
       "plane": 1,
       "pos": 1,
       "a": 500.0,
@@ -48,9 +48,9 @@
       "type": "Orion"
     },
     {
-      "id": 405,
-      "constellation": 303,
-      "model": 457,
+      "id": 4455,
+      "groupId": 7103,
+      "modelId": 457,
       "plane": 1,
       "pos": 1,
       "a": 600.0,
@@ -62,9 +62,9 @@
       "type": "Orion"
     },
     {
-      "id": 406,
-      "constellation": 304,
-      "model": 456,
+      "id": 4456,
+      "groupId": 7104,
+      "modelId": 456,
       "plane": 1,
       "pos": 1,
       "a": 500.0,
@@ -76,9 +76,9 @@
       "type": "Orion"
     },
     {
-      "id": 407,
-      "constellation": 304,
-      "model": 457,
+      "id": 4457,
+      "groupId": 7104,
+      "modelId": 457,
       "plane": 1,
       "pos": 1,
       "a": 600.0,
@@ -90,9 +90,9 @@
       "type": "Orion"
     },
     {
-      "id": 408,
-      "constellation": 305,
-      "model": 456,
+      "id": 4458,
+      "groupId": 7105,
+      "modelId": 456,
       "plane": 1,
       "pos": 1,
       "a": 500.0,
@@ -104,9 +104,65 @@
       "type": "Orion"
     },
     {
-      "id": 409,
-      "constellation": 305,
-      "model": 457,
+      "id": 4459,
+      "groupId": 7105,
+      "modelId": 457,
+      "plane": 1,
+      "pos": 1,
+      "a": 600.0,
+      "e": 0.2,
+      "i": 40.5,
+      "Q": 55.0,
+      "w": 70.7,
+      "u": 130.3,
+      "type": "Orion"
+    },
+    {
+      "id": 4460,
+      "groupId": 7106,
+      "modelId": 456,
+      "plane": 1,
+      "pos": 1,
+      "a": 500.0,
+      "e": 0.1,
+      "i": 30.5,
+      "Q": 45.0,
+      "w": 60.7,
+      "u": 120.3,
+      "type": "Orion"
+    },
+    {
+      "id": 4461,
+      "groupId": 7106,
+      "modelId": 457,
+      "plane": 1,
+      "pos": 1,
+      "a": 600.0,
+      "e": 0.2,
+      "i": 40.5,
+      "Q": 55.0,
+      "w": 70.7,
+      "u": 130.3,
+      "type": "Orion"
+    },
+    {
+      "id": 4462,
+      "groupId": 7107,
+      "modelId": 456,
+      "plane": 1,
+      "pos": 1,
+      "a": 500.0,
+      "e": 0.1,
+      "i": 30.5,
+      "Q": 45.0,
+      "w": 60.7,
+      "u": 120.3,
+      "type": "Orion"
+    },
+    {
+      "id": 4463,
+      "groupId": 7107,
+      "modelId": 457,
       "plane": 1,
       "pos": 1,
       "a": 600.0,
@@ -119,27 +175,27 @@
     }
   ],
   "parameters": {
-    "t0": 1715768428,
-    "modelingBegin": 1715621329,
-    "modelingEnd": 1715707728,
-    "modelingTimeStep": 100,
-    "interSatelliteCommunication": false,
+    "t0Ballistics": 1715621329,
+    "t0FlightData": 1715621329,
+    "tfFlightData": 1715707728,
+    "dtBallistics": 100,
+    "isInterSatellite": false,
     "controlSystem": "Automated",
     "duration": 100
   },
   "isSendingLogs": true
 }
 {
-  "eventType": "E00",
+  "event": "E00",
   "node": {
-    "nodeId": 1,
-    "nodeType": "Orion"
+    "id": 2,
+    "typeName": "Orion"
   },
   "satellites": [
     {
-      "id": 402,
-      "constellation": 302,
-      "model": 456,
+      "id": 4452,
+      "groupId": 7102,
+      "modelId": 456,
       "plane": 1,
       "pos": 1,
       "a": 500.0,
@@ -151,9 +207,9 @@
       "type": "Orion"
     },
     {
-      "id": 403,
-      "constellation": 302,
-      "model": 457,
+      "id": 4453,
+      "groupId": 7102,
+      "modelId": 457,
       "plane": 1,
       "pos": 1,
       "a": 600.0,
@@ -165,9 +221,9 @@
       "type": "Orion"
     },
     {
-      "id": 404,
-      "constellation": 303,
-      "model": 456,
+      "id": 4454,
+      "groupId": 7103,
+      "modelId": 456,
       "plane": 1,
       "pos": 1,
       "a": 500.0,
@@ -179,9 +235,9 @@
       "type": "Orion"
     },
     {
-      "id": 405,
-      "constellation": 303,
-      "model": 457,
+      "id": 4455,
+      "groupId": 7103,
+      "modelId": 457,
       "plane": 1,
       "pos": 1,
       "a": 600.0,
@@ -193,9 +249,9 @@
       "type": "Orion"
     },
     {
-      "id": 406,
-      "constellation": 304,
-      "model": 456,
+      "id": 4456,
+      "groupId": 7104,
+      "modelId": 456,
       "plane": 1,
       "pos": 1,
       "a": 500.0,
@@ -207,9 +263,9 @@
       "type": "Orion"
     },
     {
-      "id": 407,
-      "constellation": 304,
-      "model": 457,
+      "id": 4457,
+      "groupId": 7104,
+      "modelId": 457,
       "plane": 1,
       "pos": 1,
       "a": 600.0,
@@ -221,9 +277,9 @@
       "type": "Orion"
     },
     {
-      "id": 408,
-      "constellation": 305,
-      "model": 456,
+      "id": 4458,
+      "groupId": 7105,
+      "modelId": 456,
       "plane": 1,
       "pos": 1,
       "a": 500.0,
@@ -235,9 +291,65 @@
       "type": "Orion"
     },
     {
-      "id": 409,
-      "constellation": 305,
-      "model": 457,
+      "id": 4459,
+      "groupId": 7105,
+      "modelId": 457,
+      "plane": 1,
+      "pos": 1,
+      "a": 600.0,
+      "e": 0.2,
+      "i": 40.5,
+      "Q": 55.0,
+      "w": 70.7,
+      "u": 130.3,
+      "type": "Orion"
+    },
+    {
+      "id": 4460,
+      "groupId": 7106,
+      "modelId": 456,
+      "plane": 1,
+      "pos": 1,
+      "a": 500.0,
+      "e": 0.1,
+      "i": 30.5,
+      "Q": 45.0,
+      "w": 60.7,
+      "u": 120.3,
+      "type": "Orion"
+    },
+    {
+      "id": 4461,
+      "groupId": 7106,
+      "modelId": 457,
+      "plane": 1,
+      "pos": 1,
+      "a": 600.0,
+      "e": 0.2,
+      "i": 40.5,
+      "Q": 55.0,
+      "w": 70.7,
+      "u": 130.3,
+      "type": "Orion"
+    },
+    {
+      "id": 4462,
+      "groupId": 7107,
+      "modelId": 456,
+      "plane": 1,
+      "pos": 1,
+      "a": 500.0,
+      "e": 0.1,
+      "i": 30.5,
+      "Q": 45.0,
+      "w": 60.7,
+      "u": 120.3,
+      "type": "Orion"
+    },
+    {
+      "id": 4463,
+      "groupId": 7107,
+      "modelId": 457,
       "plane": 1,
       "pos": 1,
       "a": 600.0,
@@ -250,11 +362,11 @@
     }
   ],
   "parameters": {
-    "t0": 1715768428,
-    "modelingBegin": 1715621329,
-    "modelingEnd": 1715707728,
-    "modelingTimeStep": 100,
-    "interSatelliteCommunication": false,
+    "t0Ballistics": 1715621329,
+    "t0FlightData": 1715621329,
+    "tfFlightData": 1715707728,
+    "dtBallistics": 100,
+    "isInterSatellite": false,
     "controlSystem": "Automated",
     "duration": 100
   },
@@ -310,18 +422,27 @@
   "isSendingLogs": true
 }
 {
-  "timeEventOccurred": 213525235234,
-  "eventParameters": {
-    "order": {
-      "orderId": 552,
+  "type": "E20",
+  "time": 213525235234,
+  "order": [
+    {
+      "id": 602,
       "name": "Москва",
-      "latitude": 12.334,
+      "latitude": -12.341,
       "longitude": 98.123,
       "altitude": -12.341,
       "priority": 3,
-      "term": 123256216123
+      "tf": 123256216123
+    },
+    {
+      "id": 603,
+      "name": "Новосибирск",
+      "latitude": -52.341,
+      "longitude": 54.123,
+      "altitude": -52.341,
+      "priority": 3,
+      "tf": 123256216123
     }
-  },
-  "eventType": "E20",
-  "targetId": 602
+  ],
+  "targetId": 2
 }

@@ -4,14 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.constellation.dtoArbitraryConstruction;
+import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.services.constellation.ArbitraryConstructionService;
 import ru.spiiran.us_complex.services.constellation.ConstellationService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -21,44 +19,15 @@ public class RestConstellationController {
     private ArbitraryConstructionService arbitraryConstructionService;
     @Autowired
     private ConstellationService constellationService;
-    @GetMapping("/arbitrary/get/list")
-    public ResponseEntity<List<dtoArbitraryConstruction>> getAllArbitraryConstruction() {
-        List<dtoArbitraryConstruction> detailedConstellations = new ArrayList<>();
-        for (coArbitraryConstruction detailedConstellation
-                : arbitraryConstructionService.getAllDetailedConstellations()
-        ) {
-            detailedConstellations.add(detailedConstellation.getDto());
-        }
-        return ResponseEntity.ok().body(detailedConstellations);
-    }
-
-    @PostMapping("/arbitrary/add")
-    public ResponseEntity<dtoMessage> addArbitraryConstruction(@RequestParam Long id, @RequestBody dtoArbitraryConstruction detailedConstellation) {
-        return ResponseEntity.ok().body(arbitraryConstructionService.addConstellationArbitrary(id, detailedConstellation));
-    }
-
-    @PostMapping("/arbitrary/update/byId")
-    public ResponseEntity<dtoMessage> updateArbitraryConstructionById(@RequestParam Long id, @RequestBody dtoArbitraryConstruction detailedConstellation){
-        return ResponseEntity.ok().body(arbitraryConstructionService.updateConstellationArbitraryById(id, detailedConstellation));
-    }
 
     @PostMapping("/arbitrary/update/byList")
     public ResponseEntity<dtoMessage> updateArbitraryConstructionByList(@RequestBody List<dtoArbitraryConstruction> detailedConstellations){
         return ResponseEntity.ok().body(arbitraryConstructionService.updateConstellationArbitraryByList(detailedConstellations));
     }
 
-    @PostMapping("/arbitrary/delete/byId")
-    public ResponseEntity<dtoMessage> deleteArbitraryConstructionById(@RequestParam Long id){
-        return ResponseEntity.ok().body(arbitraryConstructionService.deleteConstellationArbitraryById(id));
-    }
-
-    @GetMapping("/arbitrary/get/byId")
-    public ResponseEntity<dtoArbitraryConstruction> getArbitraryConstructionById(@RequestParam Long id) {
-        return ResponseEntity.ok().body(arbitraryConstructionService.getConstellationArbitraryById(id));
-    }
     @PostMapping("/set/status")
     public ResponseEntity<dtoMessage> setStatusOfEdit(@RequestParam Boolean status){
-        return ResponseEntity.ok().body(constellationService.setTableStatusOfEdit(status));
+        return ResponseEntity.ok().body(constellationService.setSystemParams(status));
     }
 
     @PostMapping("/update")

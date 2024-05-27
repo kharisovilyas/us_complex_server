@@ -1,0 +1,15 @@
+{
+  "earthStatus": false,
+  "constellationStatus": false,
+  "earthSatStatus": false,
+  "satSatStatus": false,
+  "gridStatus": false,
+  "timeModelingHorizon": 86400,
+  "startTime": 123256216123,
+  "modelingBegin": 123256216123,
+  "modelingEnd": 213525235234,
+  "interSatelliteCommunication": false,
+  "controlSystem": "Automated",
+  "step": 100,
+  "duration": 100
+}

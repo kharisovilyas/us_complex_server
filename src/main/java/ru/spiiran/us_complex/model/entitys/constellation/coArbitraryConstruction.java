@@ -5,7 +5,7 @@ import ru.spiiran.us_complex.model.dto.constellation.dtoArbitraryConstruction;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
 import ru.spiiran.us_complex.model.entitys.general.IEntityNode;
-import ru.spiiran.us_complex.model.entitys.general.generalIdNodeEntity;
+import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
 
 @Entity
 @Table(name = "co_arbitrary_construction")
@@ -28,11 +28,11 @@ public class coArbitraryConstruction implements IEntity, IEntityNode {
     private Double trueAnomaly;
     @OneToOne
     @JoinColumn(name = "node_id")
-    private generalIdNodeEntity generalIdNodeEntity;
+    private IdNodeEntity idNodeEntity;
     @ManyToOne
-    @JoinColumn(name = "table_id")
+    @JoinColumn(name = "constellation_id")
     private ConstellationEntity constellation;
-    @Column(name="model_sat")
+    @Column(name="model_sat_id")
     private Long modelSat;
 
 
@@ -49,14 +49,22 @@ public class coArbitraryConstruction implements IEntity, IEntityNode {
         this.trueAnomaly = dtoArbitraryConstruction.getTrueAnomaly();
     }
 
-    public generalIdNodeEntity getGeneralIdNodeEntity() {
-        return generalIdNodeEntity;
+    public coArbitraryConstruction(
+            coArbitraryConstruction existingConstellation,
+            dtoArbitraryConstruction dtoArbitraryConstruction
+    ) {
+        this.ID = existingConstellation.ID;
+        this.altitude = dtoArbitraryConstruction.getAltitude();
+        this.modelSat = dtoArbitraryConstruction.getModelSat();
+        this.incline = dtoArbitraryConstruction.getIncline();
+        this.eccentricity = dtoArbitraryConstruction.getEccentricity();
+        this.longitudeAscendingNode = dtoArbitraryConstruction.getLongitudeAscendingNode();
+        this.perigeeWidthArgument = dtoArbitraryConstruction.getPerigeeWidthArgument();
+        this.trueAnomaly = dtoArbitraryConstruction.getTrueAnomaly();
+        if(existingConstellation.idNodeEntity != null) {
+            this.idNodeEntity = existingConstellation.idNodeEntity;
+        }
     }
-
-    public void setGeneralIdNodeEntity(generalIdNodeEntity generalIdNodeEntity) {
-        this.generalIdNodeEntity = generalIdNodeEntity;
-    }
-
 
     public Double getEccentricity() {
         return eccentricity;
@@ -101,10 +109,6 @@ public class coArbitraryConstruction implements IEntity, IEntityNode {
         return new dtoArbitraryConstruction(this);
     }
 
-    public Long getArbitraryConstructionIdNode() {
-        return this.generalIdNodeEntity.getIdNode();
-    }
-
     public ConstellationEntity getConstellation() {
         return constellation;
     }
@@ -135,5 +139,13 @@ public class coArbitraryConstruction implements IEntity, IEntityNode {
 
     public void setLongitudeAscendingNode(Double longitudeAscendingNode) {
         this.longitudeAscendingNode = longitudeAscendingNode;
+    }
+
+    public IdNodeEntity getIdNodeEntity() {
+        return idNodeEntity;
+    }
+
+    public void setIdNodeEntity(IdNodeEntity idNodeEntity) {
+        this.idNodeEntity = idNodeEntity;
     }
 }

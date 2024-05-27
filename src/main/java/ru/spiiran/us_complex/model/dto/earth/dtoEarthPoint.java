@@ -22,7 +22,7 @@ public class dtoEarthPoint implements IDTOEntity {
         this.longitude = earthPointEntity.getLongitude();
         this.latitude = earthPointEntity.getLatitude();
         this.isDeleted = false;
-        this.idNode = earthPointEntity.getEarthIdNode();
+        this.idNode = earthPointEntity.getIdNodeEntity().getNodeId();
     }
 
     public Long getIdNode() {

@@ -11,7 +11,7 @@ public class dtoSystem implements IDTOEntity {
     private Boolean earthSatStatus;
     private Boolean satSatStatus;
     private Boolean gridStatus;
-    private String timeModelingHorizon;
+    private Long timeModelingHorizon;
     private Long startTime;
     private Long modelingBegin;
     private Long modelingEnd;
@@ -76,11 +76,11 @@ public class dtoSystem implements IDTOEntity {
         this.gridStatus = gridStatus;
     }
 
-    public String getTimeModelingHorizon() {
+    public Long getTimeModelingHorizon() {
         return timeModelingHorizon;
     }
 
-    public void setTimeModelingHorizon(String timeModelingHorizon) {
+    public void setTimeModelingHorizon(Long timeModelingHorizon) {
         this.timeModelingHorizon = timeModelingHorizon;
     }
 

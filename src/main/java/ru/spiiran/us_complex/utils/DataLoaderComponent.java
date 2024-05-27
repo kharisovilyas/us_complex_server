@@ -5,18 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import ru.spiiran.us_complex.model.dto.general.dtoStatusGeneral;
 import ru.spiiran.us_complex.model.dto.modelsat.equipment.dtoEquipmentType;
 import ru.spiiran.us_complex.model.dto.modelsat.power.dtoMode;
 import ru.spiiran.us_complex.model.dto.modelsat.techparam.dtoParameter;
-import ru.spiiran.us_complex.model.entitys.general.generalStatusEntity;
+import ru.spiiran.us_complex.model.dto.system.dtoSystem;
 import ru.spiiran.us_complex.model.entitys.modelsat.equipment.msEquipmentTypeEntity;
 import ru.spiiran.us_complex.model.entitys.modelsat.power.msModeEntity;
 import ru.spiiran.us_complex.model.entitys.modelsat.techparam.msParameterEntity;
-import ru.spiiran.us_complex.repositories.StatusGeneralRepository;
+import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
 import ru.spiiran.us_complex.repositories.modelsat.equipment.msEquipmentTypeRepository;
-import ru.spiiran.us_complex.repositories.modelsat.techparam.msListParamRepository;
 import ru.spiiran.us_complex.repositories.modelsat.power.msModeRepository;
+import ru.spiiran.us_complex.repositories.modelsat.techparam.msListParamRepository;
+import ru.spiiran.us_complex.repositories.satrequest.SystemRepository;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -24,10 +24,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class DataLoaderComponent implements CommandLineRunner {
-
-    @Autowired private StatusGeneralRepository statusGeneralRepository;
     @Autowired private msEquipmentTypeRepository equipmentTypeRepository;
     @Autowired private msListParamRepository listParamRepository;
+    @Autowired private SystemRepository systemRepository;
     @Autowired private msModeRepository modeRepository;
     private final String DIRECTORY = "src/initial/modelsat";
 
@@ -65,12 +64,14 @@ public class DataLoaderComponent implements CommandLineRunner {
                 .map(msParameterEntity::new) // Преобразование каждого элемента типа Arbitrary Construction в dtoArbitraryConstruction
                 .collect(Collectors.toList());
 
-        dtoStatusGeneral dtoStatusGeneral = objectMapper.readValue(
-                Paths.get(DIRECTORY,"../general/StatusGeneral.json").toFile(),
+        dtoSystem dtoSystem = objectMapper.readValue(
+                Paths.get(DIRECTORY,"../general/System.json").toFile(),
                 new TypeReference<>() {}
         );
         // Сохранение данных в базу данных
-        statusGeneralRepository.save(new generalStatusEntity(dtoStatusGeneral));
+        SystemEntity systemEntity = new SystemEntity(dtoSystem);
+        systemEntity.setID(1L);
+        systemRepository.save(systemEntity);
         equipmentTypeRepository.saveAll(equipmentTypeList);
         modeRepository.saveAll(modeList);
         listParamRepository.saveAll(parameterList);
