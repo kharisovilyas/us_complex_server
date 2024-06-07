@@ -22,7 +22,7 @@ public class dtoSystem implements IDTOEntity {
 
     public dtoSystem() {}
     public dtoSystem(SystemEntity systemEntity) {
-        this.systemId = systemEntity.getID();
+        this.systemId = systemEntity.getSystemId();
         this.earthStatus = systemEntity.getEarthStatus();
         this.constellationStatus = systemEntity.getConstellationStatus();
         this.earthSatStatus = systemEntity.getEarthSatStatus();

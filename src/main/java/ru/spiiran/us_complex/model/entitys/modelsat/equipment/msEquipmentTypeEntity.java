@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name="ms_type_equipment")
 public class msEquipmentTypeEntity implements IEntity {
     @Id
-    @Column(name = "dev_id")
+    @Column(name = "id_dev")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long devId;
     @OneToMany(mappedBy = "typeEntity")
@@ -41,11 +41,6 @@ public class msEquipmentTypeEntity implements IEntity {
     public msEquipmentTypeEntity(dtoEquipmentType dto) {
         this.devId = dto.getDevId();
         this.type = dto.getType();
-    }
-
-    @Override
-    public Long getID() {
-        return devId;
     }
 
     @Override

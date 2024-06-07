@@ -8,12 +8,12 @@ import ru.spiiran.us_complex.model.entitys.general.IEntity;
 @Table(name = "ms_equipment")
 public class msEquipmentEntity implements IEntity {
     @Id
-    @Column(name = "id")
+    @Column(name = "id_equipment")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
+    private Long equipmentId;
 
     @ManyToOne
-    @JoinColumn(name = "equipment_type_id") // имя столбца для связи
+    @JoinColumn(name = "id_equipment_type") // имя столбца для связи
     private msEquipmentTypeEntity typeEntity;
 
     @Column(name = "dev_name")
@@ -24,9 +24,6 @@ public class msEquipmentEntity implements IEntity {
         this.devName = devName;
     }
 
-    public void setID(Long devID) {
-        this.ID = devID;
-    }
 
     public msEquipmentTypeEntity getTypeEntity() {
         return typeEntity;
@@ -45,15 +42,18 @@ public class msEquipmentEntity implements IEntity {
     }
 
     @Override
-    public Long getID() {
-        return ID;
-    }
-
-    @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
     }
 
     public msEquipmentEntity() {
+    }
+
+    public Long getEquipmentId() {
+        return equipmentId;
+    }
+
+    public void setEquipmentId(Long equipmentId) {
+        this.equipmentId = equipmentId;
     }
 }

@@ -11,9 +11,9 @@ import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
 @Table(name= "earth_point")
 public class EarthPointEntity implements IEntity {
     @Id
-    @Column(name = "id")
+    @Column(name = "id_earth_point")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long ID;
+    private Long earthPointId;
     @Column(name = "name_earth_point")
     private String nameEarthPoint;
     @Column(name = "longitude")
@@ -33,7 +33,7 @@ public class EarthPointEntity implements IEntity {
     }
 
     public EarthPointEntity(EarthPointEntity earthPointEntity, dtoEarthPoint dtoEarthPoint) {
-        this.ID = earthPointEntity.ID;
+        this.earthPointId = earthPointEntity.getEarthPointId();
         this.nameEarthPoint = dtoEarthPoint.getNameEarthPoint();
         this.longitude = dtoEarthPoint.getLongitude();
         this.latitude = dtoEarthPoint.getLatitude();
@@ -43,21 +43,10 @@ public class EarthPointEntity implements IEntity {
     }
 
     public EarthPointEntity() {}
-    public dtoEarthPoint getDto() {
-        return new dtoEarthPoint(this);
-    }
-
-    @Override
-    public Long getID() {
-        return ID;
-    }
 
     @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
-    }
-    public void setID(long ID) {
-        this.ID = ID;
     }
 
     public String getNameEarthPoint() {
@@ -92,4 +81,11 @@ public class EarthPointEntity implements IEntity {
         this.idNodeEntity = idNodeEntity;
     }
 
+    public Long getEarthPointId() {
+        return earthPointId;
+    }
+
+    public void setEarthPointId(Long earthPointId) {
+        this.earthPointId = earthPointId;
+    }
 }

@@ -8,11 +8,11 @@ import jakarta.persistence.*;
 public class coPlanarConstruction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long ID;
+    @Column(name = "id_satellite")
+    private Long satelliteId;
 
     @ManyToOne
-    @JoinColumn(name = "table_id")
+    @JoinColumn(name = "constellation_id")
     @JsonIgnore
     private ConstellationEntity constellation;
 

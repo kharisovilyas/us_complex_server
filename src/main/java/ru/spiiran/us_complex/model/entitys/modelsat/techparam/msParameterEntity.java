@@ -10,7 +10,7 @@ import ru.spiiran.us_complex.model.entitys.general.IEntity;
 public class msParameterEntity implements IEntity {
     @Id
     @Column(name = "prm_id")
-    private Long prmID;
+    private Long prmId;
     @Column(name = "parameter")
     private String parameter;
     @ManyToOne
@@ -21,26 +21,13 @@ public class msParameterEntity implements IEntity {
     }
 
     public msParameterEntity(dtoParameter dto) {
-        this.prmID = dto.getPrmId();
+        this.prmId = dto.getPrmId();
         this.parameter = dto.getParameter();
-    }
-
-    @Override
-    public Long getID() {
-        return prmID;
     }
 
     @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
-    }
-
-    public Long getPrmID() {
-        return prmID;
-    }
-
-    public void setPrmID(Long prmID) {
-        this.prmID = prmID;
     }
 
     public String getParameter() {
@@ -57,5 +44,13 @@ public class msParameterEntity implements IEntity {
 
     public void setMsTechParamEntity(ru.spiiran.us_complex.model.entitys.modelsat.techparam.msTechParamEntity msTechParamEntity) {
         this.msTechParamEntity = msTechParamEntity;
+    }
+
+    public Long getPrmId() {
+        return prmId;
+    }
+
+    public void setPrmId(Long prmId) {
+        this.prmId = prmId;
     }
 }

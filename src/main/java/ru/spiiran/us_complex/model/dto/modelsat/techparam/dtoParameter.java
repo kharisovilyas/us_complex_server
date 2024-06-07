@@ -27,7 +27,7 @@ public class dtoParameter implements IDTOEntity {
 
     public dtoParameter(msParameterEntity msParameterEntity) {
         this.parameter = msParameterEntity.getParameter();
-        this.prmId = msParameterEntity.getPrmID();
+        this.prmId = msParameterEntity.getPrmId();
     }
 
 }

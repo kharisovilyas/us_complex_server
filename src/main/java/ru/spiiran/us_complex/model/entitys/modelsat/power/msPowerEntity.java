@@ -10,19 +10,15 @@ import java.util.List;
 @Table(name="ms_power")
 public class msPowerEntity implements IEntity {
     @Id
-    @Column(name = "power_id")
+    @Column(name = "id_power")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long powerID;
+    private Long powerId;
     @OneToMany(mappedBy = "msPowerEntity")
     private List<ModelSatEntity> modelSatEntityList;
     @OneToMany(mappedBy = "msPowerEntity")
     private List<msModeEntity> modeEntityList;
     @Column(name = "value_of_power")
     private Double valueOfPower;
-
-    public void setPowerID(Long powerID) {
-        this.powerID = powerID;
-    }
 
     public List<ModelSatEntity> getModelSatEntityList() {
         return modelSatEntityList;
@@ -49,12 +45,15 @@ public class msPowerEntity implements IEntity {
     }
 
     @Override
-    public Long getID() {
-        return powerID;
-    }
-
-    @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
+    }
+
+    public Long getPowerId() {
+        return powerId;
+    }
+
+    public void setPowerId(Long powerId) {
+        this.powerId = powerId;
     }
 }

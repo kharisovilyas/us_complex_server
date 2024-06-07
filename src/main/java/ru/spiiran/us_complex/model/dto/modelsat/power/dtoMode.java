@@ -27,6 +27,6 @@ public class dtoMode implements IDTOEntity {
 
     public dtoMode(msModeEntity msModeEntity) {
         this.mode = msModeEntity.getMode();
-        this.modeId = msModeEntity.getModeID();
+        this.modeId = msModeEntity.getModeId();
     }
 }

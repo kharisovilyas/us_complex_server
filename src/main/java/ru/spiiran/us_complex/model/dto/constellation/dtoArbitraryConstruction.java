@@ -20,7 +20,7 @@ public class dtoArbitraryConstruction implements IDTOEntity {
     public dtoArbitraryConstruction(){}
 
     public dtoArbitraryConstruction(coArbitraryConstruction coArbitraryConstruction) {
-        this.id = coArbitraryConstruction.getID();
+        this.id = coArbitraryConstruction.getSatelliteId();
         this.modelSat = coArbitraryConstruction.getModelSat();
         this.altitude = coArbitraryConstruction.getAltitude();
         this.eccentricity = coArbitraryConstruction.getEccentricity();
@@ -29,7 +29,7 @@ public class dtoArbitraryConstruction implements IDTOEntity {
         this.perigeeWidthArgument = coArbitraryConstruction.getPerigeeWidthArgument();
         this.trueAnomaly = coArbitraryConstruction.getTrueAnomaly();
         this.idNode = coArbitraryConstruction.getIdNodeEntity().getNodeId();
-        this.tableId = coArbitraryConstruction.getConstellation().getID();
+        this.tableId = coArbitraryConstruction.getConstellation().getConstellationId();
     }
 
     public Long getID() {

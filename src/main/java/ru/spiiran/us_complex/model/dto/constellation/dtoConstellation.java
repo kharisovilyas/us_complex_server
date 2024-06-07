@@ -19,7 +19,7 @@ public class dtoConstellation implements IDTOEntity {
 
     public dtoConstellation(ConstellationEntity constellationEntity) {
         this.constellationName = constellationEntity.getConstellationName();
-        this.ID = constellationEntity.getID();
+        this.ID = constellationEntity.getConstellationId();
         this.isArbitraryFormation = constellationEntity.getArbitraryFormation();
         this.arbitraryConstructions = constellationEntity
                 .getArbitraryConstructionList()

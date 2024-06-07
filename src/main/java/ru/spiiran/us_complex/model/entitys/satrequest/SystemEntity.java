@@ -39,11 +39,6 @@ public class SystemEntity implements IEntity {
     @Column(name = "control_system")
     private String controlSystem;
 
-    @Override
-    public Long getID() {
-        return systemId;
-    }
-
     public SystemEntity() {
     }
     public SystemEntity(dtoSystem dtoSystem) {
@@ -176,5 +171,13 @@ public class SystemEntity implements IEntity {
 
     public void setModelingEnd(Long modelingEnd) {
         this.modelingEnd = modelingEnd;
+    }
+
+    public Long getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(Long systemId) {
+        this.systemId = systemId;
     }
 }

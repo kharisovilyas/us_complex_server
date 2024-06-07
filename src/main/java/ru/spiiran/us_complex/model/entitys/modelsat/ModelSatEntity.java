@@ -12,9 +12,9 @@ import ru.spiiran.us_complex.model.entitys.modelsat.techparam.msTechParamEntity;
 @Table(name = "model_sat")
 public class ModelSatEntity implements IEntity {
     @Id
-    @Column(name = "model_id")
+    @Column(name = "id_model")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long modelID;
+    private Long modelId;
 
     @Column(name = "model_name")
     private String modelName;
@@ -42,7 +42,7 @@ public class ModelSatEntity implements IEntity {
 
 
     public void setID(Long ID) {
-        this.modelID = ID;
+        this.modelId = ID;
     }
 
     public String getModelName() {
@@ -70,13 +70,15 @@ public class ModelSatEntity implements IEntity {
     }
 
     @Override
-    public Long getID() {
-        return modelID;
-    }
-
-    @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return null;
     }
 
+    public Long getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(Long modelId) {
+        this.modelId = modelId;
+    }
 }

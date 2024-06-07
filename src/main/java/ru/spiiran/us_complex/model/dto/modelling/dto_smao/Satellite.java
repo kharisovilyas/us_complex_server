@@ -19,10 +19,10 @@ public class Satellite {
     public Satellite() {}
 
     public Satellite(coArbitraryConstruction satelliteConstruction){
-        this.id = satelliteConstruction.getID();
+        this.id = satelliteConstruction.getIdNodeEntity().getNodeId();
         this.plane = 1;
         this.pos = 1;
-        this.groupId = satelliteConstruction.getConstellation().getID();
+        this.groupId = satelliteConstruction.getConstellation().getConstellationId();
         this.modelId = satelliteConstruction.getModelSat(); //TODO: потом не забыть поменять на .getModel.getModelId() после выполнения спринта модель-КА
         this.a = satelliteConstruction.getAltitude();
         this.e = satelliteConstruction.getEccentricity();

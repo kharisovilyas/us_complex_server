@@ -9,29 +9,29 @@ import ru.spiiran.us_complex.model.entitys.general.IEntity;
 @Table(name = "ms_mode")
 public class msModeEntity implements IEntity {
     @Id
-    @Column(name = "mode_id")
+    @Column(name = "id_mode")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long modeID;
+    private Long modeId;
     @Column(name = "mode")
     private String mode;
     @ManyToOne
-    @JoinColumn(name="power_id")
+    @JoinColumn(name="id_power")
     private msPowerEntity msPowerEntity;
 
     public msModeEntity() {
     }
 
     public msModeEntity(dtoMode dto) {
-        this.modeID = dto.getModeId();
+        this.modeId = dto.getModeId();
         this.mode = dto.getMode();
     }
 
-    public Long getModeID() {
-        return modeID;
+    public Long getModeId() {
+        return modeId;
     }
 
-    public void setModeID(Long modeID) {
-        this.modeID = modeID;
+    public void setModeId(Long modeId) {
+        this.modeId = modeId;
     }
 
     public String getMode() {
@@ -48,11 +48,6 @@ public class msModeEntity implements IEntity {
 
     public void setMsPowerEntity(ru.spiiran.us_complex.model.entitys.modelsat.power.msPowerEntity msPowerEntity) {
         this.msPowerEntity = msPowerEntity;
-    }
-
-    @Override
-    public Long getID() {
-        return modeID;
     }
 
     @Override

@@ -12,8 +12,8 @@ import java.util.List;
 public class ConstellationEntity implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long ID;
+    @Column(name = "id_constellation")
+    private Long constellationId;
     @Column(name = "constellation_name")
     private String constellationName;
     @Column(name = "arbitrary_formation")
@@ -36,10 +36,6 @@ public class ConstellationEntity implements IEntity {
 
     public void setArbitraryFormation(Boolean arbitraryFormation) {
         isArbitraryFormation = arbitraryFormation;
-    }
-
-    public void setID(Long ID) {
-        this.ID = ID;
     }
 
     public String getConstellationName() {
@@ -67,12 +63,15 @@ public class ConstellationEntity implements IEntity {
     }
 
     @Override
-    public Long getID() {
-        return ID;
-    }
-
-    @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
+    }
+
+    public Long getConstellationId() {
+        return constellationId;
+    }
+
+    public void setConstellationId(Long constellationId) {
+        this.constellationId = constellationId;
     }
 }

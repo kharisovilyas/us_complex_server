@@ -85,11 +85,6 @@ public class CatalogEntity implements IEntity {
     }
 
     @Override
-    public Long getID() {
-        return goalId;
-    }
-
-    @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
     }

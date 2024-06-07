@@ -8,7 +8,7 @@ public class dtoEquipmentType implements IDTOEntity {
     private String type;
 
     public dtoEquipmentType(msEquipmentTypeEntity msEquipmentTypeEntity) {
-        this.devId = msEquipmentTypeEntity.getID();
+        this.devId = msEquipmentTypeEntity.getDevId();
         this.type = msEquipmentTypeEntity.getType();
     }
 

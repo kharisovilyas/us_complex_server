@@ -17,7 +17,7 @@ public class dtoEarthPoint implements IDTOEntity {
     public dtoEarthPoint() {}
 
     public dtoEarthPoint(EarthPointEntity earthPointEntity) {
-        this.ID = earthPointEntity.getID();
+        this.ID = earthPointEntity.getEarthPointId();
         this.nameEarthPoint = earthPointEntity.getNameEarthPoint();
         this.longitude = earthPointEntity.getLongitude();
         this.latitude = earthPointEntity.getLatitude();

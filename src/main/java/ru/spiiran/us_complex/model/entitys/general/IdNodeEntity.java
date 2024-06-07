@@ -1,12 +1,13 @@
 package ru.spiiran.us_complex.model.entitys.general;
 
 import jakarta.persistence.*;
+import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 
 @Entity
 @Table(name = "id_node")
-public class IdNodeEntity {
+public class IdNodeEntity implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_entry")
@@ -70,5 +71,10 @@ public class IdNodeEntity {
 
     public void setArbitraryConstruction(coArbitraryConstruction arbitraryConstruction) {
         this.arbitraryConstruction = arbitraryConstruction;
+    }
+
+    @Override
+    public dtoMessage getDtoMessage(String type, String message) {
+        return new dtoMessage(type, message);
     }
 }

@@ -6,13 +6,13 @@ import ru.spiiran.us_complex.model.entitys.satrequest.CatalogEntity;
 import ru.spiiran.us_complex.model.entitys.satrequest.RequestEntity;
 
 public class Order {
-    Long id;
-    String name;
-    Double latitude;
-    Double longitude;
-    Double altitude;
-    Long priority;
-    Long tf;
+    private Long id;
+    private String name;
+    private Double latitude;
+    private Double longitude;
+    private Double altitude;
+    private Long priority;
+    private Long tf;
 
     public Order() {
     }

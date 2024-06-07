@@ -1,5 +1,7 @@
 package ru.spiiran.us_complex.model.dto.modelling.dto_smao;
 
+import ru.spiiran.us_complex.model.dto.modelling.dto_pro42.FlightData;
+
 import java.util.List;
 
 public class Event {

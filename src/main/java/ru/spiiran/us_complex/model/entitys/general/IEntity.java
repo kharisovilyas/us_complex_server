@@ -3,6 +3,5 @@ package ru.spiiran.us_complex.model.entitys.general;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 
 public interface IEntity{
-    Long getID();
     dtoMessage getDtoMessage(String type, String message);
 }

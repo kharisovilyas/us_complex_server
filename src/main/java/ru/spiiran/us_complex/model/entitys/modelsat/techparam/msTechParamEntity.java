@@ -14,7 +14,7 @@ public class msTechParamEntity implements IEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
+    private Long tech_param_id;
 
     @OneToMany(mappedBy = "msTechParamEntity")
     private List<msParameterEntity> parameterEntityList;
@@ -24,10 +24,6 @@ public class msTechParamEntity implements IEntity {
 
     @Column(name = "value_of_prm")
     private Double valueOfPrm;
-
-    public void setID(Long ID) {
-        this.ID = ID;
-    }
 
     public msTechParamEntity() {
     }
@@ -61,12 +57,15 @@ public class msTechParamEntity implements IEntity {
     }
 
     @Override
-    public Long getID() {
-        return ID;
-    }
-
-    @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
+    }
+
+    public Long getTech_param_id() {
+        return tech_param_id;
+    }
+
+    public void setTech_param_id(Long tech_param_id) {
+        this.tech_param_id = tech_param_id;
     }
 }

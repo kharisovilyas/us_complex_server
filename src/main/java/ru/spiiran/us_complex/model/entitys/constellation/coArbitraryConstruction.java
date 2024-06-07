@@ -4,16 +4,15 @@ import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.constellation.dtoArbitraryConstruction;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
-import ru.spiiran.us_complex.model.entitys.general.IEntityNode;
 import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
 
 @Entity
 @Table(name = "co_arbitrary_construction")
-public class coArbitraryConstruction implements IEntity, IEntityNode {
+public class coArbitraryConstruction implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long ID;
+    @Column(name = "id_satellite")
+    private Long satelliteId;
     @Column(name = "altitude")
     private Double altitude;
     @Column(name = "eccentricity")
@@ -53,7 +52,7 @@ public class coArbitraryConstruction implements IEntity, IEntityNode {
             coArbitraryConstruction existingConstellation,
             dtoArbitraryConstruction dtoArbitraryConstruction
     ) {
-        this.ID = existingConstellation.ID;
+        this.satelliteId = existingConstellation.getSatelliteId();
         this.altitude = dtoArbitraryConstruction.getAltitude();
         this.modelSat = dtoArbitraryConstruction.getModelSat();
         this.incline = dtoArbitraryConstruction.getIncline();
@@ -96,10 +95,6 @@ public class coArbitraryConstruction implements IEntity, IEntityNode {
 
     public void setTrueAnomaly(Double trueAnomaly) {
         this.trueAnomaly = trueAnomaly;
-    }
-    @Override
-    public Long getID() {
-        return ID;
     }
     @Override
     public dtoMessage getDtoMessage(String type, String message) {
@@ -147,5 +142,13 @@ public class coArbitraryConstruction implements IEntity, IEntityNode {
 
     public void setIdNodeEntity(IdNodeEntity idNodeEntity) {
         this.idNodeEntity = idNodeEntity;
+    }
+
+    public Long getSatelliteId() {
+        return satelliteId;
+    }
+
+    public void setSatelliteId(Long satelliteId) {
+        this.satelliteId = satelliteId;
     }
 }

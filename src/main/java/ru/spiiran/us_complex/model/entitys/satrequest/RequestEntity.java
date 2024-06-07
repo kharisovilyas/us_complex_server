@@ -112,11 +112,6 @@ public class RequestEntity implements IEntity {
     }
 
     @Override
-    public Long getID() {
-        return requestId;
-    }
-
-    @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
     }

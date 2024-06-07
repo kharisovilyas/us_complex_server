@@ -13,7 +13,7 @@ public class dtoEquipment implements IDTOEntity {
 
     public dtoEquipment(msEquipmentEntity msEquipmentEntity) {
         this.devName = msEquipmentEntity.getDevName();
-        this.id = msEquipmentEntity.getID();
+        this.id = msEquipmentEntity.getEquipmentId();
         this.type = msEquipmentEntity.getTypeEntity().getDto();
     }
 

@@ -67,13 +67,7 @@ public class ArbitraryConstructionService {
             return new dtoMessage("UPDATE ERROR", "Constellation not added");
         }
 
-
-        recalculationIdNodeConstellation();
         return new dtoMessage("UPDATE SUCCESS", "All Arbitrary Construction updated successfully");
-    }
-
-    private void recalculationIdNodeConstellation() {
-
     }
 
     private void updateExistingConstellationArbitrary(dtoArbitraryConstruction dtoArbitraryConstruction, Long id) {
