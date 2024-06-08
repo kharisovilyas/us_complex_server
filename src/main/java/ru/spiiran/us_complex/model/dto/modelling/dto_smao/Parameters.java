@@ -6,10 +6,10 @@ public class Parameters {
     private Long t0Ballistics;
     private Long t0FlightData;
     private Long tfFlightData;
-    private Long dtBallistics;
+    private Double dtBallistics;
     private Boolean isInterSatellite;
     private String controlSystem;
-    private Long dtShooting;
+    private Double dtShooting;
     public Parameters(SystemEntity systemEntity){
         this.t0Ballistics = systemEntity.getStartTime();
         this.t0FlightData = systemEntity.getModelingBegin();
@@ -46,14 +46,6 @@ public class Parameters {
         this.tfFlightData = tfFlightData;
     }
 
-    public Long getDtBallistics() {
-        return dtBallistics;
-    }
-
-    public void setDtBallistics(Long dtBallistics) {
-        this.dtBallistics = dtBallistics;
-    }
-
     public Boolean getInterSatelliteCommunication() {
         return isInterSatellite;
     }
@@ -70,11 +62,20 @@ public class Parameters {
         this.controlSystem = controlSystem;
     }
 
-    public Long getDtShooting() {
+
+    public Double getDtShooting() {
         return dtShooting;
     }
 
-    public void setDtShooting(Long dtShooting) {
+    public void setDtShooting(Double dtShooting) {
         this.dtShooting = dtShooting;
+    }
+
+    public Double getDtBallistics() {
+        return dtBallistics;
+    }
+
+    public void setDtBallistics(Double dtBallistics) {
+        this.dtBallistics = dtBallistics;
     }
 }

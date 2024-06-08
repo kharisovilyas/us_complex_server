@@ -7,7 +7,7 @@ import ru.spiiran.us_complex.model.dto.modelling.response.dtoEarthSat;
 import java.util.List;
 
 @Service
-public class DatabaseModellingService {
+public class ModellingDatabaseService {
 
     public void saveResultEarthSat(List<dtoEarthSat> dtoEarthSatList) {
 

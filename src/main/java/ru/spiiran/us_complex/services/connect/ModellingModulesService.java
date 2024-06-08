@@ -1,602 +1,29 @@
 package ru.spiiran.us_complex.services.connect;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import jakarta.persistence.EntityNotFoundException;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.dto.modelling.dto_pro42.FlightData;
-import ru.spiiran.us_complex.model.dto.modelling.dto_smao.*;
 import ru.spiiran.us_complex.model.dto.modelling.response.dtoAssessmentConstellation;
 import ru.spiiran.us_complex.model.dto.modelling.response.dtoEarthSat;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.IDTOSMAOResponse;
-import ru.spiiran.us_complex.model.dto.modelling.response.smao.dtoSmaoFlight;
-import ru.spiiran.us_complex.model.dto.modelling.response.smao.dtoSmaoOrder;
-import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
-import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
-import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
-import ru.spiiran.us_complex.model.entitys.satrequest.CatalogEntity;
-import ru.spiiran.us_complex.model.entitys.satrequest.RequestEntity;
-import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
-import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
-import ru.spiiran.us_complex.repositories.earth.EarthPointRepository;
-import ru.spiiran.us_complex.repositories.satrequest.CatalogRepository;
-import ru.spiiran.us_complex.repositories.satrequest.RequestRepository;
-import ru.spiiran.us_complex.repositories.satrequest.SystemRepository;
-import ru.spiiran.us_complex.utils.DirectoryNameGenerator;
-import ru.spiiran.us_complex.utils.FileUtils;
 import ru.spiiran.us_complex.utils.ParserJSON;
 
-import java.io.*;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ModellingModulesService {
-    // Директория с примерами заполнения ИД для Про42
-    @Value("${template.connect.pro42}")
-    private String templateDir;
 
-    // Директория со сгенерированными ИД для Про42 (в АРМ)
-    @Value("${generic.modelling.start.pro42}")
-    private String generic42Dir;
-
-    // Директория со сгенерированными ИД для СМАО (в АРМ)
-    @Value("${generic.modelling.start.smao}")
-    private String genericSMAODir;
-
-    // Директория модуля моделирования СМАО
-    @Value("${smao.directory}")
-    private String smaoDirectory;
-
-    // Директория движка Про42
-    @Value("${pro42.directory}")
-    private String pro42Directory;
+    @Autowired ConnectToService connectToService;
 
     @Autowired
-    private RequestRepository requestRepository;
-    @Autowired
-    private SystemRepository systemRepository;
+    private ModellingDatabaseService modellingDatabaseService;
 
-    @Autowired
-    private EarthPointRepository earthPointRepository;
-
-    @Autowired
-    private CatalogRepository catalogRepository;
-
-    @Autowired
-    private DatabaseModellingService databaseModellingService;
-
-    @Autowired
-    private ConstellationArbitraryRepository constellationArbitraryRepository;
-
-    public ModellingModulesService() {
-    }
-
-    public void genericPro42Files(dtoConstellation constellation, ModellingType modellingType) throws IOException {
-        String fileSim = templateDir + "/Inp_Sim.txt";
-        String fileOrb = templateDir + "/Orb_XXi.txt";
-        String fileSC = templateDir + "/SC_XXi.txt";
-        String fileCsg = templateDir + "/CsgFlag.txt";
-        // Создание объекта Path для директории Pro42 ./Ballistic
-        // директория ../../42_complex/42-Complex/Ballistic
-        Path modellingPro42BallisticDirectory = Paths.get(pro42Directory);
-
-        //Удаление предыдущих файлов из директории модуля моделирования ./Ballistic
-        FileUtils.deleteDirectoryContents(modellingPro42BallisticDirectory);
-
-        // Создание уникальной директории
-        String directoryName = generateUniqueDirectoryName();
-
-        //Создания поддиректории для разных типов моделирования
-        String specialDir = switch (modellingType){
-            case OneSatellite -> "one_sat";
-            case AssessmentSatEarth -> "window_earth";
-            case AssessmentConstructionConstellation -> "window_order";
-            case ConstellationNetwork -> "const_net";
-            case ConstellationDelivery -> "const_delivery";
-            case ConstellationSatEarth -> "const_earth_sat";
-        };
-
-        // Путь к созданной директории
-        String genericDir = this.generic42Dir + "/" + specialDir + "/" + directoryName;
-
-        // Создание объекта Path для директории в АРМ
-        Path directory = Paths.get(genericDir);
-
-        // Создание уникальной директории
-        Files.createDirectories(directory);
-
-        //Генерация ИД для Pro42 на основе данных БД для формирования ИД для СМАО
-        createSimFile(fileSim, genericDir, modellingType); // Файл с параметрами моделирования
-        crateCsgFlagFile(fileCsg, genericDir, modellingType);
-        createOrbFiles(fileOrb, genericDir); // Файлы орбит
-        createSCFiles(fileSC, genericDir); // Файлы КА
-
-        // Копирование файлов из созданной папки АРМа в директорию Pro42 ./Ballistic - для формирования ИД
-        copyFilesToDirectory(directory, modellingPro42BallisticDirectory);
-    }
-
-    private void copyFilesToDirectory(Path currentDirectory, Path targetDirectory) throws IOException {
-        Files.walkFileTree(currentDirectory, new SimpleFileVisitor<>() {
-            @Override
-            public FileVisitResult visitFile(Path sourceFile, BasicFileAttributes attrs) throws IOException {
-                Path targetFile = targetDirectory.resolve(currentDirectory.relativize(sourceFile));
-                Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
-                return FileVisitResult.CONTINUE;
-            }
-        });
-    }
-
-    private void crateCsgFlagFile(String fileCsg, String genericDir, ModellingType modellingType) throws IOException {
-        // Чтение файла
-        File file = new File(fileCsg);
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        StringBuilder stringBuilder = new StringBuilder();
-        String line;
-        String keyword = getKeyword(modellingType);
-        //TRUE					!  Flag Flight Data calculate
-        String replacement = "TRUE\t\t\t\t\t!  " + keyword;
-
-        // Чтение файла построчно и замена строк с ключевыми фразами
-        while ((line = reader.readLine()) != null) {
-            if (line.contains(keyword)) {
-                stringBuilder.append(replacement).append("\n");
-            } else {
-                stringBuilder.append(line).append("\n");
-            }
-        }
-        reader.close();
-
-        // Создаем путь к файлу в текущей директории
-        String filePath = genericDir + "/CsgFlag.txt";
-
-        // Запись измененного содержимого обратно в файл
-        File uploadFile = new File(filePath);
-        FileWriter writer = new FileWriter(uploadFile);
-        writer.write(stringBuilder.toString());
-        writer.close();
-    }
-
-    private String getKeyword(ModellingType modellingType) {
-        String keyword = "";
-        /*
-        FALSE					!  Flag Flight Data calculate
-        FALSE					!  Flag View Window calculate
-        FALSE					!  Flag Sc to Gs Plan Contact calculate
-        FALSE					!  Flag Sc to Gs Plan Contact calculate
-        */
-        switch (modellingType) {
-            //TODO: modellingType - определяет какой модуль моделирования запускать
-            case OneSatellite -> keyword = "Flag Flight Data calculate";
-            case AssessmentConstructionConstellation, AssessmentSatEarth -> keyword = "Flag View Window calculate";
-        }
-        return keyword;
-    }
-
-    private String formingStringOfEarthPoint() {
-        List<EarthPointEntity> earthPoints = earthPointRepository.findAll(); // Получаем список земных точек
-
-        // Формируем строку с информацией о земных точках
-        StringBuilder earthPointInformation = new StringBuilder();
-        earthPointInformation
-                .append(earthPoints.size())
-                .append("                                            ! Number of Ground Stations"); // Количество точек
-
-        for (EarthPointEntity earthPoint : earthPoints) {
-            earthPointInformation
-                    .append("\nTRUE  EARTH  ")
-                    .append(earthPoint.getLongitude())
-                    .append("  ")
-                    .append(earthPoint.getLatitude())
-                    .append("  ")
-                    .append("\"")
-                    .append(earthPoint.getNameEarthPoint())
-                    .append("\"")
-                    .append("             ! Exists, World, Lng, Lat, Label"); // Информация о каждой точке
-        }
-
-        return earthPointInformation.toString();
-    }
-
-    private String formingStringOfOrder() {
-        List<CatalogEntity> catalogEntities = catalogRepository.findAll(); // Получаем список земных точек
-
-        // Формируем строку с информацией о земных точках
-        StringBuilder orderInformation = new StringBuilder();
-        orderInformation
-                .append(catalogEntities.size())
-                .append("                                            ! Number of Ground Stations"); // Количество точек
-
-        for (CatalogEntity catalogEntity : catalogEntities) {
-            orderInformation
-                    .append("\nTRUE  EARTH  ")
-                    .append(catalogEntity.getLon())
-                    .append("  ")
-                    .append(catalogEntity.getLon())
-                    .append("  ")
-                    .append("\"")
-                    .append(catalogEntity.getGoalName())
-                    .append("\"")
-                    .append("             ! Exists, World, Lng, Lat, Label"); // Информация о каждой точке
-        }
-
-        return orderInformation.toString();
-    }
-
-    private List<String> copyResponsePro42BallisticModelling() throws InterruptedException, IOException, EntityNotFoundException {
-        // Создаем список команд для выполнения
-        List<String> command = new ArrayList<>();
-        // Добавляем команду cd для изменения рабочей директории
-        command.add("cd ../../42_complex/42-Complex/Pro42 && ./42-Complex ../Ballistic");
-
-        // Создаем процесс с указанными командами
-        ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", "-c", String.join(" ", command));
-
-        // Запуск команды
-        Process process = processBuilder.start();
-
-        // Получение вывода команды
-        InputStream inputStream = process.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-
-        // Список для хранения JSON-строк
-        List<String> jsonList = new ArrayList<>();
-
-        // Переменная для хранения текущей строки вывода
-        String line;
-
-        // Строка для хранения текущего JSON-объекта
-        StringBuilder jsonBuilder = new StringBuilder();
-
-        // Чтение вывода построчно
-        while ((line = reader.readLine()) != null) {
-            // Проверяем, содержит ли текущая строка открывающую скобку
-            if (line.contains("{")) {
-                // Начинается новый JSON-объект
-                jsonBuilder.setLength(0); // Очищаем буфер
-            }
-
-            // Добавляем текущую строку к текущему JSON-объекту
-            jsonBuilder.append(line);
-
-            // Проверяем, содержит ли текущая строка закрывающую скобку
-            if (line.contains("}")) {
-                // JSON-объект завершен, добавляем его в список
-                jsonList.add(jsonBuilder.toString());
-            }
-        }
-        return jsonList;
-    }
-
-    public void genericJsonSMAOFile(List<String> resultsFromPro42) throws EntityNotFoundException, JSONException, IOException {
-
-        List<RequestEntity> requestEntities = requestRepository.findAll();
-        List<Satellite> satellites =
-                constellationArbitraryRepository
-                        .findAll()
-                        .stream()
-                        .map(Satellite::new)
-                        .collect(Collectors.toList());
-
-        Parameters parameters = createParameters();
-
-        Event event = createEventForNode(satellites, parameters);
-        Event eventSat = createSatelliteEvent(satellites, parameters, resultsFromPro42.get(0));
-        EventRequest eventRequest = createEventRequest(requestEntities);
-
-        // Преобразование объектов Event в JSON строки
-        Gson gson = new Gson();
-        String jsonEvent = gson.toJson(event);
-        String jsonEventSat = gson.toJson(eventSat);
-        String jsonEventRequest = gson.toJson(eventRequest);
-
-        // Склеиваем две JSON строки
-        String json = jsonEvent + "\n" + jsonEventSat + "\n" + jsonEventRequest;
-
-        // Создание уникальной директории
-        String directoryName = generateUniqueDirectoryName();
-
-        // Путь к созданной директории
-        String genericDir = this.genericSMAODir + "/" + directoryName;
-
-        // Создание объекта Path для директории в АРМ
-        Path directory = Paths.get(genericDir);
-
-        // Создание всех необходимых директорий
-        Files.createDirectories(directory);
-
-        String nameOfGenericFile = "/event.json";
-
-        // Создаем путь к файлу в текущей директории
-        String filePath = genericDir + nameOfGenericFile;
-
-        // Запись измененного содержимого обратно в файл
-        File uploadFile = new File(filePath);
-        FileWriter writer = new FileWriter(uploadFile);
-        writer.write(json);
-        writer.close();
-
-        copyFilesToDirectory(directory, Paths.get(smaoDirectory));
-    }
-    private Event createEventForNode(List<Satellite> satellites, Parameters parameters) {
-        EarthPointEntity earthPointEntity = earthPointRepository.findAll().get(0);
-        IdNodeEntity idNodeEntity = earthPointEntity.getIdNodeEntity();
-        return new Event(
-                "E00",
-                new Node(idNodeEntity),
-                satellites,
-                parameters,
-                true
-        );
-    }
-
-    private EventRequest createEventRequest(List<RequestEntity> requestEntities) {
-        List<Order> orderList = new ArrayList<>();
-        for (RequestEntity request : requestEntities) {
-            orderList.add(
-                    new Order(request)
-            );
-        }
-        return new EventRequest(
-                requestEntities.get(0).getTime(),
-                orderList,
-                "E20",
-                requestEntities.get(0).getNodeEntity().getNodeId()
-        );
-    }
-
-    private Event createSatelliteEvent(List<Satellite> satellites, Parameters parameters, String resultJSON) throws JSONException {
-        // Получаем данные о спутнике из репозитория (пример)
-        coArbitraryConstruction satellite = constellationArbitraryRepository.findAll().get(0);
-
-        // Удаляем "flightData": из строки JSON
-        String cleanedJSON = resultJSON.replace("\"flightData\":", "");
-
-        FlightData flightData = ParserJSON.parseFlightDataJSON(cleanedJSON);
-
-        // Создаем объект Event и добавляем к нему flightData
-        return new Event(
-                "E00",
-                new Node(
-                        satellite.getIdNodeEntity()
-                ),
-                satellites,
-                parameters,
-                true,
-                flightData
-        );
-
-    }
-
-    private Parameters createParameters() throws EntityNotFoundException {
-        Optional<SystemEntity> optionalSystemEntity = systemRepository.findById(1L);
-        if (optionalSystemEntity.isPresent()) {
-            return new Parameters(optionalSystemEntity.get());
-        } else {
-            throw new EntityNotFoundException("System parameters not exist");
-        }
-
-    }
-
-    // Метод для создания уникальной директории на основе текущего времени
-    private String generateUniqueDirectoryName() {
-        DirectoryNameGenerator generator = DirectoryNameGenerator.getInstance();
-        return generator.generateUniqueDirectoryName();
-    }
-
-    private void createSCFiles(String fileSC, String genericDir) throws IOException {
-        List<coArbitraryConstruction> arbitraryConstructionList = constellationArbitraryRepository.findAll();
-        for (coArbitraryConstruction arbitraryConstruction : arbitraryConstructionList) {
-            //"S/C"                         !  Label
-            String label = "\"" + arbitraryConstruction.getSatelliteId() + "\"" + "                         !  Label";
-
-            // Чтение файла
-            File file = new File(fileSC);
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            int currentLine = 0;
-
-            // Чтение файла построчно и замена строк с ключевыми фразами
-            while ((line = reader.readLine()) != null) {
-                currentLine++;
-                stringBuilder.append(line).append("\n");
-                if (currentLine == 2) {
-                    stringBuilder.append(label).append("\n");
-                    reader.readLine();
-                }
-            }
-            reader.close();
-            // Создаем путь к файлу в текущей директории
-            String filePath = genericDir + "/SC_XX" + arbitraryConstructionList.indexOf(arbitraryConstruction) + ".txt";
-
-            // Запись измененного содержимого обратно в файл
-            File uploadFile = new File(filePath);
-            FileWriter writer = new FileWriter(uploadFile);
-            writer.write(stringBuilder.toString());
-            writer.close();
-        }
-    }
-
-    private void createOrbFiles(String fileOrb, String genericDir) throws IOException {
-        //400.0  2.0                    !  Min Altitude (km), Eccentricity
-        //52.0                          !  Inclination (deg)
-        //180.0                         !  Right Ascension of Ascending Node (deg)
-        //0.0                           !  Argument of Periapsis (deg)
-        //0.0                           !  True Anomaly (deg)
-        List<coArbitraryConstruction> arbitraryConstructionList = constellationArbitraryRepository.findAll();
-        for (coArbitraryConstruction arbitraryConstruction : arbitraryConstructionList) {
-            String parameters = arbitraryConstruction.getAltitude() + " " + arbitraryConstruction.getEccentricity() + "                    !  Min Altitude (km), Eccentricity\n" +
-                    arbitraryConstruction.getIncline() + "                          !  Inclination (deg)\n" +
-                    arbitraryConstruction.getLongitudeAscendingNode() + "                         !  Right Ascension of Ascending Node (deg)\n" +
-                    arbitraryConstruction.getPerigeeWidthArgument() + "                           !  Argument of Periapsis (deg)\n" +
-                    arbitraryConstruction.getTrueAnomaly() + "                           !  True Anomaly (deg)";
-            File file = new File(fileOrb);
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            int currentLine = 0;
-
-            // Чтение файла построчно и замена строк с ключевыми фразами
-            while ((line = reader.readLine()) != null) {
-                currentLine++;
-                stringBuilder.append(line).append("\n");
-                if (currentLine == 15) {
-                    stringBuilder.append(parameters).append("\n");
-                    reader.readLine();
-                    reader.readLine();
-                    reader.readLine();
-                    reader.readLine();
-                    reader.readLine();
-                }
-            }
-            reader.close();
-            // Создаем путь к файлу в текущей директории
-            String filePath = genericDir + "/Orb_XX" + arbitraryConstructionList.indexOf(arbitraryConstruction) + ".txt";
-
-            // Запись измененного содержимого обратно в файл
-            File uploadFile = new File(filePath);
-            FileWriter writer = new FileWriter(uploadFile);
-            writer.write(stringBuilder.toString());
-            writer.close();
-        }
-    }
-
-
-    private void createSimFile(String fileSim, String genericDir, ModellingType modellingType) throws IOException, EntityNotFoundException {
-        // Ключевые фразы для поиска
-        String[] keywords = {"Simulation Control", "Reference Orbits", "Spacecraft", "* Environment  *", "Ground Station"};
-
-        Optional<SystemEntity> optionalSystemEntity = systemRepository.findById(1L);
-        if (optionalSystemEntity.isPresent()) {
-            SystemEntity systemEntity = optionalSystemEntity.get();
-
-            //10000.0   0.1                   !  Sim Duration, Step Size [sec]
-            String simulationControlLine = (systemEntity.getDuration())
-                    + "   " + systemEntity.getStep()
-                    + "                   !  Sim Duration, Step Size [sec]";
-
-            List<coArbitraryConstruction> arbitraryConstructions = constellationArbitraryRepository.findAll();
-
-            //1                               !  Number of Reference Orbits
-            //TRUE   Orb_LEO.txt              !  Input file name for Orb 0
-            String referenceOrbits = arbitraryConstructions.size() + "                               !  Number of Reference Orbits\n" +
-                    arbitraryConstructions.stream()
-                            .map(file -> "TRUE   Orb_XX" + arbitraryConstructions.indexOf(file) + ".txt              !  Input file name for Orb " + arbitraryConstructions.indexOf(file))
-                            .collect(Collectors.joining("\n"));
-
-            //1                               !  Number of Spacecraft
-            //TRUE  0 SC_Empty.txt           !  Existence, RefOrb, Input file for SC 0
-
-            String spacecraft = arbitraryConstructions.size() + "                               !  Number of Spacecraft\n" +
-                    arbitraryConstructions.stream()
-                            .map(file -> "TRUE  " + arbitraryConstructions.indexOf(file) + " SC_XX" + arbitraryConstructions.indexOf(file) + ".txt           !  Existence, RefOrb, Input file for SC " + arbitraryConstructions.indexOf(file))
-                            .collect(Collectors.joining("\n"));
-
-            // Получаем время в формате Unix
-            long unixTime = systemEntity.getStartTime();
-
-            // Конвертируем время Unix в объект LocalDateTime
-            Instant instant = Instant.ofEpochSecond(unixTime);
-            LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
-
-            // Форматируем дату и время в указанный формат
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM dd yyyy HH mm ss.SS");
-            String formattedDateTime = dateTime.format(formatter);
-
-            // Создаем строку environment
-            String environment = formattedDateTime.substring(0, 10) + "                      !  Date (UTC) (Month, Day, Year)\n" +
-                    formattedDateTime.substring(11) + "                     !  Time (UTC) (Hr,Min,Sec)";
-            // Содержимое для замены
-            List<String> replacements = new ArrayList<>();
-            replacements.add(simulationControlLine);
-            replacements.add(referenceOrbits);
-            replacements.add(spacecraft);
-            replacements.add(environment);
-            replacements.add(
-                    replacementsGroundStation(modellingType)
-            );
-
-            // Чтение файла
-            File file = new File(fileSim);
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-
-            // Чтение файла построчно и замена строк с ключевыми фразами
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
-                if (line.contains(keywords[0])) {
-                    // Пропускаем 2 строки после найденной
-                    stringBuilder.append(reader.readLine()).append("\n");
-                    stringBuilder.append(replacements.get(0)).append("\n");
-                    reader.readLine(); // Пропускаем следующую строку
-
-                } else if (line.contains(keywords[1])) {
-                    // Пропускаем одну строку после найденной
-                    stringBuilder.append(replacements.get(1)).append("\n");
-                    reader.readLine(); // Пропускаем следующую строку
-                    reader.readLine(); // Пропускаем следующую строку
-                } else if (line.contains(keywords[2])) {
-                    // Пропускаем одну строку после найденной
-                    stringBuilder.append(replacements.get(2)).append("\n");
-                    reader.readLine(); // Пропускаем следующую строку
-                    reader.readLine(); // Пропускаем следующую строку
-                } else if (line.contains(keywords[3])) {
-                    // Пропускаем одну строку после найденной
-                    stringBuilder.append(replacements.get(3)).append("\n");
-                    reader.readLine(); // Пропускаем следующую строку
-                    reader.readLine(); // Пропускаем следующую строку
-                } else if (
-                        line.contains(keywords[4]) &&
-                                (modellingType.equals(ModellingType.AssessmentSatEarth) || modellingType.equals(ModellingType.AssessmentConstructionConstellation))
-                ) {
-                    stringBuilder.append(replacements.get(4)).append("\n");
-                    reader.readLine(); // Пропускаем следующую строку
-                    reader.readLine(); // Пропускаем следующую строку
-                    reader.readLine(); // Пропускаем следующую строку
-                    reader.readLine(); // Пропускаем следующую строку
-                    reader.readLine(); // Пропускаем следующую строку
-                    reader.readLine(); // Пропускаем следующую строку
-                }
-            }
-            reader.close();
-
-            // Создаем путь к файлу в текущей директории
-            String filePath = genericDir + "/Inp_Sim.txt";
-
-            // Запись измененного содержимого обратно в файл
-            File uploadFile = new File(filePath);
-            FileWriter writer = new FileWriter(uploadFile);
-            writer.write(stringBuilder.toString());
-            writer.close();
-        } else {
-            throw new EntityNotFoundException("System information not added");
-        }
-    }
-
-    private String replacementsGroundStation(ModellingType modellingType) {
-        return switch (modellingType){
-            case AssessmentConstructionConstellation -> formingStringOfOrder();
-            case AssessmentSatEarth -> formingStringOfEarthPoint();
-            default -> "";
-        };
-    }
+    public ModellingModulesService() {}
 
     public enum ModellingType {
         OneSatellite,
@@ -613,10 +40,10 @@ public class ModellingModulesService {
         List<String> modellingData;
         try {
 
-            genericPro42Files(constellation, ModellingType.AssessmentSatEarth);
-            modellingData = copyResponsePro42BallisticModelling();
+            connectToService.genericPro42Files(constellation, ModellingType.AssessmentSatEarth);
+            modellingData = connectToService.copyResponsePro42BallisticModelling();
 
-            databaseModellingService.saveResultEarthSat(convertToEarthSat(modellingData));
+            modellingDatabaseService.saveResultEarthSat(convertToEarthSat(modellingData));
 
             return modellingData; /*new dtoMessage("SUCCESS", "Modelling has been completed");*/
         } catch (InterruptedException | IOException e) {
@@ -632,9 +59,9 @@ public class ModellingModulesService {
     public List<String> assessmentConstellation(dtoConstellation constellation){
         List<String> modellingData;
         try {
-            genericPro42Files(constellation, ModellingType.AssessmentConstructionConstellation);
-            modellingData = copyResponsePro42BallisticModelling();
-            databaseModellingService.saveResultConstellationOrder(
+            connectToService.genericPro42Files(constellation, ModellingType.AssessmentConstructionConstellation);
+            modellingData = connectToService.copyResponsePro42BallisticModelling();
+            modellingDatabaseService.saveResultConstellationOrder(
                     convertToAssessmentConstellationOrder(modellingData)
             );
             return modellingData; /*new dtoMessage("SUCCESS", "Modelling has been completed");*/
@@ -661,28 +88,35 @@ public class ModellingModulesService {
         return viewWindows;
     }
 
-    public List<String/*IDTOSMAOResponse*/> modellingOneSat() {
+    public List<IDTOSMAOResponse> modellingOneSat() {
         try {
             // Генерирует файлы ИД для отправки их в Pro42
             // Копирование файлы в рабочую директорию движка
-            genericPro42Files(null, ModellingType.OneSatellite);
+            connectToService.genericPro42Files(null, ModellingType.OneSatellite);
 
             // Генерирует файлы ИД для отправки их в Pro42
-            List<String> ballisticModellingData = copyResponsePro42BallisticModelling();
+            List<String> ballisticModellingData = connectToService.copyResponsePro42BallisticModelling();
 
             // Генерирует файлы ИД для СМАО
-            genericJsonSMAOFile(ballisticModellingData);
+            connectToService.genericJsonSMAOFile(ballisticModellingData);
 
             // Создание файла в директории СМАО
-            List<String> smaoModellingData = copyResponseSMAOModelling(ballisticModellingData);
+            String smaoModellingData = connectToService.copyResponseSMAOModelling();
 
             saveSMAOData(smaoModellingData);
 
-            return smaoModellingData; /*smaoModellingData
-                    .stream()
-                    .flatMap(data -> splitJsonObjects(data).stream())
-                    .map(this::parseJsonToDto)
-                    .collect(Collectors.toList());*/
+            smaoModellingData = ParserJSON.cleanJsonFromResponse(smaoModellingData);
+
+            List<String> listOfModellingData = ParserJSON.splitJsonObjects(smaoModellingData);
+
+            return listOfModellingData
+                            .stream()
+                            .map(
+                                    ParserJSON::parseJsonToDto
+                            )
+                            .collect(
+                                    Collectors.toList()
+                            );
 
         } catch (InterruptedException | JSONException | IOException e) {
             e.printStackTrace();
@@ -690,113 +124,22 @@ public class ModellingModulesService {
         }
     }
 
-    private List<String> splitJsonObjects(String json) {
-        // Разделение JSON-строк на отдельные объекты
-        List<String> jsonObjects = new ArrayList<>();
-        int openBraces = 0;
-        StringBuilder currentJson = new StringBuilder();
 
-        for (char c : json.toCharArray()) {
-            if (c == '{') openBraces++;
-            if (c == '}') openBraces--;
-            currentJson.append(c);
-            if (openBraces == 0 && !currentJson.isEmpty()) {
-                jsonObjects.add(currentJson.toString());
-                currentJson.setLength(0);
-            }
-        }
+    private void saveSMAOData(String smaoModellingData) {
 
-        return jsonObjects;
-    }
-
-    private IDTOSMAOResponse parseJsonToDto(String jsonResponse) {
-        try {
-            if (jsonResponse == null || jsonResponse.trim().isEmpty()) {
-                throw new IllegalArgumentException("Empty or null JSON response");
-            }
-
-            // Обработка JSON-строки перед разбором
-            String unescapedJSON = ParserJSON.removeQuotesAndUnescape(jsonResponse);
-
-            JsonElement jsonElement = JsonParser.parseString(unescapedJSON);
-            if (!jsonElement.isJsonObject()) {
-                throw new IllegalStateException("Not a JSON Object: " + unescapedJSON);
-            }
-
-            String type = jsonElement.getAsJsonObject().get("type").getAsString();
-            if ("E42".equals(type)) {
-                return new dtoSmaoFlight(unescapedJSON);
-            } else if ("E20".equals(type)) {
-                return new dtoSmaoOrder(unescapedJSON);
-            } else {
-                throw new IllegalArgumentException("Unknown type: " + type);
-            }
-        } catch (JsonSyntaxException e) {
-            throw new RuntimeException("Failed to parse JSON: " + jsonResponse, e);
-        }
-    }
-
-    private void saveSMAOData(List<String> smaoModellingData) {
-
-    }
-
-
-    private List<String> copyResponseSMAOModelling(List<String> ballisticModellingData) throws IOException {
-        // Создаем список команд для выполнения
-        List<String> command = new ArrayList<>();
-        // Добавляем команду cd для изменения рабочей директории
-        command.add("cd ../../smao_complex/SMAO-Complex && ./SMAO-Complex");
-
-        // Создаем процесс с указанными командами
-        ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", "-c", String.join(" ", command));
-
-        // Запуск команды
-        Process process = processBuilder.start();
-
-        // Получение вывода команды
-        InputStream inputStream = process.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-
-        // Список для хранения JSON-строк
-        List<String> jsonList = new ArrayList<>();
-
-        // Переменная для хранения текущей строки вывода
-        String line;
-
-        // Строка для хранения текущего JSON-объекта
-        StringBuilder jsonBuilder = new StringBuilder();
-
-        // Чтение вывода построчно
-        while ((line = reader.readLine()) != null) {
-            // Проверяем, содержит ли текущая строка открывающую скобку
-            if (line.contains("{")) {
-                // Начинается новый JSON-объект
-                jsonBuilder.setLength(0); // Очищаем буфер
-            }
-
-            // Добавляем текущую строку к текущему JSON-объекту
-            jsonBuilder.append(line);
-
-            // Проверяем, содержит ли текущая строка закрывающую скобку
-            if (line.contains("}")) {
-                // JSON-объект завершен, добавляем его в список
-                jsonList.add(jsonBuilder.toString());
-            }
-        }
-        return jsonList;
     }
 
     public dtoMessage modellingConstellationSatEarth(dtoConstellation constellation) {
         try {
             // Генерирует файлы ИД для отправки их в Pro42
             // Копирует файлы в рабочую директорию движка
-            genericPro42Files(constellation, ModellingType.ConstellationSatEarth);
+            connectToService.genericPro42Files(constellation, ModellingType.ConstellationSatEarth);
 
             // Генерирует файлы ИД для отправки их в Pro42
-            List<String> ballisticModellingData = copyResponsePro42BallisticModelling();
+            List<String> ballisticModellingData = connectToService.copyResponsePro42BallisticModelling();
 
             // Генерирует файлы ИД для СМАО
-            genericJsonSMAOFile(ballisticModellingData);
+            connectToService.genericJsonSMAOFile(ballisticModellingData);
 
             return new dtoMessage("SUCCESS", "Connect success");
 
@@ -809,13 +152,13 @@ public class ModellingModulesService {
         try {
             // Генерирует файлы ИД для отправки их в Pro42
             // Копирует файлы в рабочую директорию движка
-            genericPro42Files(constellation, ModellingType.ConstellationNetwork);
+            connectToService.genericPro42Files(constellation, ModellingType.ConstellationNetwork);
 
             // Генерирует файлы ИД для отправки их в Pro42
-            List<String> ballisticModellingData = copyResponsePro42BallisticModelling();
+            List<String> ballisticModellingData = connectToService.copyResponsePro42BallisticModelling();
 
             // Генерирует файлы ИД для СМАО
-            genericJsonSMAOFile(ballisticModellingData);
+            connectToService.genericJsonSMAOFile(ballisticModellingData);
 
             return new dtoMessage("SUCCESS", "Connect success");
 
@@ -828,13 +171,13 @@ public class ModellingModulesService {
         try {
             // Генерирует файлы ИД для отправки их в Pro42
             // Копирует файлы в рабочую директорию движка
-            genericPro42Files(constellation, ModellingType.ConstellationDelivery);
+            connectToService.genericPro42Files(constellation, ModellingType.ConstellationDelivery);
 
             // Генерирует файлы ИД для отправки их в Pro42
-            List<String> ballisticModellingData = copyResponsePro42BallisticModelling();
+            List<String> ballisticModellingData = connectToService.copyResponsePro42BallisticModelling();
 
             // Генерирует файлы ИД для СМАО
-            genericJsonSMAOFile(ballisticModellingData);
+            connectToService.genericJsonSMAOFile(ballisticModellingData);
 
             return new dtoMessage("SUCCESS", "Connect success");
 

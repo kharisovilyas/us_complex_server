@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
+import ru.spiiran.us_complex.model.dto.modelling.response.smao.IDTOSMAOResponse;
 import ru.spiiran.us_complex.services.connect.ModellingModulesService;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class RestModellingController {
     @Autowired
     private ModellingModulesService modellingModulesService;
     @GetMapping("/satellite")
-    public ResponseEntity<List<String/*IDTOSMAOResponse*/>> frameworkSatellite(){
+    public ResponseEntity<List<IDTOSMAOResponse>> frameworkSatellite(){
         return ResponseEntity.ok().body(modellingModulesService.modellingOneSat());
     }
 

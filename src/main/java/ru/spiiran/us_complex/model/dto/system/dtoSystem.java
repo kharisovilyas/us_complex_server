@@ -17,8 +17,8 @@ public class dtoSystem implements IDTOEntity {
     private Long modelingEnd;
     private Boolean interSatelliteCommunication;
     private String controlSystem;
-    private Long step;
-    private Long duration;
+    private Double step;
+    private Double duration;
 
     public dtoSystem() {}
     public dtoSystem(SystemEntity systemEntity) {
@@ -109,23 +109,6 @@ public class dtoSystem implements IDTOEntity {
     }
 
 
-
-    public Long getStep() {
-        return step;
-    }
-
-    public void setStep(Long step) {
-        this.step = step;
-    }
-
-    public Long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Long duration) {
-        this.duration = duration;
-    }
-
     public Long getStartTime() {
         return startTime;
     }
@@ -148,5 +131,21 @@ public class dtoSystem implements IDTOEntity {
 
     public void setModelingEnd(Long modelingEnd) {
         this.modelingEnd = modelingEnd;
+    }
+
+    public Double getStep() {
+        return step;
+    }
+
+    public void setStep(Double step) {
+        this.step = step;
+    }
+
+    public Double getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Double duration) {
+        this.duration = duration;
     }
 }

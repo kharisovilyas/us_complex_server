@@ -31,9 +31,9 @@ public class SystemEntity implements IEntity {
     @Column(name = "modeling_end")
     private Long modelingEnd;
     @Column(name = "modeling_step")
-    private Long step;
+    private Double step;
     @Column(name = "duration")
-    private Long duration;
+    private Double duration;
     @Column(name = "inter_satellite_communication")
     private Boolean interSatelliteCommunication;
     @Column(name = "control_system")
@@ -131,24 +131,6 @@ public class SystemEntity implements IEntity {
         this.controlSystem = controlSystem;
     }
 
-
-
-    public Long getStep() {
-        return step;
-    }
-
-    public void setStep(Long step) {
-        this.step = step;
-    }
-
-    public Long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Long duration) {
-        this.duration = duration;
-    }
-
     public Long getStartTime() {
         return startTime;
     }
@@ -179,5 +161,21 @@ public class SystemEntity implements IEntity {
 
     public void setSystemId(Long systemId) {
         this.systemId = systemId;
+    }
+
+    public Double getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Double duration) {
+        this.duration = duration;
+    }
+
+    public Double getStep() {
+        return step;
+    }
+
+    public void setStep(Double step) {
+        this.step = step;
     }
 }

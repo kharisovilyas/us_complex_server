@@ -10,6 +10,6 @@
   "modelingEnd": 213525235234,
   "interSatelliteCommunication": false,
   "controlSystem": "Automated",
-  "step": 0.1,
+  "step": 1,
   "duration": 100
 }
