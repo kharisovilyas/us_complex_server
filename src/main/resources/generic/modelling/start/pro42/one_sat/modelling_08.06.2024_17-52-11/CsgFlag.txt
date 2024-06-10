@@ -1,6 +1,0 @@
-<<<<<<<<<<  42-CSG: Flag for calculate in CSG Module  >>>>>>>>>
-*************************** CSG Flag **************************
-TRUE					!  Flag Flight Data calculate
-FALSE					!  Flag View Window calculate
-FALSE					!  Flag Sc to Gs Plan Contact calculate
-FALSE					!  Flag Sc to Gs Plan Contact calculate

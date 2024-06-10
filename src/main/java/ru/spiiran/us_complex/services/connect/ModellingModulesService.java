@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.dto.modelling.response.dtoAssessmentConstellation;
-import ru.spiiran.us_complex.model.dto.modelling.response.dtoEarthSat;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.IDTOSMAOResponse;
+import ru.spiiran.us_complex.utils.ConverterDTO;
 import ru.spiiran.us_complex.utils.ParserJSON;
 
 import java.io.IOException;
@@ -43,49 +42,13 @@ public class ModellingModulesService {
             connectToService.genericPro42Files(constellation, ModellingType.AssessmentSatEarth);
             modellingData = connectToService.copyResponsePro42BallisticModelling();
 
-            modellingDatabaseService.saveResultEarthSat(convertToEarthSat(modellingData));
+            modellingDatabaseService.saveResultEarthSat(ConverterDTOnvertToEarthSat(modellingData));
 
             return modellingData; /*new dtoMessage("SUCCESS", "Modelling has been completed");*/
         } catch (InterruptedException | IOException e) {
             return new ArrayList<>(); /*new dtoMessage("ERROR", "Modelling has not been completed. Description:\n" + e.getMessage());*/
         }
 
-    }
-
-    private List<dtoEarthSat> convertToEarthSat(List<String> ballisticModellingData) {
-        return null;
-    }
-
-    public List<String> assessmentConstellation(dtoConstellation constellation){
-        List<String> modellingData;
-        try {
-            connectToService.genericPro42Files(constellation, ModellingType.AssessmentConstructionConstellation);
-            modellingData = connectToService.copyResponsePro42BallisticModelling();
-            modellingDatabaseService.saveResultConstellationOrder(
-                    convertToAssessmentConstellationOrder(modellingData)
-            );
-            return modellingData; /*new dtoMessage("SUCCESS", "Modelling has been completed");*/
-        } catch (InterruptedException | IOException e) {
-            return new ArrayList<>(); /*new dtoMessage("ERROR", "Modelling has not been completed. Description:\n" + e.getMessage());*/
-        }
-    }
-
-    private List<dtoAssessmentConstellation> convertToAssessmentConstellationOrder(List<String> resultJSON) {
-        List<dtoAssessmentConstellation> viewWindows = new ArrayList<>();
-        for (String data : resultJSON) {
-            // Удаляем "ViewVindows Array": из строки JSON
-            String cleanedJSON = data
-                    .replace("\"ViewVindows Array\":", "")
-                    .replace("{", "")
-                    .replace("[", "")
-                    .replace("},", "}");
-
-            // Парсим JSON с помощью метода из ParserJSON
-            viewWindows.add(
-                    ParserJSON.parseViewWindowJSON(cleanedJSON)
-            );
-        }
-        return viewWindows;
     }
 
     public List<IDTOSMAOResponse> modellingOneSat() {
@@ -101,15 +64,11 @@ public class ModellingModulesService {
             connectToService.genericJsonSMAOFile(ballisticModellingData);
 
             // Создание файла в директории СМАО
-            String smaoModellingData = connectToService.copyResponseSMAOModelling();
+            List<String> smaoModellingData = connectToService.copyResponseSMAOModelling();
 
             saveSMAOData(smaoModellingData);
 
-            smaoModellingData = ParserJSON.cleanJsonFromResponse(smaoModellingData);
-
-            List<String> listOfModellingData = ParserJSON.splitJsonObjects(smaoModellingData);
-
-            return listOfModellingData
+            return smaoModellingData
                             .stream()
                             .map(
                                     ParserJSON::parseJsonToDto
@@ -125,7 +84,7 @@ public class ModellingModulesService {
     }
 
 
-    private void saveSMAOData(String smaoModellingData) {
+    private void saveSMAOData(List<String> smaoModellingData) {
 
     }
 

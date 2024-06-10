@@ -474,7 +474,7 @@ public class ConnectToService {
             SystemEntity systemEntity = optionalSystemEntity.get();
 
             //10000.0   0.1                   !  Sim Duration, Step Size [sec]
-            String simulationControlLine = (systemEntity.getDuration())
+            String simulationControlLine = (systemEntity.getModelingEnd() - systemEntity.getModelingBegin())
                     + "   " + systemEntity.getStep()
                     + "                   !  Sim Duration, Step Size [sec]";
 
@@ -585,7 +585,7 @@ public class ConnectToService {
         };
     }
 
-    public String copyResponseSMAOModelling() throws IOException {
+    public List<String> copyResponseSMAOModelling() throws IOException {
         // Создаем список команд для выполнения
         List<String> command = new ArrayList<>();
         // Добавляем команду cd для изменения рабочей директории
@@ -612,7 +612,7 @@ public class ConnectToService {
             jsonBuilder.append(line);
         }
 
-        return jsonBuilder.toString();
+        return ParserJSON.cleanJsonFromResponse(jsonBuilder.toString());
     }
 
     public String copyResponsePro42Modelling() {

@@ -43,34 +43,6 @@ public class ParserJSON {
         return StringEscapeUtils.unescapeJson(noQuotes);
     }
 
-    public static List<String> splitJsonObjects(String json) {
-        List<String> jsonObjects = new ArrayList<>();
-        int braceCount = 0;
-        int start = 0;
-        boolean inString = false;
-
-        for (int i = 0; i < json.length(); i++) {
-            char c = json.charAt(i);
-            if (c == '"') {
-                inString = !inString;
-            }
-            if (!inString) {
-                if (c == '{') {
-                    if (braceCount == 0) {
-                        start = i;
-                    }
-                    braceCount++;
-                } else if (c == '}') {
-                    braceCount--;
-                    if (braceCount == 0) {
-                        jsonObjects.add(json.substring(start, i + 1));
-                    }
-                }
-            }
-        }
-        return jsonObjects;
-    }
-
     public static IDTOSMAOResponse parseJsonToDto(String jsonResponse) {
         try {
             if (jsonResponse == null || jsonResponse.trim().isEmpty()) {
@@ -98,11 +70,11 @@ public class ParserJSON {
         }
     }
 
-    public static String cleanJsonFromResponse(String smaoModellingData) {
-        StringBuilder jsonBuilder = new StringBuilder();
+    public static List<String> cleanJsonFromResponse(String smaoModellingData) {
+        List<String> jsonObjects = new ArrayList<>();
+        StringBuilder currentObject = new StringBuilder();
         int braceCount = 0;
         boolean inString = false;
-        boolean insideJson = false;
 
         for (char c : smaoModellingData.toCharArray()) {
             if (c == '"') {
@@ -110,24 +82,23 @@ public class ParserJSON {
             }
             if (!inString) {
                 if (c == '{') {
-                    if (braceCount == 0) {
-                        insideJson = true;
-                    }
                     braceCount++;
                 } else if (c == '}') {
                     braceCount--;
-                    if (braceCount == 0) {
-                        insideJson = false;
-                        jsonBuilder.append(c);
-                        break;
-                    }
                 }
             }
-            if (insideJson) {
-                jsonBuilder.append(c);
+
+            if (braceCount > 0) {
+                currentObject.append(c);
+            }
+
+            if (braceCount == 0 && currentObject.length() > 0) {
+                currentObject.append(c); // add the closing brace
+                jsonObjects.add(currentObject.toString().trim());
+                currentObject.setLength(0);
             }
         }
 
-        return jsonBuilder.toString();
+        return jsonObjects;
     }
 }

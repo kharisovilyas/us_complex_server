@@ -32,7 +32,7 @@ public class Order {
         CatalogEntity catalogEntity = request.getCatalogEntity();
         this.id = catalogEntity.getGoalId();
         this.name = catalogEntity.getGoalName();
-        this.latitude = catalogEntity.getAlt();
+        this.latitude = catalogEntity.getLat();
         this.longitude = catalogEntity.getLon();
         this.altitude = catalogEntity.getAlt();
         this.priority = request.getPriory();
