@@ -33,7 +33,7 @@ public class ModellingModulesService {
         AssessmentSatEarth
     }
 
-    public List<String> assessmentEarthSat(dtoConstellation constellation){
+    public dtoMessage assessmentEarthSat(dtoConstellation constellation){
         // Генерирует файлы ИД для отправки их в Pro42
         // Копирует файлы в рабочую директорию движка
         List<String> modellingData;
@@ -42,13 +42,27 @@ public class ModellingModulesService {
             connectToService.genericPro42Files(constellation, ModellingType.AssessmentSatEarth);
             modellingData = connectToService.copyResponsePro42BallisticModelling();
 
-            modellingDatabaseService.saveResultEarthSat(ConverterDTOnvertToEarthSat(modellingData));
+            modellingDatabaseService.saveResultEarthSat(ConverterDTO.convertToEarthSat(modellingData));
 
-            return modellingData; /*new dtoMessage("SUCCESS", "Modelling has been completed");*/
+            return new dtoMessage("SUCCESS", "Modelling has been completed");
         } catch (InterruptedException | IOException e) {
-            return new ArrayList<>(); /*new dtoMessage("ERROR", "Modelling has not been completed. Description:\n" + e.getMessage());*/
+            return new dtoMessage("ERROR", "Modelling has not been completed. Description:\n" + e.getMessage());
         }
 
+    }
+
+    public dtoMessage assessmentConstellation(dtoConstellation constellation){
+        List<String> modellingData;
+        try {
+            connectToService.genericPro42Files(constellation, ModellingModulesService.ModellingType.AssessmentConstructionConstellation);
+            modellingData = connectToService.copyResponsePro42BallisticModelling();
+            modellingDatabaseService.saveResultConstellationOrder(
+                    ConverterDTO.convertToAssessmentConstellationOrder(modellingData)
+            );
+            return new dtoMessage("SUCCESS", "Modelling has been completed");
+        } catch (InterruptedException | IOException e) {
+            return new dtoMessage("ERROR", "Modelling has not been completed. Description:\n" + e.getMessage());
+        }
     }
 
     public List<IDTOSMAOResponse> modellingOneSat() {

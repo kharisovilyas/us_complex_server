@@ -37,13 +37,13 @@ public class RestModellingController {
     }
 
     @GetMapping("/view/earth")
-    public ResponseEntity<List<String>/*dtoMessage*/> frameworkViewEarthPoint(){
+    public ResponseEntity<dtoMessage> frameworkViewEarthPoint(){
         return ResponseEntity.ok().body(modellingModulesService.assessmentEarthSat(null));
 
     }
 
     @GetMapping("/view/request")
-    public ResponseEntity<List<String>/*dtoMessage*/> frameworkViewRequest(){
+    public ResponseEntity<dtoMessage> frameworkViewRequest(){
         return ResponseEntity.ok().body(modellingModulesService.assessmentConstellation(null));
     }
 }

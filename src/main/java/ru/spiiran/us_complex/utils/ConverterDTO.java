@@ -9,23 +9,11 @@ import java.util.List;
 public class ConverterDTO {
     public static List<dtoAssessmentConstellation> convertToAssessmentConstellationOrder(List<String> resultJSON) {
         List<dtoAssessmentConstellation> viewWindows = new ArrayList<>();
-        for (String data : resultJSON) {
-            // Удаляем "ViewVindows Array": из строки JSON
-            String cleanedJSON = data
-                    .replace("\"ViewVindows Array\":", "")
-                    .replace("{", "")
-                    .replace("[", "")
-                    .replace("},", "}");
-
-            // Парсим JSON с помощью метода из ParserJSON
-            viewWindows.add(
-                    ParserJSON.parseViewWindowJSON(cleanedJSON)
-            );
-        }
         return viewWindows;
     }
 
-    public static List<dtoEarthSat> convertToEarthSat(List<String> modellingData) {
+    public static List<dtoEarthSat> convertToEarthSat(List<String> modellingData){
         return null;
     }
+
 }
