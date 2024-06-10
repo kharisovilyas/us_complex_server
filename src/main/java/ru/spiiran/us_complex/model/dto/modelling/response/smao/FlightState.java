@@ -1,4 +1,4 @@
-package ru.spiiran.us_complex.model.dto.modelling.response;
+package ru.spiiran.us_complex.model.dto.modelling.response.smao;
 
 public class FlightState {
     private Integer satId;

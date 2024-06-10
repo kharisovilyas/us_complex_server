@@ -1,7 +1,6 @@
 package ru.spiiran.us_complex.model.dto.modelling.response.smao;
 
 import com.google.gson.Gson;
-import ru.spiiran.us_complex.model.dto.modelling.response.FlightState;
 
 public class dtoSmaoFlight implements IDTOSMAOResponse{
     private Long time;

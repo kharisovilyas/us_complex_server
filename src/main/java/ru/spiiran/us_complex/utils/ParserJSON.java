@@ -6,13 +6,14 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.text.StringEscapeUtils;
 import ru.spiiran.us_complex.model.dto.modelling.dto_pro42.FlightData;
-import ru.spiiran.us_complex.model.dto.modelling.response.dtoAssessmentConstellation;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.IDTOSMAOResponse;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.dtoSmaoFlight;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.dtoSmaoOrder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ParserJSON {
 
@@ -24,16 +25,6 @@ public class ParserJSON {
         Gson gson = new Gson();
 
         return gson.fromJson(unescapedJSON, FlightData.class);
-    }
-
-    public static dtoAssessmentConstellation parseViewWindowJSON(String resultJSON) {
-        // Удаляем кавычки из начала и конца строки и убираем экранирование символов
-        String unescapedJSON = removeQuotesAndUnescape(resultJSON);
-
-        // Используем Gson для преобразования JSON-строки в объект FlightData
-        Gson gson = new Gson();
-
-        return gson.fromJson(unescapedJSON, dtoAssessmentConstellation.class);
     }
 
     public static String removeQuotesAndUnescape(String uncleanJson) {
@@ -70,7 +61,7 @@ public class ParserJSON {
         }
     }
 
-    public static List<String> cleanJsonFromResponse(String smaoModellingData) {
+    public static List<String> splitJsonFromResponse(String smaoModellingData) {
         List<String> jsonObjects = new ArrayList<>();
         StringBuilder currentObject = new StringBuilder();
         int braceCount = 0;
@@ -92,11 +83,26 @@ public class ParserJSON {
                 currentObject.append(c);
             }
 
-            if (braceCount == 0 && currentObject.length() > 0) {
+            if (braceCount == 0 && !currentObject.isEmpty()) {
                 currentObject.append(c); // add the closing brace
                 jsonObjects.add(currentObject.toString().trim());
                 currentObject.setLength(0);
             }
+        }
+
+        return jsonObjects;
+    }
+
+    public static List<String> toListJsonFromResponse(String string) {
+        List<String> jsonObjects = new ArrayList<>();
+
+        // Регулярное выражение для поиска объектов JSON в строке
+        Pattern pattern = Pattern.compile("\\{[^\\{\\}]*\\}");
+        Matcher matcher = pattern.matcher(string);
+
+        // Ищем и добавляем объекты JSON в список
+        while (matcher.find()) {
+            jsonObjects.add(matcher.group());
         }
 
         return jsonObjects;

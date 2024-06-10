@@ -612,11 +612,36 @@ public class ConnectToService {
             jsonBuilder.append(line);
         }
 
-        return ParserJSON.cleanJsonFromResponse(jsonBuilder.toString());
+        return ParserJSON.splitJsonFromResponse(jsonBuilder.toString());
     }
 
-    public String copyResponsePro42Modelling() {
-        return null;
+    public List<String> copyResponsePro42Modelling() throws InterruptedException, IOException {
+        // Создаем список команд для выполнения
+        List<String> command = new ArrayList<>();
+        // Добавляем команду cd для изменения рабочей директории
+        command.add("cd ../../42_complex/42-Complex/Pro42 && ./42-Complex ../Ballistic");
+
+        // Создаем процесс с указанными командами
+        ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", "-c", String.join(" ", command));
+
+        // Запуск команды
+        Process process = processBuilder.start();
+
+        // Получение вывода команды
+        InputStream inputStream = process.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+        // Переменная для хранения текущей строки вывода
+        String line;
+
+        // Чтение вывода построчно
+        StringBuilder jsonBuilder = new StringBuilder();
+
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+
+        return ParserJSON.toListJsonFromResponse(jsonBuilder.toString());
     }
 
     public String copyResponseSMAOModelling1() {

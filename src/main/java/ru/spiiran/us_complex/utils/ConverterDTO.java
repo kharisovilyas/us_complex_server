@@ -1,19 +1,12 @@
 package ru.spiiran.us_complex.utils;
 
-import ru.spiiran.us_complex.model.dto.modelling.response.dtoAssessmentConstellation;
-import ru.spiiran.us_complex.model.dto.modelling.response.dtoEarthSat;
+import ru.spiiran.us_complex.model.dto.modelling.response.pro42.dtoEarthSat;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ConverterDTO {
-    public static List<dtoAssessmentConstellation> convertToAssessmentConstellationOrder(List<String> resultJSON) {
-        List<dtoAssessmentConstellation> viewWindows = new ArrayList<>();
-        return viewWindows;
-    }
-
     public static List<dtoEarthSat> convertToEarthSat(List<String> modellingData){
-        return null;
+        return modellingData.stream().map(dtoEarthSat::new).collect(Collectors.toList());
     }
-
 }

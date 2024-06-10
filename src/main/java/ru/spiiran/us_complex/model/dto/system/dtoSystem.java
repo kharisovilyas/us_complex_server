@@ -34,6 +34,8 @@ public class dtoSystem implements IDTOEntity {
         this.timeModelingHorizon = systemEntity.getTimeModelingHorizon();
         this.interSatelliteCommunication = systemEntity.getInterSatelliteCommunication();
         this.controlSystem = systemEntity.getControlSystem();
+        this.duration = systemEntity.getDuration();
+        this.step = systemEntity.getStep();
     }
 
     public Boolean getEarthStatus() {

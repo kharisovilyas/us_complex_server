@@ -55,9 +55,9 @@ public class ModellingModulesService {
         List<String> modellingData;
         try {
             connectToService.genericPro42Files(constellation, ModellingModulesService.ModellingType.AssessmentConstructionConstellation);
-            modellingData = connectToService.copyResponsePro42BallisticModelling();
+            modellingData = connectToService.copyResponsePro42Modelling();
             modellingDatabaseService.saveResultConstellationOrder(
-                    ConverterDTO.convertToAssessmentConstellationOrder(modellingData)
+                    ConverterDTO.convertToEarthSat(modellingData)
             );
             return new dtoMessage("SUCCESS", "Modelling has been completed");
         } catch (InterruptedException | IOException e) {

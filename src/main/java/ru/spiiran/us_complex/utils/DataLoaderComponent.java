@@ -68,9 +68,11 @@ public class DataLoaderComponent implements CommandLineRunner {
                 Paths.get(DIRECTORY,"../general/System.json").toFile(),
                 new TypeReference<>() {}
         );
+
         // Сохранение данных в базу данных
         SystemEntity systemEntity = new SystemEntity(dtoSystem);
         systemEntity.setID(1L);
+
         systemRepository.save(systemEntity);
         equipmentTypeRepository.saveAll(equipmentTypeList);
         modeRepository.saveAll(modeList);
