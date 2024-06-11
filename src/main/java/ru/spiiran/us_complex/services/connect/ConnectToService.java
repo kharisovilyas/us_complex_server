@@ -6,9 +6,9 @@ import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.modelling.dto_pro42.FlightData;
 import ru.spiiran.us_complex.model.dto.modelling.dto_smao.*;
+import ru.spiiran.us_complex.model.dto.modelling.request.dtoViewWindowRequest;
 import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
 import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
@@ -74,7 +74,7 @@ public class ConnectToService {
     private String pro42Directory;
 
 
-    public void genericPro42Files(dtoConstellation constellation, ModellingModulesService.ModellingType modellingType) throws IOException {
+    public void genericPro42Files(dtoViewWindowRequest viewWindow, ModellingModulesService.ModellingType modellingType) throws IOException {
         String fileSim = templateDir + "/Inp_Sim.txt";
         String fileOrb = templateDir + "/Orb_XXi.txt";
         String fileSC = templateDir + "/SC_XXi.txt";
@@ -109,7 +109,7 @@ public class ConnectToService {
         Files.createDirectories(directory);
 
         //Генерация ИД для Pro42 на основе данных БД для формирования ИД для СМАО
-        createSimFile(fileSim, genericDir, modellingType); // Файл с параметрами моделирования
+        createSimFile(viewWindow, fileSim, genericDir, modellingType); // Файл с параметрами моделирования
         crateCsgFlagFile(fileCsg, genericDir, modellingType);
         createOrbFiles(fileOrb, genericDir); // Файлы орбит
         createSCFiles(fileSC, genericDir); // Файлы КА
@@ -465,7 +465,7 @@ public class ConnectToService {
     }
 
 
-    private void createSimFile(String fileSim, String genericDir, ModellingModulesService.ModellingType modellingType) throws IOException, EntityNotFoundException {
+    private void createSimFile(dtoViewWindowRequest viewWindow, String fileSim, String genericDir, ModellingModulesService.ModellingType modellingType) throws IOException, EntityNotFoundException {
         // Ключевые фразы для поиска
         String[] keywords = {"Simulation Control", "Reference Orbits", "Spacecraft", "* Environment  *", "Ground Station"};
 
@@ -473,9 +473,17 @@ public class ConnectToService {
         if (optionalSystemEntity.isPresent()) {
             SystemEntity systemEntity = optionalSystemEntity.get();
 
+            long modellingDuration = systemEntity.getModelingEnd() - systemEntity.getModelingBegin();
+            double modellingStep = systemEntity.getStep();
+
+            if (viewWindow != null){
+                modellingDuration = viewWindow.getModellingEnd() - viewWindow.getModellingBegin();
+                modellingStep = viewWindow.getModellingStep();
+            }
+
             //10000.0   0.1                   !  Sim Duration, Step Size [sec]
-            String simulationControlLine = (systemEntity.getModelingEnd() - systemEntity.getModelingBegin())
-                    + "   " + systemEntity.getStep()
+            String simulationControlLine = modellingDuration
+                    + "   " + modellingStep
                     + "                   !  Sim Duration, Step Size [sec]";
 
             List<coArbitraryConstruction> arbitraryConstructions = constellationArbitraryRepository.findAll();

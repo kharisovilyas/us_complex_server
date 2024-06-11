@@ -1,5 +1,6 @@
 package ru.spiiran.us_complex.utils;
 
+import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.dto.modelling.response.pro42.dtoAssessmentConstellation;
 import ru.spiiran.us_complex.model.dto.modelling.response.pro42.dtoEarthSat;
 
@@ -11,7 +12,7 @@ public class ConverterDTO {
         return modellingData.stream().map(dtoEarthSat::new).collect(Collectors.toList());
     }
 
-    public static List<dtoAssessmentConstellation> convertToAssessment(List<String> modellingData){
+    public static List<IDTOEntity> convertToAssessment(List<String> modellingData){
         return modellingData.stream().map(dtoAssessmentConstellation::new).collect(Collectors.toList());
     }
 }

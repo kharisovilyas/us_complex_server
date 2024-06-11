@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.dto.modelling.response.pro42.dtoAssessmentConstellation;
+import ru.spiiran.us_complex.model.dto.modelling.request.dtoViewWindowRequest;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.IDTOSMAOResponse;
 import ru.spiiran.us_complex.services.connect.ModellingModulesService;
 
@@ -18,33 +21,33 @@ public class RestModellingController {
     @Autowired
     private ModellingModulesService modellingModulesService;
     @GetMapping("/satellite")
-    public ResponseEntity<List<IDTOSMAOResponse>> frameworkSatellite(){
+    public ResponseEntity<List<IDTOSMAOResponse>> modellingSatellite(){
         return ResponseEntity.ok().body(modellingModulesService.modellingOneSat());
     }
 
     @GetMapping("/constellation/sat-earth")
-    public ResponseEntity<dtoMessage> frameworkConstSatEarth(){
+    public ResponseEntity<dtoMessage> modellingConstSatEarth(){
         return ResponseEntity.ok().body(modellingModulesService.modellingConstellationSatEarth(null));
     }
 
     @GetMapping("/constellation/net")
-    public ResponseEntity<dtoMessage> frameworkConstNet(){
+    public ResponseEntity<dtoMessage> modellingConstNet(){
         return ResponseEntity.ok().body(modellingModulesService.modellingConstellationNetwork(null));
     }
 
     @GetMapping("/constellation/sat-earth/delivery")
-    public ResponseEntity<dtoMessage> frameworkConstSatEarthDelivery(){
+    public ResponseEntity<dtoMessage> modellingConstSatEarthDelivery(){
         return ResponseEntity.ok().body(modellingModulesService.modellingConstellationDelivery(null));
     }
 
     @GetMapping("/view/earth")
-    public ResponseEntity<dtoMessage> frameworkViewEarthPoint(){
+    public ResponseEntity<dtoMessage> modellingViewEarthPoint(){
         return ResponseEntity.ok().body(modellingModulesService.assessmentEarthSat(null));
 
     }
 
-    @GetMapping("/view/request")
-    public ResponseEntity<List<dtoAssessmentConstellation>> frameworkViewRequest(){
-        return ResponseEntity.ok().body(modellingModulesService.assessmentConstellation(null));
+    @PostMapping("/view/request")
+    public ResponseEntity<List<IDTOEntity>> modellingViewRequest(@RequestBody dtoViewWindowRequest dtoViewWindowRequest){
+        return ResponseEntity.ok().body(modellingModulesService.assessmentConstellation(dtoViewWindowRequest));
     }
 }
