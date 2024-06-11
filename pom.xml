@@ -92,6 +92,12 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<jvmArguments>
+						<jvmArgument>-Xmx4g</jvmArgument>
+						<jvmArgument>-Xms2g</jvmArgument>
+					</jvmArguments>
+				</configuration>
 				<version>3.2.4</version>
 			</plugin>
 		</plugins>
