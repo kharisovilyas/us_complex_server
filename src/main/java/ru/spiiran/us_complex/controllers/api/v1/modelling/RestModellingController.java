@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
+import ru.spiiran.us_complex.model.dto.modelling.response.pro42.dtoAssessmentConstellation;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.IDTOSMAOResponse;
 import ru.spiiran.us_complex.services.connect.ModellingModulesService;
 
@@ -43,7 +44,7 @@ public class RestModellingController {
     }
 
     @GetMapping("/view/request")
-    public ResponseEntity<dtoMessage> frameworkViewRequest(){
+    public ResponseEntity<List<dtoAssessmentConstellation>> frameworkViewRequest(){
         return ResponseEntity.ok().body(modellingModulesService.assessmentConstellation(null));
     }
 }

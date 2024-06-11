@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
+import ru.spiiran.us_complex.model.dto.modelling.response.pro42.dtoAssessmentConstellation;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.IDTOSMAOResponse;
 import ru.spiiran.us_complex.utils.ConverterDTO;
 import ru.spiiran.us_complex.utils.ParserJSON;
@@ -51,7 +52,7 @@ public class ModellingModulesService {
 
     }
 
-    public dtoMessage assessmentConstellation(dtoConstellation constellation){
+    public List<dtoAssessmentConstellation> assessmentConstellation(dtoConstellation constellation){
         List<String> modellingData;
         try {
             connectToService.genericPro42Files(constellation, ModellingModulesService.ModellingType.AssessmentConstructionConstellation);
@@ -59,9 +60,9 @@ public class ModellingModulesService {
             modellingDatabaseService.saveResultConstellationOrder(
                     ConverterDTO.convertToEarthSat(modellingData)
             );
-            return new dtoMessage("SUCCESS", "Modelling has been completed");
+            return ConverterDTO.convertToAssessment(modellingData);
         } catch (InterruptedException | IOException e) {
-            return new dtoMessage("ERROR", "Modelling has not been completed. Description:\n" + e.getMessage());
+            return new ArrayList<>();
         }
     }
 
