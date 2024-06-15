@@ -1,38 +1,33 @@
 package ru.spiiran.us_complex.model.dto.modelling.response.pro42;
 
-import com.google.gson.Gson;
+import ru.spiiran.us_complex.model.entitys.modelling.EarthSatEntity;
 
 public class dtoEarthSat {
-    private String goalLabel;
-    private String scLabel;
+    private String earthName;
+    private Long satelliteId;
     private Long begin;
     private Long end;
 
     public dtoEarthSat() {}
 
-    public dtoEarthSat(String jsonResponse){
-        Gson gson = new Gson();
-        dtoEarthSat response = gson.fromJson(jsonResponse, dtoEarthSat.class);
-        this.begin = response.begin;
-        this.end = response.end;
-        this.scLabel = response.scLabel;
-        this.goalLabel = response.goalLabel;
+    public dtoEarthSat(EarthSatEntity earthSatEntity) {
+
     }
 
-    public String getGoalLabel() {
-        return goalLabel;
+    public String getEarthName() {
+        return earthName;
     }
 
-    public void setGoalLabel(String goalLabel) {
-        this.goalLabel = goalLabel;
+    public void setEarthName(String earthName) {
+        this.earthName = earthName;
     }
 
-    public String getScLabel() {
-        return scLabel;
+    public Long getSatelliteId() {
+        return satelliteId;
     }
 
-    public void setScLabel(String scLabel) {
-        this.scLabel = scLabel;
+    public void setSatelliteId(Long satelliteId) {
+        this.satelliteId = satelliteId;
     }
 
     public Long getBegin() {

@@ -2,7 +2,7 @@ package ru.spiiran.us_complex.model.entitys.general;
 
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
+import ru.spiiran.us_complex.model.entitys.constellation.SatelliteEntity;
 import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 
 @Entity
@@ -22,8 +22,9 @@ public class IdNodeEntity implements IEntity {
     @OneToOne(mappedBy = "idNodeEntity", cascade = CascadeType.ALL)
     private EarthPointEntity earthPointEntity;
 
-    @OneToOne(mappedBy = "idNodeEntity", cascade = CascadeType.ALL)
-    private coArbitraryConstruction arbitraryConstruction;
+    @OneToOne(mappedBy = "idNodeEntity", cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id_satellite")
+    private SatelliteEntity satellite;
 
     public IdNodeEntity(Long maxEarthNode, String nodeType) {
         this.nodeId = maxEarthNode + 1;
@@ -65,16 +66,16 @@ public class IdNodeEntity implements IEntity {
         this.earthPointEntity = earthPointEntity;
     }
 
-    public coArbitraryConstruction getArbitraryConstruction() {
-        return arbitraryConstruction;
-    }
-
-    public void setArbitraryConstruction(coArbitraryConstruction arbitraryConstruction) {
-        this.arbitraryConstruction = arbitraryConstruction;
-    }
-
     @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
+    }
+
+    public SatelliteEntity getSatellite() {
+        return satellite;
+    }
+
+    public void setSatellite(SatelliteEntity satellite) {
+        this.satellite = satellite;
     }
 }

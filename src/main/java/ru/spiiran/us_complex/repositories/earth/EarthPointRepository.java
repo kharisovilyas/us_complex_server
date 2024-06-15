@@ -12,4 +12,6 @@ import java.util.List;
 public interface EarthPointRepository extends JpaRepository<EarthPointEntity, Long> {
     @Query("SELECT e FROM EarthPointEntity e WHERE e.idNodeEntity.nodeId > :nodeId ORDER BY e.idNodeEntity.nodeId ASC")
     List<EarthPointEntity> findAllByNodeIdGreaterThan(@Param("nodeId") Long nodeId);
+
+    EarthPointEntity findByNameEarthPoint(String goalLabel);
 }

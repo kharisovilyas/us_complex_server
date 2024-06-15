@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.spiiran.us_complex.model.dto.constellation.dtoArbitraryConstruction;
 import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.services.constellation.ArbitraryConstructionService;
 import ru.spiiran.us_complex.services.constellation.ConstellationService;
 
 import java.util.List;
@@ -16,33 +14,16 @@ import java.util.List;
 @RequestMapping("/api/v1/constellation")
 public class RestConstellationController {
     @Autowired
-    private ArbitraryConstructionService arbitraryConstructionService;
-    @Autowired
     private ConstellationService constellationService;
 
-    @PostMapping("/arbitrary/update/byList")
-    public ResponseEntity<dtoMessage> updateArbitraryConstructionByList(@RequestBody List<dtoArbitraryConstruction> detailedConstellations){
-        return ResponseEntity.ok().body(arbitraryConstructionService.updateConstellationArbitraryByList(detailedConstellations));
-    }
-
-    @PostMapping("/set/status")
-    public ResponseEntity<dtoMessage> setStatusOfEdit(@RequestParam Boolean status){
-        return ResponseEntity.ok().body(constellationService.setSystemParams(status));
-    }
-
     @PostMapping("/update")
-    public ResponseEntity<dtoMessage> updateConstellation(@RequestBody dtoConstellation dtoConstellation, @RequestParam Long id){
-        return ResponseEntity.ok().body(constellationService.updateConstellation(dtoConstellation, id));
+    public ResponseEntity<dtoMessage> updateConstellation(@RequestBody dtoConstellation constellation){
+        return ResponseEntity.ok().body(constellationService.updateConstellation(constellation));
     }
 
-    @PostMapping("/updateByList")
-    public ResponseEntity<dtoMessage> updateConstellationByList(@RequestBody List<dtoConstellation> dtoConstellationList, @RequestParam Long id){
-        return ResponseEntity.ok().body(constellationService.updateListConstellation(dtoConstellationList));
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<dtoMessage> addConstellation(@RequestBody dtoConstellation dtoConstellation){
-        return ResponseEntity.ok().body(constellationService.addConstellation(dtoConstellation));
+    @GetMapping("/get/list")
+    public ResponseEntity<List<dtoConstellation>> getAllConstellations() {
+        return ResponseEntity.ok().body(constellationService.getAllConstellations());
     }
 
     @PostMapping("/delete/byId")
@@ -50,8 +31,9 @@ public class RestConstellationController {
         return ResponseEntity.ok().body(constellationService.deleteConstellation(id));
     }
 
-    @GetMapping("/get/list")
-    public ResponseEntity<List<dtoConstellation>> getAllConstellations() {
-        return ResponseEntity.ok().body(constellationService.getAllConstellations());
+    @PostMapping("/set/status")
+    public ResponseEntity<dtoMessage> setStatusOfEdit(@RequestParam Boolean status) {
+        return ResponseEntity.ok().body(constellationService.setSystemParams(status));
     }
+
 }

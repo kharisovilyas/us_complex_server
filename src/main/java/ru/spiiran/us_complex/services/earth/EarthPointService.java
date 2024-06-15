@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.earth.dtoEarthPoint;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
+import ru.spiiran.us_complex.model.entitys.constellation.SatelliteEntity;
 import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
 import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
 import ru.spiiran.us_complex.repositories.NodeIdRepository;
-import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
+import ru.spiiran.us_complex.repositories.constellation.SatelliteRepository;
 import ru.spiiran.us_complex.repositories.earth.EarthPointRepository;
 import ru.spiiran.us_complex.repositories.satrequest.SystemRepository;
 
@@ -24,7 +24,7 @@ public class EarthPointService {
     @Autowired
     private EarthPointRepository earthPointRepository;
     @Autowired
-    private ConstellationArbitraryRepository arbitraryRepository;
+    private SatelliteRepository satelliteRepository;
     @Autowired
     private SystemRepository systemRepository;
     @Autowired
@@ -77,14 +77,14 @@ public class EarthPointService {
         earthPointRepository.save(
                 earthPointEntity
         );
-        arbitraryRepository.findAllByOrderByNodeIdAsc()
+        satelliteRepository.findAllByOrderByNodeIdAsc()
                 .forEach(this::incrementNodeId);
     }
 
-    private void incrementNodeId(coArbitraryConstruction coArbitraryConstruction) {
-        IdNodeEntity idNodeEntity = coArbitraryConstruction.getIdNodeEntity();
+    private void incrementNodeId(SatelliteEntity satelliteEntity) {
+        IdNodeEntity idNodeEntity = satelliteEntity.getIdNodeEntity();
         idNodeEntity.setNodeId(idNodeEntity.getNodeId() + 1);
-        nodeRepository.save(idNodeEntity);
+        nodeRepository.saveAndFlush(idNodeEntity);
     }
 
     private Long findMaxEarthNode() {
@@ -120,22 +120,22 @@ public class EarthPointService {
                 .forEach(this::decrementEarthPointNodeId);
 
         // Обновляем nodeId у coArbitraryConstruction:
-        arbitraryRepository.findAllByNodeIdGreaterThan(deletedNodeId)
-                .forEach(this::decrementArbitraryConstructionNodeId);
+        satelliteRepository.findAllByNodeIdGreaterThan(deletedNodeId)
+                .forEach(this::decrementSatelliteNodeId);
     }
 
     private void decrementEarthPointNodeId(EarthPointEntity earthPointEntity) {
         IdNodeEntity idNodeEntity = earthPointEntity.getIdNodeEntity();
         idNodeEntity.setNodeId(idNodeEntity.getNodeId() - 1);
         nodeRepository.save(idNodeEntity);
-        earthPointRepository.save(earthPointEntity); // Сохраняем EarthPointEntity
+        earthPointRepository.saveAndFlush(earthPointEntity); // Сохраняем EarthPointEntity
     }
 
-    private void decrementArbitraryConstructionNodeId(coArbitraryConstruction coArbitraryConstruction) {
-        IdNodeEntity idNodeEntity = coArbitraryConstruction.getIdNodeEntity();
+    private void decrementSatelliteNodeId(SatelliteEntity satellite) {
+        IdNodeEntity idNodeEntity = satellite.getIdNodeEntity();
         idNodeEntity.setNodeId(idNodeEntity.getNodeId() - 1);
         nodeRepository.save(idNodeEntity);
-        arbitraryRepository.save(coArbitraryConstruction); // Сохраняем coArbitraryConstruction
+        satelliteRepository.saveAndFlush(satellite); // Сохраняем Satellite
     }
 
     public dtoMessage setSystemParams(Boolean status) {
@@ -143,12 +143,12 @@ public class EarthPointService {
         if (optionalSystemEntity.isPresent()) {
             SystemEntity systemEntity = optionalSystemEntity.get();
             systemEntity.setEarthStatus(status);
-            systemRepository.save(systemEntity);
+            systemRepository.saveAndFlush(systemEntity);
             return new dtoMessage("APPROVE SUCCESS", "System update");
         } else {
             SystemEntity systemEntity = new SystemEntity();
             systemEntity.setEarthStatus(status);
-            systemRepository.save(systemEntity);
+            systemRepository.saveAndFlush(systemEntity);
             return new dtoMessage("APPROVE SUCCESS", "System added");
         }
     }

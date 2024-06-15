@@ -27,7 +27,7 @@ public class RestModellingController {
 
     @GetMapping("/constellation/sat-earth")
     public ResponseEntity<dtoMessage> modellingConstSatEarth(){
-        return ResponseEntity.ok().body(modellingModulesService.modellingConstellationSatEarth(null));
+        return ResponseEntity.ok().body(modellingModulesService.modellingConstellationSatEarth());
     }
 
     @GetMapping("/constellation/net")
@@ -42,7 +42,7 @@ public class RestModellingController {
 
     @GetMapping("/view/earth")
     public ResponseEntity<dtoMessage> modellingViewEarthPoint(){
-        return ResponseEntity.ok().body(modellingModulesService.assessmentEarthSat(null));
+        return ResponseEntity.ok().body(modellingModulesService.assessmentEarthSatModelling());
 
     }
 

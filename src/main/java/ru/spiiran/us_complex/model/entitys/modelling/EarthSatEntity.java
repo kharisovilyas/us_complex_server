@@ -2,12 +2,18 @@ package ru.spiiran.us_complex.model.entitys.modelling;
 
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.dto.modelling.response.pro42.dtoEarthSat;
+import ru.spiiran.us_complex.model.dto.modelling.response.pro42.dtoAssessment;
+import ru.spiiran.us_complex.model.entitys.constellation.SatelliteEntity;
+import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
+import ru.spiiran.us_complex.repositories.constellation.SatelliteRepository;
+import ru.spiiran.us_complex.repositories.earth.EarthPointRepository;
+import ru.spiiran.us_complex.repositories.modelling.EarthSatRepository;
 
 @Entity
 @Table(name = "earth_sat")
 public class EarthSatEntity implements IEntity {
+
     @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
@@ -15,7 +21,7 @@ public class EarthSatEntity implements IEntity {
 
     @Id
     @Column(name = "id_earth_sat")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long earthSatId;
 
     @Column(name = "begin_time")
@@ -24,12 +30,44 @@ public class EarthSatEntity implements IEntity {
     @Column(name = "end_time")
     private Long endTime;
 
-    public EarthSatEntity(dtoEarthSat earthSat) {
+    @ManyToOne
+    @JoinColumn(name = "earth_point_id")
+    private EarthPointEntity earthPoint;
+
+    @ManyToOne
+    @JoinColumn(name = "satellite_id")
+    private SatelliteEntity satellite;
+
+    public EarthSatEntity(){}
+
+    public EarthSatEntity(
+            dtoAssessment earthSat,
+            EarthSatRepository earthSatRepository,
+            EarthPointRepository earthPointRepository,
+            SatelliteRepository satelliteRepository) {
         this.beginTime = earthSat.getBegin();
+        this.endTime = earthSat.getEnd();
+        earthSatRepository.save(this);
+        // Находим EarthPointEntity по имени
+        EarthPointEntity earthPoint = earthPointRepository.findByNameEarthPoint(earthSat.getGoalLabel());
+
+        // Находим coArbitraryConstruction по ID
+        SatelliteEntity satellite = satelliteRepository.findById(Long.parseLong(earthSat.getScLabel())).orElse(null);
+
+        // Добавляем в списки
+        if (earthPoint != null) {
+            earthPoint.getEarthSatContacts().add(this);
+            this.earthPoint = earthPoint;
+            earthPointRepository.saveAndFlush(earthPoint);
+        }
+        if (satellite != null) {
+            satellite.getEarthSatContacts().add(this);
+            this.satellite = satellite;
+            satelliteRepository.saveAndFlush(satellite);
+
+
+        }
     }
-
-    public EarthSatEntity() {}
-
     public Long getEarthSatId() {
         return earthSatId;
     }
@@ -54,46 +92,20 @@ public class EarthSatEntity implements IEntity {
         this.endTime = endTime;
     }
 
-    /*
-    @OneToMany
-    @JoinColumn(name = "id_node")
-    private List<IdNodeEntity> idNodeEntityList;
 
-    @OneToMany
-    @JoinColumn(name = "id_arbitrary_satellite")
-    private List<coArbitraryConstruction> arbitraryConstructionList;
-
-    /*@OneToMany
-    @JoinColumn(name = "id_planar_satellite")
-    private coPlanarConstruction planarConstruction;
-
-    public List<IdNodeEntity> getIdNodeEntityList() {
-        return idNodeEntityList;
+    public EarthPointEntity getEarthPoint() {
+        return earthPoint;
     }
 
-    public void setIdNodeEntityList(List<IdNodeEntity> idNodeEntityList) {
-        this.idNodeEntityList = idNodeEntityList;
+    public void setEarthPoint(EarthPointEntity earthPoint) {
+        this.earthPoint = earthPoint;
     }
 
-    public List<coArbitraryConstruction> getArbitraryConstructionList() {
-        return arbitraryConstructionList;
+    public SatelliteEntity getSatellite() {
+        return satellite;
     }
 
-    public void setArbitraryConstructionList(List<coArbitraryConstruction> arbitraryConstructionList) {
-        this.arbitraryConstructionList = arbitraryConstructionList;
+    public void setSatellite(SatelliteEntity satellite) {
+        this.satellite = satellite;
     }
-
-    public Long getEarthSatId() {
-        return earthSatId;
-    }
-
-    public void setEarthSatId(Long earthSatId) {
-        this.earthSatId = earthSatId;
-    }
-
-    @Override
-    public dtoMessage getDtoMessage(String type, String message) {
-        return null;
-    }
-    */
 }

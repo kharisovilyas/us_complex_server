@@ -9,20 +9,20 @@ import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.modelling.dto_pro42.FlightData;
 import ru.spiiran.us_complex.model.dto.modelling.dto_smao.*;
 import ru.spiiran.us_complex.model.dto.modelling.request.dtoViewWindowRequest;
-import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
+import ru.spiiran.us_complex.model.entitys.constellation.SatelliteEntity;
 import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
 import ru.spiiran.us_complex.model.entitys.satrequest.CatalogEntity;
 import ru.spiiran.us_complex.model.entitys.satrequest.RequestEntity;
 import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
-import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
+import ru.spiiran.us_complex.repositories.constellation.SatelliteRepository;
 import ru.spiiran.us_complex.repositories.earth.EarthPointRepository;
 import ru.spiiran.us_complex.repositories.satrequest.CatalogRepository;
 import ru.spiiran.us_complex.repositories.satrequest.RequestRepository;
 import ru.spiiran.us_complex.repositories.satrequest.SystemRepository;
-import ru.spiiran.us_complex.utils.DirectoryNameGenerator;
-import ru.spiiran.us_complex.utils.FileUtils;
-import ru.spiiran.us_complex.utils.ParserJSON;
+import ru.spiiran.us_complex.utils.files.DirectoryNameGenerator;
+import ru.spiiran.us_complex.utils.files.FileUtils;
+import ru.spiiran.us_complex.utils.files.ParserJSON;
 
 import java.io.*;
 import java.nio.file.*;
@@ -51,7 +51,7 @@ public class ConnectToService {
     private EarthPointRepository earthPointRepository;
 
     @Autowired
-    private ConstellationArbitraryRepository constellationArbitraryRepository;
+    private SatelliteRepository satelliteRepository;
 
     // Директория с примерами заполнения ИД для Про42
     @Value("${template.connect.pro42}")
@@ -274,7 +274,7 @@ public class ConnectToService {
 
         List<RequestEntity> requestEntities = requestRepository.findAll();
         List<Satellite> satellites =
-                constellationArbitraryRepository
+                satelliteRepository
                         .findAll()
                         .stream()
                         .map(Satellite::new)
@@ -349,7 +349,7 @@ public class ConnectToService {
 
     private Event createSatelliteEvent(List<Satellite> satellites, Parameters parameters, String resultJSON) throws JSONException {
         // Получаем данные о спутнике из репозитория (пример)
-        coArbitraryConstruction satellite = constellationArbitraryRepository.findAll().get(0);
+        SatelliteEntity satellite = satelliteRepository.findAll().get(0);
 
         // Удаляем "flightData": из строки JSON
         String cleanedJSON = resultJSON.replace("\"flightData\":", "");
@@ -387,8 +387,8 @@ public class ConnectToService {
     }
 
     private void createSCFiles(String fileSC, String genericDir) throws IOException {
-        List<coArbitraryConstruction> arbitraryConstructionList = constellationArbitraryRepository.findAll();
-        for (coArbitraryConstruction arbitraryConstruction : arbitraryConstructionList) {
+        List<SatelliteEntity> arbitraryConstructionList = satelliteRepository.findAll();
+        for (SatelliteEntity arbitraryConstruction : arbitraryConstructionList) {
             //"S/C"                         !  Label
             String label = "\"" + arbitraryConstruction.getSatelliteId() + "\"" + "                         !  Label";
 
@@ -426,8 +426,8 @@ public class ConnectToService {
         //180.0                         !  Right Ascension of Ascending Node (deg)
         //0.0                           !  Argument of Periapsis (deg)
         //0.0                           !  True Anomaly (deg)
-        List<coArbitraryConstruction> arbitraryConstructionList = constellationArbitraryRepository.findAll();
-        for (coArbitraryConstruction arbitraryConstruction : arbitraryConstructionList) {
+        List<SatelliteEntity> arbitraryConstructionList = satelliteRepository.findAll();
+        for (SatelliteEntity arbitraryConstruction : arbitraryConstructionList) {
             String parameters = arbitraryConstruction.getAltitude() + " " + arbitraryConstruction.getEccentricity() + "                    !  Min Altitude (km), Eccentricity\n" +
                     arbitraryConstruction.getIncline() + "                          !  Inclination (deg)\n" +
                     arbitraryConstruction.getLongitudeAscendingNode() + "                         !  Right Ascension of Ascending Node (deg)\n" +
@@ -486,7 +486,7 @@ public class ConnectToService {
                     + "   " + modellingStep
                     + "                   !  Sim Duration, Step Size [sec]";
 
-            List<coArbitraryConstruction> arbitraryConstructions = constellationArbitraryRepository.findAll();
+            List<SatelliteEntity> arbitraryConstructions = satelliteRepository.findAll();
 
             //1                               !  Number of Reference Orbits
             //TRUE   Orb_LEO.txt              !  Input file name for Orb 0

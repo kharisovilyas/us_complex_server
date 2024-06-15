@@ -3,7 +3,6 @@ package ru.spiiran.us_complex.model.dto.constellation;
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,9 +10,7 @@ public class dtoConstellation implements IDTOEntity {
     private Long ID;
     private String constellationName;
     private Boolean isArbitraryFormation;
-    private List<dtoArbitraryConstruction> arbitraryConstructions;
-    private List<dtoPlanarConstruction> planarConstructions;
-    private Boolean isDeleted;
+    private List<dtoSatellite> satellites;
 
     public dtoConstellation(){}
 
@@ -21,12 +18,11 @@ public class dtoConstellation implements IDTOEntity {
         this.constellationName = constellationEntity.getConstellationName();
         this.ID = constellationEntity.getConstellationId();
         this.isArbitraryFormation = constellationEntity.getArbitraryFormation();
-        this.arbitraryConstructions = constellationEntity
-                .getArbitraryConstructionList()
+        this.satellites = constellationEntity
+                .getSatelliteEntities()
                 .stream()
-                .map(dtoArbitraryConstruction::new) // Преобразование каждого элемента типа Arbitrary Construction в dtoArbitraryConstruction
+                .map(dtoSatellite::new)
                 .collect(Collectors.toList());
-        this.planarConstructions = new ArrayList<>();
     }
     public Long getID() {
         return ID;
@@ -44,22 +40,6 @@ public class dtoConstellation implements IDTOEntity {
         this.constellationName = constellationName;
     }
 
-    public List<dtoArbitraryConstruction> getArbitraryConstructions() {
-        return arbitraryConstructions;
-    }
-
-    public void setArbitraryConstructions(List<dtoArbitraryConstruction> arbitraryConstructions) {
-        this.arbitraryConstructions = arbitraryConstructions;
-    }
-
-    public List<dtoPlanarConstruction> getPlanarConstructions() {
-        return planarConstructions;
-    }
-
-    public void setPlanarConstructions(List<dtoPlanarConstruction> planarConstructions) {
-        this.planarConstructions = planarConstructions;
-    }
-
     public Boolean getArbitraryFormation() {
         return isArbitraryFormation;
     }
@@ -68,13 +48,11 @@ public class dtoConstellation implements IDTOEntity {
         isArbitraryFormation = arbitraryFormation;
     }
 
-    public Boolean getDeleted() {
-        return isDeleted;
+    public List<dtoSatellite> getSatellites() {
+        return satellites;
     }
 
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
+    public void setSatellites(List<dtoSatellite> satellites) {
+        this.satellites = satellites;
     }
-
-
 }

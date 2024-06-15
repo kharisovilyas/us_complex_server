@@ -3,9 +3,12 @@ package ru.spiiran.us_complex.model.entitys.modelsat;
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.modelsat.dtoModelSat;
+import ru.spiiran.us_complex.model.entitys.constellation.SatelliteEntity;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
 import ru.spiiran.us_complex.model.entitys.modelsat.power.msPowerEntity;
 import ru.spiiran.us_complex.model.entitys.modelsat.techparam.msTechParamEntity;
+
+import java.util.List;
 
 
 @Entity
@@ -31,6 +34,9 @@ public class ModelSatEntity implements IEntity {
     @ManyToOne
     @JoinColumn(name = "power_id")
     private msPowerEntity msPowerEntity;
+
+    @OneToMany(mappedBy = "modelSat", cascade = CascadeType.ALL)
+    private List<SatelliteEntity> satelliteEntities;
 
     public ModelSatEntity() {
     }
@@ -80,5 +86,13 @@ public class ModelSatEntity implements IEntity {
 
     public void setModelId(Long modelId) {
         this.modelId = modelId;
+    }
+
+    public List<SatelliteEntity> getSatelliteEntities() {
+        return satelliteEntities;
+    }
+
+    public void setSatelliteEntities(List<SatelliteEntity> satelliteEntities) {
+        this.satelliteEntities = satelliteEntities;
     }
 }

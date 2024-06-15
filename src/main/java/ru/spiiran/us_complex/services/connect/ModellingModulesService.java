@@ -7,8 +7,8 @@ import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.modelling.request.dtoViewWindowRequest;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.IDTOSMAOResponse;
-import ru.spiiran.us_complex.utils.ConverterDTO;
-import ru.spiiran.us_complex.utils.ParserJSON;
+import ru.spiiran.us_complex.utils.converters.ConverterDTO;
+import ru.spiiran.us_complex.utils.files.ParserJSON;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,14 +34,14 @@ public class ModellingModulesService {
         AssessmentSatEarth
     }
 
-    public dtoMessage assessmentEarthSat(dtoViewWindowRequest viewWindow){
+    public dtoMessage assessmentEarthSatModelling(){
         // Генерирует файлы ИД для отправки их в Pro42
         // Копирует файлы в рабочую директорию движка
         List<String> modellingData;
         try {
 
-            connectToService.genericPro42Files(viewWindow, ModellingType.AssessmentSatEarth);
-            modellingData = connectToService.copyResponsePro42BallisticModelling();
+            connectToService.genericPro42Files(null, ModellingType.AssessmentSatEarth);
+            modellingData = connectToService.copyResponsePro42Modelling();
 
             modellingDatabaseService.saveResultEarthSat(ConverterDTO.convertToEarthSat(modellingData));
 
@@ -60,9 +60,9 @@ public class ModellingModulesService {
                     ModellingModulesService.ModellingType.AssessmentConstructionConstellation
             );
             modellingData = connectToService.copyResponsePro42Modelling();
-            modellingDatabaseService.saveResultConstellationOrder(
+            /*modellingDatabaseService.saveResultConstellationOrder(
                     ConverterDTO.convertToEarthSat(modellingData)
-            );
+            );*/
             return ConverterDTO.convertToAssessment(modellingData);
         } catch (InterruptedException | IOException e) {
             return List.of(new dtoMessage("ERROR", "Modelling have not completed"));
@@ -106,11 +106,11 @@ public class ModellingModulesService {
 
     }
 
-    public dtoMessage modellingConstellationSatEarth(dtoViewWindowRequest viewWindow) {
+    public dtoMessage modellingConstellationSatEarth() {
         try {
             // Генерирует файлы ИД для отправки их в Pro42
             // Копирует файлы в рабочую директорию движка
-            connectToService.genericPro42Files(viewWindow, ModellingType.ConstellationSatEarth);
+            connectToService.genericPro42Files(null, ModellingType.ConstellationSatEarth);
 
             // Генерирует файлы ИД для отправки их в Pro42
             List<String> ballisticModellingData = connectToService.copyResponsePro42BallisticModelling();
@@ -118,7 +118,7 @@ public class ModellingModulesService {
             // Генерирует файлы ИД для СМАО
             connectToService.genericJsonSMAOFile(ballisticModellingData);
 
-            return new dtoMessage("SUCCESS", "Connect success");
+            return new dtoMessage("SUCCESS", "Earth-Satellite modelling data save to database");
 
         } catch (InterruptedException | JSONException | IOException e) {
             return new dtoMessage("ERROR", e.getMessage());

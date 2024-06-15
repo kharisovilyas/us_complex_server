@@ -4,18 +4,15 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.spiiran.us_complex.model.dto.constellation.dtoArbitraryConstruction;
 import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
-import ru.spiiran.us_complex.model.dto.constellation.dtoPlanarConstruction;
+import ru.spiiran.us_complex.model.dto.constellation.dtoSatellite;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
-import ru.spiiran.us_complex.model.entitys.constellation.coArbitraryConstruction;
-import ru.spiiran.us_complex.model.entitys.constellation.coPlanarConstruction;
+import ru.spiiran.us_complex.model.entitys.constellation.SatelliteEntity;
 import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
-import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
 import ru.spiiran.us_complex.repositories.NodeIdRepository;
-import ru.spiiran.us_complex.repositories.constellation.ConstellationArbitraryRepository;
 import ru.spiiran.us_complex.repositories.constellation.ConstellationRepository;
+import ru.spiiran.us_complex.repositories.constellation.SatelliteRepository;
 import ru.spiiran.us_complex.repositories.satrequest.SystemRepository;
 
 import java.util.ArrayList;
@@ -28,21 +25,21 @@ public class ConstellationService {
     @Autowired
     private ConstellationRepository constellationRepository;
     @Autowired
-    private ConstellationArbitraryRepository constellationArbitraryRepository;
-    @Autowired
     private NodeIdRepository nodeRepository;
     @Autowired
     private SystemRepository systemRepository;
+    @Autowired
+    private SatelliteRepository satelliteRepository;
 
-
+    @Transactional
     public List<dtoConstellation> getAllConstellations() {
-        List<ConstellationEntity> entities = constellationRepository.findAllWithArbitraryList();
+        List<ConstellationEntity> entities = constellationRepository.findAll();
         return entities.stream()
                 .map(dtoConstellation::new)
                 .collect(Collectors.toList());
     }
 
-
+/*
     @Transactional
     public dtoMessage addConstellation(dtoConstellation dtoConstellation) {
         try {
@@ -58,7 +55,7 @@ public class ConstellationService {
                 /*
                     добавление, сохранение, инициализация некоторых полей (idNode и generalStatus) списка сущностей Constellation Detailed
                     а так же добавление и сохранения поля Constellation происходит в этом методе
-                 */
+
                 addConstellationArbitrary(dtoConstellation.getArbitraryConstructions(), constellation);
                 return new dtoMessage("INSERT SUCCESS", "Arbitrary Construction Constellation added successfully");
 
@@ -100,7 +97,7 @@ public class ConstellationService {
                 /*
                     добавление, сохранение, инициализация idNode для списка сущностей Constellation Detailed
                     а так же добавление и сохранения поля Constellation происходит в этом методе
-                */
+
                     return new dtoMessage("UPDATE SUCCESS", "Arbitrary Construction Constellation added successfully");
 
                 } else { // если пришли данные для создания записи в Planar Construction
@@ -163,8 +160,10 @@ public class ConstellationService {
             if (isDeleted != null && isDeleted) {
                 deleteConstellationArbitrary(existingConstellation);
             } else {
+
                 coArbitraryConstruction updateConstellation =
                         new coArbitraryConstruction(existingConstellation, arbitraryConstruction);
+
                 constellationArbitraryRepository.save(updateConstellation);
             }
         } else {
@@ -231,11 +230,6 @@ public class ConstellationService {
         return coArbitraryConstruction;
     }
 
-    public Long findMaxIdNode() {
-        Long maxIdNode = nodeRepository.findMaxIdNode();
-        return maxIdNode == null ? 0L : maxIdNode;
-    }
-
     @Transactional
     public dtoMessage deleteConstellation(Long id) {
         Optional<ConstellationEntity> optionalConstellation = constellationRepository.findById(id);
@@ -262,7 +256,6 @@ public class ConstellationService {
 
     private void deleteConstellationPlanar(coPlanarConstruction coPlanarConstruction) {
     }
-
     public dtoMessage updateListConstellation(List<dtoConstellation> dtoConstellationList) {
         for (dtoConstellation constellation : dtoConstellationList) {
             try {
@@ -291,10 +284,199 @@ public class ConstellationService {
             systemRepository.save(systemEntity);
             return new dtoMessage("APPROVE SUCCESS", "System update");
         } else {
-            SystemEntity systemEntity =  new SystemEntity();
+            SystemEntity systemEntity = new SystemEntity();
             systemEntity.setConstellationStatus(status);
             systemRepository.save(systemEntity);
             return new dtoMessage("APPROVE ERROR", "System not exist");
         }
+    }
+
+*/
+
+    @Transactional
+    public dtoMessage updateConstellation(dtoConstellation dtoConstellation) {
+        try {
+            if (dtoConstellation.getID() != null) {
+                Optional<ConstellationEntity> optionalConstellation = constellationRepository.findById(dtoConstellation.getID());
+                if (optionalConstellation.isPresent()) {
+                    ConstellationEntity existingConstellation = new ConstellationEntity(dtoConstellation, optionalConstellation.get());
+                    if (dtoConstellation.getArbitraryFormation()) {
+                        List<SatelliteEntity> existingArbitraryConstructions = existingConstellation.getSatelliteEntities();
+                        if (existingArbitraryConstructions == null) {
+                            existingArbitraryConstructions = new ArrayList<>();
+                        }
+
+                        // Обновляем список satellite
+                        List<SatelliteEntity> finalExistingSatellites = existingArbitraryConstructions;
+                        existingConstellation.setSatelliteEntities(
+                                dtoConstellation
+                                        .getSatellites()
+                                        .stream()
+                                        .filter(dtoSatellite -> dtoSatellite.getDeleted() == null || !dtoSatellite.getDeleted())
+                                        .map(dtoSatellite -> {
+
+                                            // Ищем соответствующую запись в existingSatellites
+                                            Optional<SatelliteEntity> existingSatellite = finalExistingSatellites.stream()
+                                                    .filter(existing -> existing.getSatelliteId().equals(dtoSatellite.getSatelliteId()))
+                                                    .findFirst();
+
+                                            if (existingSatellite.isEmpty()) {
+                                                // Получаем список SatelliteEntity, которые не принадлежат к текущей констелляции
+                                                List<SatelliteEntity> satellitesToUpdate = satelliteRepository.findAllNotInConstellation(existingConstellation.getConstellationId());
+                                                satellitesToUpdate
+                                                        .stream()
+                                                        .filter(satellite -> satellite.getConstellation().getConstellationId() > existingConstellation.getConstellationId())
+                                                        .forEach(this::incrementNodeId);
+                                            }
+
+                                            // Создаем новый объект Satellite с DTO и Entity
+                                            return satelliteRepository.saveAndFlush(
+                                                    new SatelliteEntity(
+                                                            existingSatellite.orElse(null),
+                                                            dtoSatellite,
+                                                            existingConstellation,
+                                                            nodeRepository,
+                                                            new IdNodeEntity(
+                                                                    findMaxNodeConstellation(existingConstellation),
+                                                                    dtoConstellation.getConstellationName() == null ?
+                                                                            dtoConstellation.getConstellationName() : existingConstellation.getConstellationName()
+                                                            )
+                                                    )
+                                            );
+                                        })
+                                        .collect(Collectors.toList())
+                        );
+
+                        // Сохраняем изменения в ConstellationEntity
+                        constellationRepository.saveAndFlush(existingConstellation);
+
+                        // Удаляем SatelliteEntity, где isDeleted = true
+                        dtoConstellation
+                                .getSatellites()
+                                .stream()
+                                .filter(dtoSatellite -> dtoSatellite.getDeleted() == null || dtoSatellite.getDeleted())
+                                .filter(dtoSatellite -> dtoSatellite.getSatelliteId() != null)
+                                .forEach(this::deleteSatelliteAndDecrementNodes);
+
+
+                        return new dtoMessage("SUCCESS", "UPDATE Arbitrary");
+
+                    } else {
+                        // Сохраняем изменения в ConstellationEntity
+                        constellationRepository.saveAndFlush(existingConstellation);
+
+                        return new dtoMessage("SUCCESS", "UPDATE Planar");
+                    }
+
+                } else {
+                    throw new EntityNotFoundException();
+                }
+
+            } else {
+                throw new IllegalArgumentException();
+            }
+
+        } catch (EntityNotFoundException | IllegalArgumentException exception) {
+            // Сохраняем Constellation Entity
+            ConstellationEntity newConstellation = new ConstellationEntity(dtoConstellation);
+            constellationRepository.saveAndFlush(newConstellation);
+
+            List<SatelliteEntity> satelliteEntities = new ArrayList<>();
+            if (dtoConstellation.getArbitraryFormation() && dtoConstellation.getSatellites() != null) {
+                satelliteEntities.addAll(
+                        dtoConstellation.getSatellites().stream()
+                                .map(dtoSatellite -> {
+                                    SatelliteEntity satellite = new SatelliteEntity(
+                                            dtoConstellation.getConstellationName(),
+                                            findMaxIdNode(),
+                                            newConstellation,
+                                            dtoSatellite,
+                                            nodeRepository
+                                    );
+                                    return satelliteRepository.saveAndFlush(satellite);
+                                })
+                                .toList()
+                );
+            }
+            newConstellation.setSatelliteEntities(satelliteEntities);
+            return new dtoMessage("SUCCESS", "ADD");
+        }
+    }
+
+    @Transactional
+    private void deleteSatelliteAndDecrementNodes(dtoSatellite dtoSatellite) {
+        // Получаем SatelliteEntity
+        Optional<SatelliteEntity> satellite = satelliteRepository.findById(dtoSatellite.getSatelliteId());
+
+        // Удаляем SatelliteEntity
+        if (satellite.isPresent()) {
+            satelliteRepository.deleteById(satellite.get().getSatelliteId());
+            // Получаем idNode удаленной SatelliteEntity
+            Long deletedNodeId = satellite.get().getIdNodeEntity().getNodeId();
+            // Обновляем idNode у остальных SatelliteEntity
+            List<SatelliteEntity> satellitesToUpdate = satelliteRepository.findAllByNodeIdGreaterThan(deletedNodeId);
+            satellitesToUpdate
+                    .forEach(this::decrementSatelliteNodeId);
+        }
+    }
+
+    @Transactional
+    public dtoMessage deleteConstellation(Long id) {
+        Optional<ConstellationEntity> optionalConstellation = constellationRepository.findById(id);
+        if (optionalConstellation.isPresent()) {
+            ConstellationEntity constellation = optionalConstellation.get();
+            try {
+                constellation.getSatelliteEntities().forEach(this::deleteSatellite);
+                constellationRepository.delete(constellation);
+                return new dtoMessage("SUCCESS", "Constellation with id: " + id + " deleted");
+            } catch (Exception e) {
+                e.printStackTrace();  // Логирование исключения
+                return new dtoMessage("ERROR", "Failed to delete Constellation with id: " + id + ". Reason: " + e.getMessage());
+            }
+        } else {
+            return new dtoMessage("ERROR", "Constellation with id: " + id + " not found");
+        }
+    }
+
+    @Transactional
+    private void deleteSatellite(SatelliteEntity satellite) {
+        // Удаляем SatelliteEntity из базы данных
+        satelliteRepository.delete(satellite);
+
+        // Удаляем IdNodeEntity, связанный с SatelliteEntity (если он есть)
+        if (satellite.getIdNodeEntity() != null) {
+            nodeRepository.delete(satellite.getIdNodeEntity());
+        }
+    }
+
+
+    private Long findMaxNodeConstellation(ConstellationEntity constellation) {
+        Long maxConstellationNode = nodeRepository.findMaxConstellationIdNode(constellation.getConstellationId());
+        //TODO: здесь текущая проблема и зарыта
+        return maxConstellationNode == null ? findMaxIdNode() : maxConstellationNode;
+    }
+
+    public Long findMaxIdNode() {
+        Long maxIdNode = nodeRepository.findMaxIdNode();
+        return maxIdNode == null ? 0L : maxIdNode;
+    }
+
+    @Transactional
+    private void incrementNodeId(SatelliteEntity satelliteEntity) {
+        IdNodeEntity idNodeEntity = satelliteEntity.getIdNodeEntity();
+        idNodeEntity.setNodeId(idNodeEntity.getNodeId() + 1);
+        nodeRepository.saveAndFlush(idNodeEntity);
+    }
+
+    @Transactional
+    private void decrementSatelliteNodeId(SatelliteEntity satellite) {
+        IdNodeEntity idNodeEntity = satellite.getIdNodeEntity();
+        idNodeEntity.setNodeId(idNodeEntity.getNodeId() - 1);
+        nodeRepository.save(idNodeEntity);
+        satelliteRepository.saveAndFlush(satellite); // Сохраняем Satellite
+    }
+
+    public dtoMessage setSystemParams(Boolean status) {
+        return null;
     }
 }

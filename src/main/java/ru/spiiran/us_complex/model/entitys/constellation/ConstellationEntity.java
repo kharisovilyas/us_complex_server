@@ -1,6 +1,8 @@
 package ru.spiiran.us_complex.model.entitys.constellation;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
@@ -18,16 +20,30 @@ public class ConstellationEntity implements IEntity {
     private String constellationName;
     @Column(name = "arbitrary_formation")
     private Boolean isArbitraryFormation;
-    @OneToMany(mappedBy = "constellation")
-    private List<coArbitraryConstruction> coArbitraryConstructionList;
     @OneToMany(mappedBy = "constellation", cascade = CascadeType.ALL)
-    private List<coPlanarConstruction> coPlanarConstructionList;
+    @Fetch(FetchMode.JOIN)
+    private List<SatelliteEntity> satelliteEntities;
+
+    public ConstellationEntity(ConstellationEntity constellation){
+        this.constellationId = constellation.getConstellationId();
+        this.constellationName = constellation.getConstellationName();
+        this.isArbitraryFormation = constellation.getArbitraryFormation();
+        this.satelliteEntities = constellation.getSatelliteEntities();
+    }
 
     public ConstellationEntity(){}
 
     public ConstellationEntity(dtoConstellation dtoConstellation) {
         this.isArbitraryFormation = dtoConstellation.getArbitraryFormation();
         this.constellationName = dtoConstellation.getConstellationName();
+    }
+
+    public ConstellationEntity(dtoConstellation dtoConstellation, ConstellationEntity constellation) {
+        this.constellationId = constellation.getConstellationId();
+        this.constellationName = dtoConstellation.getConstellationName();
+        this.isArbitraryFormation = //TODO: возможно потом добавить возможность обновлять список КА в группировке в зависимости от вида ее построения
+                constellation.getArbitraryFormation();
+        this.satelliteEntities = constellation.getSatelliteEntities();
     }
 
     public Boolean getArbitraryFormation() {
@@ -46,22 +62,6 @@ public class ConstellationEntity implements IEntity {
         this.constellationName = constellationName;
     }
 
-    public List<coArbitraryConstruction> getArbitraryConstructionList() {
-        return coArbitraryConstructionList;
-    }
-
-    public void setArbitraryConstructionList(List<coArbitraryConstruction> coArbitraryConstructions) {
-        this.coArbitraryConstructionList = coArbitraryConstructions;
-    }
-
-    public List<coPlanarConstruction> getPlanarConstructionList() {
-        return coPlanarConstructionList;
-    }
-
-    public void setPlanarConstructionList(List<coPlanarConstruction> coPlanarConstructionList) {
-        this.coPlanarConstructionList = coPlanarConstructionList;
-    }
-
     @Override
     public dtoMessage getDtoMessage(String type, String message) {
         return new dtoMessage(type, message);
@@ -73,5 +73,13 @@ public class ConstellationEntity implements IEntity {
 
     public void setConstellationId(Long constellationId) {
         this.constellationId = constellationId;
+    }
+
+    public List<SatelliteEntity> getSatelliteEntities() {
+        return satelliteEntities;
+    }
+
+    public void setSatelliteEntities(List<SatelliteEntity> satelliteEntities) {
+        this.satelliteEntities = satelliteEntities;
     }
 }

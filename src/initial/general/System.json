@@ -5,11 +5,11 @@
   "satSatStatus": false,
   "gridStatus": false,
   "timeModelingHorizon": 86400,
-  "startTime": 123256216123,
-  "modelingBegin": 123256216123,
-  "modelingEnd": 213525235234,
+  "startTime": 1718213742,
+  "modelingBegin": 1718223742,
+  "modelingEnd": 1718223742,
   "interSatelliteCommunication": false,
   "controlSystem": "Automated",
   "step": 1,
-  "duration": 100
+  "duration": 1000
 }
