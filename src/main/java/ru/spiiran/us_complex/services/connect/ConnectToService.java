@@ -387,10 +387,10 @@ public class ConnectToService {
     }
 
     private void createSCFiles(String fileSC, String genericDir) throws IOException {
-        List<SatelliteEntity> arbitraryConstructionList = satelliteRepository.findAll();
-        for (SatelliteEntity arbitraryConstruction : arbitraryConstructionList) {
+        List<SatelliteEntity> satelliteEntityList = satelliteRepository.findAll();
+        for (SatelliteEntity satellite : satelliteEntityList) {
             //"S/C"                         !  Label
-            String label = "\"" + arbitraryConstruction.getSatelliteId() + "\"" + "                         !  Label";
+            String label = "\"" + satellite.getSatelliteId() + "\"" + "                         !  Label";
 
             // Чтение файла
             File file = new File(fileSC);
@@ -410,7 +410,7 @@ public class ConnectToService {
             }
             reader.close();
             // Создаем путь к файлу в текущей директории
-            String filePath = genericDir + "/SC_XX" + arbitraryConstructionList.indexOf(arbitraryConstruction) + ".txt";
+            String filePath = genericDir + "/SC_XX" + satelliteEntityList.indexOf(satellite) + ".txt";
 
             // Запись измененного содержимого обратно в файл
             File uploadFile = new File(filePath);
@@ -426,13 +426,13 @@ public class ConnectToService {
         //180.0                         !  Right Ascension of Ascending Node (deg)
         //0.0                           !  Argument of Periapsis (deg)
         //0.0                           !  True Anomaly (deg)
-        List<SatelliteEntity> arbitraryConstructionList = satelliteRepository.findAll();
-        for (SatelliteEntity arbitraryConstruction : arbitraryConstructionList) {
-            String parameters = arbitraryConstruction.getAltitude() + " " + arbitraryConstruction.getEccentricity() + "                    !  Min Altitude (km), Eccentricity\n" +
-                    arbitraryConstruction.getIncline() + "                          !  Inclination (deg)\n" +
-                    arbitraryConstruction.getLongitudeAscendingNode() + "                         !  Right Ascension of Ascending Node (deg)\n" +
-                    arbitraryConstruction.getPerigeeWidthArgument() + "                           !  Argument of Periapsis (deg)\n" +
-                    arbitraryConstruction.getTrueAnomaly() + "                           !  True Anomaly (deg)";
+        List<SatelliteEntity> satelliteEntities = satelliteRepository.findAll();
+        for (SatelliteEntity satellite : satelliteEntities) {
+            String parameters = satellite.getAltitude() + " " + satellite.getEccentricity() + "                    !  Min Altitude (km), Eccentricity\n" +
+                    satellite.getIncline() + "                          !  Inclination (deg)\n" +
+                    satellite.getLongitudeAscendingNode() + "                         !  Right Ascension of Ascending Node (deg)\n" +
+                    satellite.getPerigeeWidthArgument() + "                           !  Argument of Periapsis (deg)\n" +
+                    satellite.getTrueAnomaly() + "                           !  True Anomaly (deg)";
             File file = new File(fileOrb);
             BufferedReader reader = new BufferedReader(new FileReader(file));
             StringBuilder stringBuilder = new StringBuilder();
@@ -454,7 +454,7 @@ public class ConnectToService {
             }
             reader.close();
             // Создаем путь к файлу в текущей директории
-            String filePath = genericDir + "/Orb_XX" + arbitraryConstructionList.indexOf(arbitraryConstruction) + ".txt";
+            String filePath = genericDir + "/Orb_XX" + satelliteEntities.indexOf(satellite) + ".txt";
 
             // Запись измененного содержимого обратно в файл
             File uploadFile = new File(filePath);

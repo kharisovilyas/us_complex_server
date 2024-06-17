@@ -11,7 +11,10 @@ public class dtoEarthSat {
     public dtoEarthSat() {}
 
     public dtoEarthSat(EarthSatEntity earthSatEntity) {
-
+        this.earthName = earthSatEntity.getEarthPoint().getNameEarthPoint();
+        this.satelliteId = earthSatEntity.getSatellite().getIdNodeEntity().getNodeId();
+        this.end = earthSatEntity.getEndTime();
+        this.begin = earthSatEntity.getBeginTime();
     }
 
     public String getEarthName() {
