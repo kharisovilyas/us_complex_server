@@ -30,11 +30,11 @@ public class EarthSatEntity implements IEntity {
     @Column(name = "end_time")
     private Long endTime;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "earth_point_id")
     private EarthPointEntity earthPoint;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "satellite_id")
     private SatelliteEntity satellite;
 
@@ -50,23 +50,21 @@ public class EarthSatEntity implements IEntity {
         earthSatRepository.save(this);
         // Находим EarthPointEntity по имени
         EarthPointEntity earthPoint = earthPointRepository.findByNameEarthPoint(earthSat.getGoalLabel());
-
         // Находим coArbitraryConstruction по ID
         SatelliteEntity satellite = satelliteRepository.findById(Long.parseLong(earthSat.getScLabel())).orElse(null);
-
         // Добавляем в списки
         if (earthPoint != null) {
             earthPoint.getEarthSatContacts().add(this);
             this.earthPoint = earthPoint;
             earthPointRepository.saveAndFlush(earthPoint);
         }
+
         if (satellite != null) {
             satellite.getEarthSatContacts().add(this);
             this.satellite = satellite;
             satelliteRepository.saveAndFlush(satellite);
-
-
         }
+
     }
     public Long getEarthSatId() {
         return earthSatId;
