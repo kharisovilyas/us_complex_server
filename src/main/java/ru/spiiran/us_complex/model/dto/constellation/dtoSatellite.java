@@ -3,6 +3,7 @@ package ru.spiiran.us_complex.model.dto.constellation;
 import ru.spiiran.us_complex.model.entitys.constellation.SatelliteEntity;
 
 public class dtoSatellite {
+    private Long idNode;
     private Long satelliteId;
     private Double altitude;
     private Double eccentricity;
@@ -16,6 +17,7 @@ public class dtoSatellite {
     private Boolean isDeleted;
 
     public dtoSatellite(SatelliteEntity satelliteEntity) {
+        this.idNode = satelliteEntity.getIdNodeEntity().getNodeId();
         this.satelliteId = satelliteEntity.getSatelliteId();
         this.altitude = satelliteEntity.getAltitude();
         this.eccentricity = satelliteEntity.getEccentricity();
@@ -117,5 +119,13 @@ public class dtoSatellite {
 
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Long getIdNode() {
+        return idNode;
+    }
+
+    public void setIdNode(Long idNode) {
+        this.idNode = idNode;
     }
 }
