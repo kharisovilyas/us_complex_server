@@ -4,9 +4,35 @@ import java.util.List;
 
 public class FlightData {
     private int nRev;
-    private List<Long> revTime;
-    private List<Long> sunTime;
-    private List<Long> eclTime;
+    private List<Double> revTime;
+    private List<Double> sunTime;
+    private List<Double> eclTime;
+
+    public FlightData() {}
+
+    public List<Double> getRevTime() {
+        return revTime;
+    }
+
+    public void setRevTime(List<Double> revTime) {
+        this.revTime = revTime;
+    }
+
+    public List<Double> getSunTime() {
+        return sunTime;
+    }
+
+    public void setSunTime(List<Double> sunTime) {
+        this.sunTime = sunTime;
+    }
+
+    public List<Double> getEclTime() {
+        return eclTime;
+    }
+
+    public void setEclTime(List<Double> eclTime) {
+        this.eclTime = eclTime;
+    }
 
     public int getnRev() {
         return nRev;
@@ -15,30 +41,4 @@ public class FlightData {
     public void setnRev(int nRev) {
         this.nRev = nRev;
     }
-
-    public List<Long> getRevTime() {
-        return revTime;
-    }
-
-    public void setRevTime(List<Long> revTime) {
-        this.revTime = revTime;
-    }
-
-    public List<Long> getSunTime() {
-        return sunTime;
-    }
-
-    public void setSunTime(List<Long> sunTime) {
-        this.sunTime = sunTime;
-    }
-
-    public List<Long> getEclTime() {
-        return eclTime;
-    }
-
-    public void setEclTime(List<Long> eclTime) {
-        this.eclTime = eclTime;
-    }
-
-    public FlightData() {}
 }
