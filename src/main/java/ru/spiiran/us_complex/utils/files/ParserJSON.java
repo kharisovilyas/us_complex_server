@@ -1,15 +1,13 @@
 package ru.spiiran.us_complex.utils.files;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import org.apache.commons.text.StringEscapeUtils;
 import ru.spiiran.us_complex.model.dto.modelling.dto_pro42.FlightData;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.IDTOSMAOResponse;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.dtoSmaoFlight;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.dtoSmaoOrder;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -22,7 +20,9 @@ public class ParserJSON {
         String unescapedJSON = removeQuotesAndUnescape(resultJSON);
 
         // Используем Gson для преобразования JSON-строки в объект FlightData
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Double.class, new DoubleDeserializer())
+                .create();
 
         return gson.fromJson(unescapedJSON, FlightData.class);
     }
@@ -32,6 +32,19 @@ public class ParserJSON {
         String noQuotes = uncleanJson.replaceAll("^\"|\"$", "");
         // Убираем экранирование символов
         return StringEscapeUtils.unescapeJson(noQuotes);
+    }
+
+    static class DoubleDeserializer implements JsonDeserializer<Double> {
+        @Override
+        public Double deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            String value = json.getAsString();
+            // Удаление дробной части, если она есть
+            int decimalIndex = value.indexOf('.');
+            if (decimalIndex != -1) {
+                value = value.substring(0, decimalIndex);
+            }
+            return Double.parseDouble(value);
+        }
     }
 
     public static IDTOSMAOResponse parseJsonToDto(String jsonResponse) {

@@ -347,7 +347,7 @@ public class ConnectToService {
         );
     }
 
-    private Event createSatelliteEvent(List<Satellite> satellites, Parameters parameters, String resultJSON) throws JSONException {
+    private Event createSatelliteEvent(List<Satellite> satellites, Parameters parameters, String resultJSON) {
         // Получаем данные о спутнике из репозитория (пример)
         SatelliteEntity satellite = satelliteRepository.findAll().get(0);
 
