@@ -20,10 +20,10 @@ public class Satellite {
 
     public Satellite(SatelliteEntity satellite) {
         this.id = satellite.getIdNodeEntity().getNodeId();
-        this.plane = Math.toIntExact(satellite.getPlane() == null ? satellite.getPlane() : 1);
-        this.pos = Math.toIntExact(satellite.getPosition() == null ? satellite.getPosition() : 1);
+        this.plane = 1;
+        this.pos = 1;
         this.groupId = satellite.getConstellation().getConstellationId();
-        this.modelId = satellite.getModelSat().getModelId(); //TODO: после выполнения спринта модель-КА
+        this.modelId = 1L; //TODO: после выполнения спринта модель-КА
         this.a = satellite.getAltitude();
         this.e = satellite.getEccentricity();
         this.i = satellite.getIncline();
