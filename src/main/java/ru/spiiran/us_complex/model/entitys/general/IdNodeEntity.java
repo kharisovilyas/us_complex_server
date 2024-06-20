@@ -22,7 +22,7 @@ public class IdNodeEntity implements IEntity {
     @OneToOne(mappedBy = "idNodeEntity", cascade = CascadeType.ALL)
     private EarthPointEntity earthPointEntity;
 
-    @OneToOne(mappedBy = "idNodeEntity", cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "idNodeEntity")
     @JoinColumn(name = "id_satellite")
     private SatelliteEntity satellite;
 

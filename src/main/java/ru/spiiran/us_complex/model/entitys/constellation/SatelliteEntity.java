@@ -39,7 +39,7 @@ public class SatelliteEntity implements IEntity {
     private Long position;
     @Column(name = "plane")
     private Long plane;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_node")
     private IdNodeEntity idNodeEntity;
     @ManyToOne
@@ -77,7 +77,7 @@ public class SatelliteEntity implements IEntity {
             this.satelliteId = existingSatellite.getSatelliteId();
         } else {
             this.idNodeEntity = newConstellationNode;
-            this.idNodeEntity = nodeIdRepository.save(this.idNodeEntity);
+            this.idNodeEntity = nodeIdRepository.saveAndFlush(this.idNodeEntity);
             this.constellation = existingConstellation;
         }
     }
@@ -110,7 +110,7 @@ public class SatelliteEntity implements IEntity {
         this.perigeeWidthArgument = dtoSatellite.getPerigeeWidthArgument();
         this.trueAnomaly = dtoSatellite.getTrueAnomaly();
         this.idNodeEntity = new IdNodeEntity(maxIdNode, nodeType);
-        this.idNodeEntity = nodeIdRepository.save(this.idNodeEntity);
+        this.idNodeEntity = nodeIdRepository.saveAndFlush(this.idNodeEntity);
         this.constellation = newConstellation;
     }
 

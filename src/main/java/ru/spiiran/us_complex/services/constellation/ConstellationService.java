@@ -330,7 +330,7 @@ public class ConstellationService {
                                             }
 
                                             // Создаем новый объект Satellite с DTO и Entity
-                                            return satelliteRepository.saveAndFlush(
+                                            return satelliteRepository.save(
                                                     new SatelliteEntity(
                                                             existingSatellite.orElse(null),
                                                             dtoSatellite,
@@ -359,13 +359,13 @@ public class ConstellationService {
                                 .forEach(this::deleteSatelliteAndDecrementNodes);
 
 
-                        return new dtoMessage("SUCCESS", "UPDATE Arbitrary");
+                        return new dtoMessage("SUCCESS", "UPDATE Satellite");
 
                     } else {
                         // Сохраняем изменения в ConstellationEntity
                         constellationRepository.saveAndFlush(existingConstellation);
 
-                        return new dtoMessage("SUCCESS", "UPDATE Planar");
+                        return new dtoMessage("SUCCESS", "UPDATE Planar Satellite");
                     }
 
                 } else {
@@ -379,8 +379,6 @@ public class ConstellationService {
         } catch (EntityNotFoundException | IllegalArgumentException exception) {
             // Сохраняем Constellation Entity
             ConstellationEntity newConstellation = new ConstellationEntity(dtoConstellation);
-            constellationRepository.saveAndFlush(newConstellation);
-
             List<SatelliteEntity> satelliteEntities = new ArrayList<>();
             if (dtoConstellation.getArbitraryFormation() && dtoConstellation.getSatellites() != null) {
                 satelliteEntities.addAll(
@@ -393,12 +391,13 @@ public class ConstellationService {
                                             dtoSatellite,
                                             nodeRepository
                                     );
-                                    return satelliteRepository.saveAndFlush(satellite);
+                                    return satelliteRepository.save(satellite);
                                 })
                                 .toList()
                 );
             }
             newConstellation.setSatelliteEntities(satelliteEntities);
+            constellationRepository.save(newConstellation);
             return new dtoMessage("SUCCESS", "ADD");
         }
     }
