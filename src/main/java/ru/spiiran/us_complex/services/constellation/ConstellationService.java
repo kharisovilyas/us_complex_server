@@ -337,7 +337,7 @@ public class ConstellationService {
                                                             existingConstellation,
                                                             nodeRepository,
                                                             new IdNodeEntity(
-                                                                    findMaxNodeConstellation(existingConstellation),
+                                                                    findMaxNodeConstellation(existingConstellation) + 1,
                                                                     dtoConstellation.getConstellationName() == null ?
                                                                             dtoConstellation.getConstellationName() : existingConstellation.getConstellationName()
                                                             )
