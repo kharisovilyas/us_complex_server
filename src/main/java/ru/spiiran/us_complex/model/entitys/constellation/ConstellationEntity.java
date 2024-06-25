@@ -3,6 +3,7 @@ package ru.spiiran.us_complex.model.entitys.constellation;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import ru.spiiran.us_complex.model.dto.constellation.IDTOConstellation;
 import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
@@ -33,7 +34,7 @@ public class ConstellationEntity implements IEntity {
 
     public ConstellationEntity(){}
 
-    public ConstellationEntity(dtoConstellation dtoConstellation) {
+    public ConstellationEntity(IDTOConstellation dtoConstellation) {
         this.isArbitraryFormation = dtoConstellation.getArbitraryFormation();
         this.constellationName = dtoConstellation.getConstellationName();
     }

@@ -5,6 +5,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.constellation.dtoConstellation;
+import ru.spiiran.us_complex.model.dto.constellation.dtoPlanarConstellation;
+import ru.spiiran.us_complex.model.dto.constellation.dtoPlanarPrm;
 import ru.spiiran.us_complex.model.dto.constellation.dtoSatellite;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
@@ -292,6 +294,57 @@ public class ConstellationService {
     }
 
 */
+
+
+    @Transactional
+    public dtoMessage calculationPlanarConstellation(dtoPlanarConstellation planarConstellation) {
+        ConstellationEntity newConstellation = new ConstellationEntity(planarConstellation);
+        dtoPlanarPrm parameters = planarConstellation.getParametersCalculation();
+        List<dtoSatellite> satellites = getDtoSatellites(planarConstellation, parameters);
+        constellationRepository.save(newConstellation);
+        List<SatelliteEntity> satelliteEntities = new ArrayList<>(satellites.stream()
+                .map(dtoSatellite -> {
+                    SatelliteEntity satellite = new SatelliteEntity(
+                            planarConstellation.getConstellationName(),
+                            findMaxIdNode(),
+                            newConstellation,
+                            dtoSatellite,
+                            nodeRepository
+                    );
+                    return satelliteRepository.save(satellite);
+                })
+                .toList());
+        newConstellation.setSatelliteEntities(satelliteEntities);
+        return new dtoMessage("SUCCESS", "ADD");
+    }
+
+    private static List<dtoSatellite> getDtoSatellites(dtoPlanarConstellation planarConstellation, dtoPlanarPrm parameters) {
+        long numberOfPlane = parameters.getNumberOfPlane();
+        long numberOfPosition = parameters.getPositionPlane();
+        double longitudePlane1 = parameters.getLongitudeOfPlane1();
+        double spacecraftLongitude = parameters.getSpacecraftOfLongitude();
+        long firstPosition = parameters.getFirstPositionInPlane1();
+        double spacecraftSpacing = parameters.getSpacecraftSpacing();
+        double phaseShift = parameters.getPhaseShift();
+        List<dtoSatellite> satellites = new ArrayList<>();
+
+        for(long plane = 1L; plane <= numberOfPlane; plane++){
+            for(long position = 1L; position <= numberOfPosition; position++){
+                dtoSatellite satellite = new dtoSatellite(planarConstellation.getParametersCalculation());
+                satellite.setPlane(plane);
+                satellite.setPosition(position);
+                satellite.setLongitudeAscendingNode(
+                        longitudePlane1 + spacecraftLongitude * (plane - 1L)
+                );
+                satellite.setTrueAnomaly(
+                        firstPosition + spacecraftSpacing * (position - 1L) + phaseShift*(plane - 1L)
+                );
+                satellites.add(satellite);
+            }
+        }
+        return satellites;
+    }
+
 
     @Transactional
     public dtoMessage updateConstellation(dtoConstellation dtoConstellation) {

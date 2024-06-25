@@ -45,7 +45,6 @@ public class RestModellingController {
         return ResponseEntity.ok().body(modellingModulesService.assessmentEarthSatModelling());
 
     }
-
     @PostMapping("/view/request")
     public ResponseEntity<List<IDTOEntity>> modellingViewRequest(@RequestBody dtoViewWindowRequest dtoViewWindowRequest){
         return ResponseEntity.ok().body(modellingModulesService.assessmentConstellation(dtoViewWindowRequest));

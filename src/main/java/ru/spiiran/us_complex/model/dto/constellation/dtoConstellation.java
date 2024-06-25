@@ -6,7 +6,7 @@ import ru.spiiran.us_complex.model.entitys.constellation.ConstellationEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class dtoConstellation implements IDTOEntity {
+public class dtoConstellation implements IDTOEntity, IDTOConstellation {
     private Long ID;
     private String constellationName;
     private Boolean isArbitraryFormation;
@@ -32,18 +32,20 @@ public class dtoConstellation implements IDTOEntity {
         this.ID = ID;
     }
 
+    @Override
     public String getConstellationName() {
         return constellationName;
     }
+
 
     public void setConstellationName(String constellationName) {
         this.constellationName = constellationName;
     }
 
+    @Override
     public Boolean getArbitraryFormation() {
         return isArbitraryFormation;
     }
-
     public void setArbitraryFormation(Boolean arbitraryFormation) {
         isArbitraryFormation = arbitraryFormation;
     }

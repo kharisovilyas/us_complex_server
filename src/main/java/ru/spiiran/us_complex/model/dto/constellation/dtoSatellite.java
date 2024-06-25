@@ -33,6 +33,14 @@ public class dtoSatellite {
     public dtoSatellite() {
     }
 
+    public dtoSatellite(dtoPlanarPrm parametersCalculation) {
+        this.perigeeWidthArgument = parametersCalculation.getPerigeeWidthArgument();
+        this.phaseShift = parametersCalculation.getPhaseShift();
+        this.altitude = parametersCalculation.getAltitude();
+        this.incline = parametersCalculation.getIncline();
+        this.eccentricity = parametersCalculation.getEccentricity();
+    }
+
     public Long getSatelliteId() {
         return satelliteId;
     }

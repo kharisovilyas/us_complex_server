@@ -109,8 +109,11 @@ public class SatelliteEntity implements IEntity {
         this.longitudeAscendingNode = dtoSatellite.getLongitudeAscendingNode();
         this.perigeeWidthArgument = dtoSatellite.getPerigeeWidthArgument();
         this.trueAnomaly = dtoSatellite.getTrueAnomaly();
+        this.phaseShift = dtoSatellite.getPhaseShift() != null ? dtoSatellite.getPhaseShift() : 1L;
+        this.position = dtoSatellite.getPosition() != null ? dtoSatellite.getPosition() : 1L;
+        this.plane = dtoSatellite.getPlane() != null ? dtoSatellite.getPlane() : 1L;
         this.idNodeEntity = new IdNodeEntity(maxIdNode, nodeType);
-        this.idNodeEntity = nodeIdRepository.saveAndFlush(this.idNodeEntity);
+        this.idNodeEntity = nodeIdRepository.save(this.idNodeEntity);
         this.constellation = newConstellation;
     }
 

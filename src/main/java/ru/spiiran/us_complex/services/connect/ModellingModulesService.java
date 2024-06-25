@@ -7,6 +7,7 @@ import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.modelling.request.dtoViewWindowRequest;
 import ru.spiiran.us_complex.model.dto.modelling.response.smao.IDTOSMAOResponse;
+import ru.spiiran.us_complex.repositories.constellation.SatelliteRepository;
 import ru.spiiran.us_complex.utils.converters.ConverterDTO;
 import ru.spiiran.us_complex.utils.files.ParserJSON;
 
@@ -18,7 +19,8 @@ import java.util.stream.Collectors;
 @Service
 public class ModellingModulesService {
 
-    @Autowired ConnectToService connectToService;
+    @Autowired private ConnectToService connectToService;
+    @Autowired private SatelliteRepository satelliteRepository;
 
     @Autowired
     private ModellingDatabaseService modellingDatabaseService;
@@ -63,7 +65,7 @@ public class ModellingModulesService {
             /*modellingDatabaseService.saveResultConstellationOrder(
                     ConverterDTO.convertToEarthSat(modellingData)
             );*/
-            return ConverterDTO.convertToAssessment(modellingData);
+            return ConverterDTO.convertToAssessment(modellingData, satelliteRepository);
         } catch (InterruptedException | IOException e) {
             return List.of(new dtoMessage("ERROR", "Modelling have not completed"));
         }
