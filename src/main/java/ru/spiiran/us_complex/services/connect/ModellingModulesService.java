@@ -6,15 +6,12 @@ import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.modelling.request.dtoViewWindowRequest;
-import ru.spiiran.us_complex.model.dto.modelling.response.smao.IDTOSMAOResponse;
 import ru.spiiran.us_complex.repositories.constellation.SatelliteRepository;
 import ru.spiiran.us_complex.utils.converters.ConverterDTO;
-import ru.spiiran.us_complex.utils.files.ParserJSON;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ModellingModulesService {
@@ -71,7 +68,7 @@ public class ModellingModulesService {
         }
     }
 
-    public List<IDTOSMAOResponse> modellingOneSat() {
+    public List<String> modellingOneSat() {
         try {
             // Генерирует файлы ИД для отправки их в Pro42
             // Копирование файлы в рабочую директорию движка
@@ -88,14 +85,7 @@ public class ModellingModulesService {
 
             saveSMAOData(smaoModellingData);
 
-            return smaoModellingData
-                            .stream()
-                            .map(
-                                    ParserJSON::parseJsonToDto
-                            )
-                            .collect(
-                                    Collectors.toList()
-                            );
+            return smaoModellingData;
 
         } catch (InterruptedException | JSONException | IOException e) {
             e.printStackTrace();

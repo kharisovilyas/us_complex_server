@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.modelling.request.dtoViewWindowRequest;
-import ru.spiiran.us_complex.model.dto.modelling.response.smao.IDTOSMAOResponse;
 import ru.spiiran.us_complex.services.connect.ModellingModulesService;
 
 import java.util.List;
@@ -21,7 +20,7 @@ public class RestModellingController {
     @Autowired
     private ModellingModulesService modellingModulesService;
     @GetMapping("/satellite")
-    public ResponseEntity<List<IDTOSMAOResponse>> modellingSatellite(){
+    public ResponseEntity<List<String>> modellingSatellite(){
         return ResponseEntity.ok().body(modellingModulesService.modellingOneSat());
     }
 

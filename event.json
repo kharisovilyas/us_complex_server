@@ -23,11 +23,31 @@
   "parameters": {
     "t0Ballistics": 1716595200,
     "t0FlightData": 1716633000,
-    "tfFlightData": 1716634800,
+    "tfFlightData": 1716649200,
     "dtBallistics": 5.0,
     "isInterSatellite": false,
     "controlSystem": "Automated",
-    "dtShooting": 10.0
+    "dtShooting": 1000.0,
+    "config_udm": [
+      {
+        "nWheels": 4,
+        "accel": 2.1,
+        "rate": 10.0,
+        "stabTime": 10.0
+      },
+      {
+        "nWheels": 3,
+        "accel": 0.5,
+        "rate": 4.0,
+        "stabTime": 10.0
+      },
+      {
+        "nWheels": 2,
+        "accel": 0.005,
+        "rate": 2.0,
+        "stabTime": 20.0
+      }
+    ]
   },
   "isSendingLogs": true
 }
@@ -56,24 +76,44 @@
   "parameters": {
     "t0Ballistics": 1716595200,
     "t0FlightData": 1716633000,
-    "tfFlightData": 1716634800,
+    "tfFlightData": 1716649200,
     "dtBallistics": 5.0,
     "isInterSatellite": false,
     "controlSystem": "Automated",
-    "dtShooting": 10.0,
+    "dtShooting": 1000.0,
     "config_udm": [
-      {"nWheels": 4, "accel": 2.1, "rate": 10.0, "stabTime": 10.0},
-      {"nWheels": 3, "accel": 0.5, "rate": 4.0, "stabTime": 10.0},
-      {"nWheels": 2, "accel": 0.005, "rate": 2.0, "stabTime": 20.0}
+      {
+        "nWheels": 4,
+        "accel": 2.1,
+        "rate": 10.0,
+        "stabTime": 10.0
+      },
+      {
+        "nWheels": 3,
+        "accel": 0.5,
+        "rate": 4.0,
+        "stabTime": 10.0
+      },
+      {
+        "nWheels": 2,
+        "accel": 0.005,
+        "rate": 2.0,
+        "stabTime": 20.0
+      }
     ]
   },
   "flightData": {
-    "nRev": 1,
-    "revTime": [],
-    "sunTime": [
-      1716595200
+    "nRev": 2,
+    "revTime": [
+      1716608335
     ],
-    "eclTime": []
+    "sunTime": [
+      1716595200,
+      1716602850
+    ],
+    "eclTime": [
+      1716600510
+    ]
   },
   "isSendingLogs": true
 }
@@ -103,7 +143,7 @@
       "id": 2,
       "name": "Penza",
       "latitude": 53.0,
-      "longitude": 45.0,
+      "longitude": 45.0,./
       "altitude": 0.0,
       "priority": 3,
       "tf": 1716649200
