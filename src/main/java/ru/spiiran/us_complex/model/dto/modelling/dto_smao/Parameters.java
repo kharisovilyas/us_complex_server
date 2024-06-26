@@ -2,6 +2,9 @@ package ru.spiiran.us_complex.model.dto.modelling.dto_smao;
 
 import ru.spiiran.us_complex.model.entitys.satrequest.SystemEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Parameters {
     private Long t0Ballistics;
     private Long t0FlightData;
@@ -10,6 +13,7 @@ public class Parameters {
     private Boolean isInterSatellite;
     private String controlSystem;
     private Double dtShooting;
+    private List<ConfigUDM> config_udm;
     public Parameters(SystemEntity systemEntity){
         this.t0Ballistics = systemEntity.getStartTime();
         this.t0FlightData = systemEntity.getModelingBegin();
@@ -18,6 +22,12 @@ public class Parameters {
         this.isInterSatellite = systemEntity.getInterSatelliteCommunication();
         this.controlSystem = systemEntity.getControlSystem();
         this.dtShooting = systemEntity.getDuration();
+        List<ConfigUDM> configUDMList = new ArrayList<>();
+        configUDMList.add(new ConfigUDM(4L, 2.1, 10.0, 10.0));
+        configUDMList.add(new ConfigUDM(3L, 0.5, 4.0, 10.0));
+        configUDMList.add(new ConfigUDM(2L, 0.005, 2.0, 20.0));
+        this.config_udm = configUDMList;
+
     }
 
     public Parameters() {}
@@ -77,5 +87,13 @@ public class Parameters {
 
     public void setDtBallistics(Double dtBallistics) {
         this.dtBallistics = dtBallistics;
+    }
+
+    public List<ConfigUDM> getConfig_udm() {
+        return config_udm;
+    }
+
+    public void setConfig_udm(List<ConfigUDM> config_udm) {
+        this.config_udm = config_udm;
     }
 }

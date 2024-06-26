@@ -90,7 +90,7 @@ public class ConnectToService {
         String directoryName = generateUniqueDirectoryName();
 
         //Создания поддиректории для разных типов моделирования
-        String specialDir = switch (modellingType){
+        String specialDir = switch (modellingType) {
             case OneSatellite -> "one_sat";
             case AssessmentSatEarth -> "window_earth";
             case AssessmentConstructionConstellation -> "window_order";
@@ -320,6 +320,7 @@ public class ConnectToService {
 
         copyFilesToDirectory(directory, Paths.get(smaoDirectory));
     }
+
     private Event createEventForNode(List<Satellite> satellites, Parameters parameters) {
         EarthPointEntity earthPointEntity = earthPointRepository.findAll().get(0);
         IdNodeEntity idNodeEntity = earthPointEntity.getIdNodeEntity();
@@ -332,19 +333,27 @@ public class ConnectToService {
         );
     }
 
-    private EventRequest createEventRequest(List<RequestEntity> requestEntities) {
+    private EventRequest createEventRequest(List<RequestEntity> requestEntities) throws EntityNotFoundException {
         List<Order> orderList = new ArrayList<>();
         for (RequestEntity request : requestEntities) {
             orderList.add(
                     new Order(request)
             );
         }
-        return new EventRequest(
-                requestEntities.get(0).getTime(),
-                orderList,
-                "E20",
-                requestEntities.get(0).getNodeEntity().getNodeId()
-        );
+        Optional<SystemEntity> optionalSystemEntity = systemRepository.findById(1L);
+        if (optionalSystemEntity.isPresent()) {
+            SystemEntity systemEntity = optionalSystemEntity.get();
+            return new EventRequest(
+                    //TODO: переделать так, чтобы время бралось по хитрому
+                    systemEntity.getStartTime(),
+                    orderList,
+                    "E20",
+                    requestEntities.get(0).getNodeEntity().getNodeId()
+            );
+        } else {
+            throw new EntityNotFoundException();
+        }
+
     }
 
     private Event createSatelliteEvent(List<Satellite> satellites, Parameters parameters, String resultJSON) {
@@ -476,7 +485,7 @@ public class ConnectToService {
             long modellingDuration = systemEntity.getModelingEnd() - systemEntity.getModelingBegin();
             double modellingStep = systemEntity.getStep();
 
-            if (viewWindow != null){
+            if (viewWindow != null) {
                 modellingDuration = viewWindow.getModellingEnd() - viewWindow.getModellingBegin();
                 modellingStep = viewWindow.getModellingStep();
             }
@@ -586,7 +595,7 @@ public class ConnectToService {
     }
 
     private String replacementsGroundStation(ModellingModulesService.ModellingType modellingType) {
-        return switch (modellingType){
+        return switch (modellingType) {
             case AssessmentConstructionConstellation -> formingStringOfOrder();
             case AssessmentSatEarth -> formingStringOfEarthPoint();
             default -> "";
