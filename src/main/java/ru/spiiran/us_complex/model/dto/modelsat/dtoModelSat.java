@@ -26,8 +26,6 @@ public class dtoModelSat implements IDTOEntity {
         this.description = modelSatEntity.getDescription();
         this.modelName = modelSatEntity.getModelName();
         this.description = modelSatEntity.getDescription();
-        this.targetEquipment = new dtoTargetEquipment();
-        this.onBoardDevice = new dtoOnBoardDevice();
         this.operatingParameter = modelSatEntity.getOperatingParameter().stream().map(dtoOperatingParameter::new).collect(Collectors.toList());
     }
 
