@@ -3,10 +3,10 @@ package ru.spiiran.us_complex.services.modelsat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.dto.modelsat.equipment.dtoEquipment;
-import ru.spiiran.us_complex.model.dto.modelsat.equipment.dtoEquipmentType;
-import ru.spiiran.us_complex.model.entitys.modelsat.equipment.msEquipmentEntity;
-import ru.spiiran.us_complex.model.entitys.modelsat.equipment.msEquipmentTypeEntity;
+import ru.spiiran.us_complex.model.dto.modelsat.old.equipment.dtoEquipment;
+import ru.spiiran.us_complex.model.dto.modelsat.old.equipment.dtoEquipmentType;
+import ru.spiiran.us_complex.model.entitys.modelsat.old.equipment.msEquipmentEntity;
+import ru.spiiran.us_complex.model.entitys.modelsat.old.equipment.msEquipmentTypeEntity;
 import ru.spiiran.us_complex.repositories.modelsat.equipment.msEquipmentRepository;
 import ru.spiiran.us_complex.repositories.modelsat.equipment.msEquipmentTypeRepository;
 

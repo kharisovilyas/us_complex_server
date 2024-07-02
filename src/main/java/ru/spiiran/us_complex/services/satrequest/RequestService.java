@@ -3,14 +3,17 @@ package ru.spiiran.us_complex.services.satrequest;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.spiiran.us_complex.model.dto.earth.dtoEarthPoint;
 import ru.spiiran.us_complex.model.dto.general.dtoIdNode;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.satrequest.dtoCatalog;
 import ru.spiiran.us_complex.model.dto.satrequest.dtoRequest;
+import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
 import ru.spiiran.us_complex.model.entitys.satrequest.CatalogEntity;
 import ru.spiiran.us_complex.model.entitys.satrequest.RequestEntity;
 import ru.spiiran.us_complex.repositories.NodeIdRepository;
+import ru.spiiran.us_complex.repositories.earth.EarthPointRepository;
 import ru.spiiran.us_complex.repositories.satrequest.CatalogRepository;
 import ru.spiiran.us_complex.repositories.satrequest.RequestRepository;
 
@@ -26,6 +29,8 @@ public class RequestService {
     private CatalogRepository catalogRepository;
     @Autowired
     private NodeIdRepository nodeRepository;
+    @Autowired
+    private EarthPointRepository earthPointRepository;
 
     public List<dtoRequest> getAllRequests() {
         return requestRepository
@@ -60,9 +65,9 @@ public class RequestService {
                     requestRepository.delete(new RequestEntity(request));
                 } else {
                     RequestEntity requestEntity = new RequestEntity(request);
-                    IdNodeEntity idNodeEntity = findGeneralIdNode(request.getIdNode());
+                    EarthPointEntity earthPoint = findExistingEarthPoint(request.getEarthPoint());
                     CatalogEntity catalogEntity = findCatalogEntity(request.getCatalog());
-                    requestEntity.setNodeEntity(idNodeEntity);
+                    requestEntity.setEarthPoint(earthPoint);
                     requestEntity.setCatalogEntity(catalogEntity);
                     requestRepository.saveAndFlush(requestEntity);
                 }
@@ -71,6 +76,15 @@ public class RequestService {
             return new dtoMessage("SUCCESS", "All requests update");
         } catch (EntityNotFoundException exception) {
             return new dtoMessage("ERROR", exception.getMessage());
+        }
+    }
+
+    private EarthPointEntity findExistingEarthPoint(dtoEarthPoint earthPoint) throws EntityNotFoundException {
+        Optional<EarthPointEntity> optionalEarthPointEntity = earthPointRepository.findById(earthPoint.getID());
+        if (optionalEarthPointEntity.isPresent()) {
+            return optionalEarthPointEntity.get();
+        } else {
+            throw new EntityNotFoundException("Earth Point with " + earthPoint.getID() + " not exist");
         }
     }
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.modelling.request.dtoViewWindowRequest;
+import ru.spiiran.us_complex.model.dto.modelling.response.pro42.dtoEarthSat;
 import ru.spiiran.us_complex.services.connect.ModellingModulesService;
 
 import java.util.List;
@@ -47,5 +48,10 @@ public class RestModellingController {
     @PostMapping("/view/request")
     public ResponseEntity<List<IDTOEntity>> modellingViewRequest(@RequestBody dtoViewWindowRequest dtoViewWindowRequest){
         return ResponseEntity.ok().body(modellingModulesService.assessmentConstellation(dtoViewWindowRequest));
+    }
+
+    @GetMapping("/contact-plan/sat-earth")
+    public ResponseEntity<dtoMessage> calculationContactPlanSatEarth(@RequestBody dtoEarthSat earthSat){
+        return ResponseEntity.ok().body(modellingModulesService.calculationContactPlan(earthSat));
     }
 }

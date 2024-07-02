@@ -375,7 +375,8 @@ public class ConstellationService {
 
                                             if (existingSatellite.isEmpty()) {
                                                 // Получаем список SatelliteEntity, которые не принадлежат к текущей констелляции
-                                                List<SatelliteEntity> satellitesToUpdate = satelliteRepository.findAllNotInConstellation(existingConstellation.getConstellationId());
+                                                List<SatelliteEntity> satellitesToUpdate =
+                                                        satelliteRepository.findAllNotInConstellation(existingConstellation.getConstellationId());
                                                 satellitesToUpdate
                                                         .stream()
                                                         .filter(satellite -> satellite.getConstellation().getConstellationId() > existingConstellation.getConstellationId())
@@ -390,7 +391,7 @@ public class ConstellationService {
                                                             existingConstellation,
                                                             nodeRepository,
                                                             new IdNodeEntity(
-                                                                    findMaxNodeConstellation(existingConstellation) + 1,
+                                                                    findMaxNodeConstellation(existingConstellation) + 1L,
                                                                     dtoConstellation.getConstellationName() == null ?
                                                                             dtoConstellation.getConstellationName() : existingConstellation.getConstellationName()
                                                             )

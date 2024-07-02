@@ -3,6 +3,7 @@ package ru.spiiran.us_complex.model.entitys.modelling;
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.modelling.response.pro42.dtoAssessment;
+import ru.spiiran.us_complex.model.dto.modelling.response.pro42.dtoEarthSat;
 import ru.spiiran.us_complex.model.entitys.constellation.SatelliteEntity;
 import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
@@ -66,6 +67,35 @@ public class EarthSatEntity implements IEntity {
         }
 
     }
+
+    public EarthSatEntity(
+            dtoEarthSat earthSat,
+            EarthSatRepository earthSatRepository,
+            EarthPointRepository earthPointRepository,
+            SatelliteRepository satelliteRepository) {
+        this.beginTime = earthSat.getBegin();
+        this.endTime = earthSat.getEnd();
+        earthSatRepository.save(this);
+        // Находим EarthPointEntity по имени
+        EarthPointEntity earthPoint = earthPointRepository.findByNameEarthPoint(earthSat.getEarthName());
+        // Находим coArbitraryConstruction по ID
+        SatelliteEntity satellite = satelliteRepository.findById(earthSat.getSatelliteId()).orElse(null);
+        // Добавляем в списки
+        if (earthPoint != null) {
+            earthPoint.getEarthSatContacts().add(this);
+            this.earthPoint = earthPoint;
+            earthPointRepository.saveAndFlush(earthPoint);
+        }
+
+        if (satellite != null) {
+            satellite.getEarthSatContacts().add(this);
+            this.satellite = satellite;
+            satelliteRepository.saveAndFlush(satellite);
+        }
+
+    }
+
+
     public Long getEarthSatId() {
         return earthSatId;
     }

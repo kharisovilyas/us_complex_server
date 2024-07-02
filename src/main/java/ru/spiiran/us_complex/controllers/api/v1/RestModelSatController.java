@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.modelsat.dtoModelSat;
-import ru.spiiran.us_complex.model.dto.modelsat.equipment.dtoEquipment;
-import ru.spiiran.us_complex.model.dto.modelsat.equipment.dtoEquipmentType;
-import ru.spiiran.us_complex.model.dto.modelsat.power.dtoPowerTable;
-import ru.spiiran.us_complex.model.dto.modelsat.techparam.dtoParameter;
-import ru.spiiran.us_complex.model.dto.modelsat.techparam.dtoTechParameter;
+import ru.spiiran.us_complex.model.dto.modelsat.old.equipment.dtoEquipment;
+import ru.spiiran.us_complex.model.dto.modelsat.old.equipment.dtoEquipmentType;
+import ru.spiiran.us_complex.model.dto.modelsat.old.power.dtoPowerTable;
+import ru.spiiran.us_complex.model.dto.modelsat.old.techparam.dtoParameter;
+import ru.spiiran.us_complex.model.dto.modelsat.old.techparam.dtoTechParameter;
 import ru.spiiran.us_complex.services.modelsat.PowerService;
 import ru.spiiran.us_complex.services.modelsat.EquipmentService;
 import ru.spiiran.us_complex.services.modelsat.ModelSatService;
@@ -43,8 +43,8 @@ public class RestModelSatController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<dtoMessage> updateModelSat(@RequestParam Long id, @RequestBody dtoModelSat dtoModelSat){
-        return ResponseEntity.ok().body(modelSatService.updateModelSat(id, dtoModelSat));
+    public ResponseEntity<dtoMessage> updateModelSat(@RequestBody dtoModelSat dtoModelSat){
+        return ResponseEntity.ok().body(modelSatService.updateModelSat(dtoModelSat));
     }
 
     @PostMapping("/delete")

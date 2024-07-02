@@ -25,6 +25,13 @@ public class ModellingDatabaseService {
                         .forEach(it -> new EarthSatEntity(it, earthSatRepository, earthPointRepository, satelliteRepository));
     }
 
+    @Transactional
+    public void saveResultContactEarthSat(List<dtoEarthSat> earthSatList) {
+        earthSatList
+                .forEach(it -> new EarthSatEntity(it, earthSatRepository, earthPointRepository, satelliteRepository));
+    }
+
+
     public void saveResultConstellationOrder(List<dtoEarthSat> dtoAssessmentConstellations) {
         //TODO: если понадобиться - то для сохранения данных по constellation
     }

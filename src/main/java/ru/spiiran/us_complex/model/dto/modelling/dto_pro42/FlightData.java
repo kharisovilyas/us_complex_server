@@ -1,6 +1,7 @@
 package ru.spiiran.us_complex.model.dto.modelling.dto_pro42;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FlightData {
     private int nRev;
@@ -41,4 +42,20 @@ public class FlightData {
     }
 
     public FlightData() {}
+    public FlightData(List<Double> revTime, List<Double> sunTime, List<Double> eclTime) {
+        this.revTime = revTime.stream()
+                .map(Math::round) // Округление Double к Long
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+
+        this.sunTime = sunTime.stream()
+                .map(Math::round) // Округление Double к Long
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+
+        this.eclTime = eclTime.stream()
+                .map(Math::round) // Округление Double к Long
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+    }
 }

@@ -4,14 +4,14 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
-import ru.spiiran.us_complex.model.dto.modelsat.techparam.dtoTechParameter;
+import ru.spiiran.us_complex.model.dto.modelsat.old.techparam.dtoTechParameter;
 import ru.spiiran.us_complex.model.entitys.modelsat.ModelSatEntity;
-import ru.spiiran.us_complex.model.entitys.modelsat.techparam.msParameterEntity;
-import ru.spiiran.us_complex.model.entitys.modelsat.techparam.msTechParamEntity;
+import ru.spiiran.us_complex.model.entitys.modelsat.old.techparam.msParameterEntity;
+import ru.spiiran.us_complex.model.entitys.modelsat.old.techparam.msTechParamEntity;
 import ru.spiiran.us_complex.repositories.modelsat.ModelSatRepository;
 import ru.spiiran.us_complex.repositories.modelsat.techparam.msListParamRepository;
 import ru.spiiran.us_complex.repositories.modelsat.techparam.msTechParamRepository;
-import ru.spiiran.us_complex.model.dto.modelsat.techparam.dtoParameter;
+import ru.spiiran.us_complex.model.dto.modelsat.old.techparam.dtoParameter;
 
 import java.util.List;
 import java.util.Optional;

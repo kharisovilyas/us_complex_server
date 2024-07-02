@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.spiiran.us_complex.model.dto.IDTOEntity;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.modelling.request.dtoViewWindowRequest;
+import ru.spiiran.us_complex.model.dto.modelling.response.pro42.dtoEarthSat;
 import ru.spiiran.us_complex.repositories.constellation.SatelliteRepository;
+import ru.spiiran.us_complex.utils.calc.CalculationSatEarth;
 import ru.spiiran.us_complex.utils.converters.ConverterDTO;
 
 import java.io.IOException;
@@ -23,6 +25,18 @@ public class ModellingModulesService {
     private ModellingDatabaseService modellingDatabaseService;
 
     public ModellingModulesService() {}
+
+    public dtoMessage calculationContactPlan(dtoEarthSat earthSat) {
+        try {
+            List<dtoEarthSat> earthSatList = CalculationSatEarth.calculationContactPlan(earthSat);
+            assert earthSatList != null;
+            modellingDatabaseService.saveResultContactEarthSat(earthSatList);
+            return new dtoMessage("SUCCESS", "Modelling has been completed");
+        } catch (RuntimeException e) {
+            return new dtoMessage("ERROR", "Modelling has not been completed. Description:\n" + e.getMessage());
+        }
+
+    }
 
     public enum ModellingType {
         OneSatellite,

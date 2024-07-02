@@ -15,6 +15,7 @@ import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.modelsat.dtoModelSat;
 import ru.spiiran.us_complex.model.entitys.modelsat.ModelSatEntity;
 import ru.spiiran.us_complex.repositories.modelsat.ModelSatRepository;
+import ru.spiiran.us_complex.repositories.modelsat.OperatingParametersRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 public class ModelSatService {
     @Autowired
     private ModelSatRepository modelSatRepository;
+    @Autowired private OperatingParametersRepository operatingParametersRepository;
     @Value("${image.ms.upload.dir}") // Путь к директории для загружаемых изображений
     private String uploadDir;
 
@@ -82,12 +84,16 @@ public class ModelSatService {
         }
     }
 
-    public dtoMessage updateModelSat(Long id, dtoModelSat dtoModelSat) {
+    public dtoMessage updateModelSat(dtoModelSat dtoModelSat) {
+        Long id = dtoModelSat.getId();
         Optional<ModelSatEntity> optionalModelSatEntity = modelSatRepository.findById(id);
         if (optionalModelSatEntity.isPresent()) {
-            ModelSatEntity existingModelSatEntity = optionalModelSatEntity.get();
-            existingModelSatEntity.setModelName(dtoModelSat.getModelName());
-            existingModelSatEntity.setDescription(dtoModelSat.getDescription());
+            ModelSatEntity existingModelSatEntity =
+                    new ModelSatEntity(
+                            optionalModelSatEntity.get(),
+                            dtoModelSat.getOperatingParameter(),
+                            operatingParametersRepository
+                    );
             modelSatRepository.save(existingModelSatEntity);
             return new dtoMessage("SUCCESS", "Модель КА c id = " + id + "обновлена успешно");
         } else {

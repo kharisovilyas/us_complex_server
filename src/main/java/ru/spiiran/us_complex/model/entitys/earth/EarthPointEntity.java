@@ -9,6 +9,7 @@ import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
 import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
 import ru.spiiran.us_complex.model.entitys.modelling.EarthSatEntity;
+import ru.spiiran.us_complex.model.entitys.satrequest.RequestEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,9 @@ public class EarthPointEntity implements IEntity {
     @JoinColumn(name = "node_id")
     @JsonIgnore
     private IdNodeEntity idNodeEntity;
+    @OneToMany(mappedBy = "earthPoint", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<RequestEntity> requestEntityList;
 
 
     public EarthPointEntity(dtoEarthPoint earthPoint) {
@@ -104,5 +108,13 @@ public class EarthPointEntity implements IEntity {
 
     public void setEarthSatContacts(List<EarthSatEntity> earthSatContacts) {
         this.earthSatContacts = earthSatContacts;
+    }
+
+    public List<RequestEntity> getRequestEntityList() {
+        return requestEntityList;
+    }
+
+    public void setRequestEntityList(List<RequestEntity> requestEntityList) {
+        this.requestEntityList = requestEntityList;
     }
 }

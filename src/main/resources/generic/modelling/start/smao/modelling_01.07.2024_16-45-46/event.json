@@ -1,0 +1,220 @@
+{
+  "type": "E00",
+  "node": {
+    "id": 1,
+    "typeName": "GS"
+  },
+  "satellites": [
+    {
+      "id": 12,
+      "groupId": 252,
+      "modelId": 1,
+      "plane": 1,
+      "pos": 1,
+      "a": 677.0,
+      "e": 1.0E-4,
+      "i": 97.003,
+      "Q": 57.0,
+      "w": 0.0,
+      "u": 45.0,
+      "type": "Orion2"
+    }
+  ],
+  "parameters": {
+    "t0Ballistics": 1716595200,
+    "t0FlightData": 1716633000,
+    "tfFlightData": 1716753600,
+    "dtBallistics": 5.0,
+    "isInterSatellite": false,
+    "controlSystem": "Automated",
+    "dtShooting": 1000.0,
+    "config_udm": [
+      {
+        "nWheels": 4,
+        "accel": 2.1,
+        "rate": 10.0,
+        "stabTime": 10.0
+      },
+      {
+        "nWheels": 3,
+        "accel": 0.5,
+        "rate": 4.0,
+        "stabTime": 10.0
+      },
+      {
+        "nWheels": 2,
+        "accel": 0.005,
+        "rate": 2.0,
+        "stabTime": 20.0
+      }
+    ]
+  },
+  "isSendingLogs": true
+}
+{
+  "type": "E00",
+  "node": {
+    "id": 12,
+    "typeName": "Orion2"
+  },
+  "satellites": [
+    {
+      "id": 12,
+      "groupId": 252,
+      "modelId": 1,
+      "plane": 1,
+      "pos": 1,
+      "a": 677.0,
+      "e": 1.0E-4,
+      "i": 97.003,
+      "Q": 57.0,
+      "w": 0.0,
+      "u": 45.0,
+      "type": "Orion2"
+    }
+  ],
+  "parameters": {
+    "t0Ballistics": 1716595200,
+    "t0FlightData": 1716633000,
+    "tfFlightData": 1716753600,
+    "dtBallistics": 5.0,
+    "isInterSatellite": false,
+    "controlSystem": "Automated",
+    "dtShooting": 1000.0,
+    "config_udm": [
+      {
+        "nWheels": 4,
+        "accel": 2.1,
+        "rate": 10.0,
+        "stabTime": 10.0
+      },
+      {
+        "nWheels": 3,
+        "accel": 0.5,
+        "rate": 4.0,
+        "stabTime": 10.0
+      },
+      {
+        "nWheels": 2,
+        "accel": 0.005,
+        "rate": 2.0,
+        "stabTime": 20.0
+      }
+    ]
+  },
+  "flightData": {
+    "nRev": 21,
+    "revTime": [
+      1716600365,
+      1716606260,
+      1716612160,
+      1716618060,
+      1716623955,
+      1716629855,
+      1716635755,
+      1716641650,
+      1716647550,
+      1716653450,
+      1716659350,
+      1716665245,
+      1716671145,
+      1716677045,
+      1716682940,
+      1716688840,
+      1716694740,
+      1716700635,
+      1716706535,
+      1716712435
+    ],
+    "sunTime": [
+      1716595200,
+      1716598805,
+      1716604705,
+      1716610600,
+      1716616500,
+      1716622400,
+      1716628295,
+      1716634195,
+      1716640095,
+      1716645990,
+      1716651890,
+      1716657790,
+      1716663685,
+      1716669585,
+      1716675485,
+      1716681385,
+      1716687280,
+      1716693180,
+      1716699080,
+      1716704975,
+      1716710875
+    ],
+    "eclTime": [
+      1726602595,
+      1716602590,
+      1716608490,
+      1716614390,
+      1716620285,
+      1716626185,
+      1716632085,
+      1716637980,
+      1716643880,
+      1716649780,
+      1716655680,
+      1716661575,
+      1716667475,
+      1716673375,
+      1716679270,
+      1716685170,
+      1716691070,
+      1716696970,
+      1716702865,
+      1716708765,
+      1716714665
+    ]
+  },
+  "isSendingLogs": true
+}
+{
+  "type": "E20",
+  "time": 1716595200,
+  "order": [
+    {
+      "id": 1,
+      "name": "Samara",
+      "latitude": 53.0,
+      "longitude": 50.0,
+      "altitude": 0.0,
+      "priority": 3,
+      "tf": 1716649200
+    },
+    {
+      "id": 5,
+      "name": "Vladimir",
+      "latitude": 56.0,
+      "longitude": 40.0,
+      "altitude": 0.0,
+      "priority": 3,
+      "tf": 1716649200
+    },
+    {
+      "id": 2,
+      "name": "Penza",
+      "latitude": 53.0,
+      "longitude": 45.0,
+      "altitude": 0.0,
+      "priority": 3,
+      "tf": 1716649200
+    },
+    {
+      "id": 3,
+      "name": "Saranck",
+      "latitude": 54.0,
+      "longitude": 45.0,
+      "altitude": 0.0,
+      "priority": 3,
+      "tf": 1716633000
+    }
+  ],
+  "targetId": 1
+}

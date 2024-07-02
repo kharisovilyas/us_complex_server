@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import ru.spiiran.us_complex.model.dto.message.dtoMessage;
 import ru.spiiran.us_complex.model.dto.satrequest.dtoRequest;
+import ru.spiiran.us_complex.model.entitys.earth.EarthPointEntity;
 import ru.spiiran.us_complex.model.entitys.general.IEntity;
-import ru.spiiran.us_complex.model.entitys.general.IdNodeEntity;
 
 @Entity
 @Table(name = "sr_request")
@@ -33,9 +33,9 @@ public class RequestEntity implements IEntity {
     private Long time;
 
     @ManyToOne
-    @JoinColumn(name = "id_node")
+    @JoinColumn(name = "id_ep_begin")
     @JsonIgnore
-    private IdNodeEntity nodeEntity;
+    private EarthPointEntity earthPoint;
 
     @Column(name = "filter")
     private Boolean filter;
@@ -116,11 +116,11 @@ public class RequestEntity implements IEntity {
         return new dtoMessage(type, message);
     }
 
-    public IdNodeEntity getNodeEntity() {
-        return nodeEntity;
+    public EarthPointEntity getEarthPoint() {
+        return earthPoint;
     }
 
-    public void setNodeEntity(IdNodeEntity nodeEntity) {
-        this.nodeEntity = nodeEntity;
+    public void setEarthPoint(EarthPointEntity earthPoint) {
+        this.earthPoint = earthPoint;
     }
 }

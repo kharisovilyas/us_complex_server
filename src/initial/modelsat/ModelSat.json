@@ -1,0 +1,176 @@
+[
+  {
+    "id": 1,
+    "modelName": "Модель «А»",
+    "description": "Первый искусственный спутник Земли",
+    "imageFile": null,
+    "operatingParameter": [
+      {
+        "operationParamId": 1,
+        "parameterName": "Ускорение / замедление КА",
+        "value": 3.0
+      },
+      {
+        "operationParamId": 2,
+        "parameterName": "Максимальная скорость вращения КА",
+        "value": 12.0
+      },
+      {
+        "operationParamId": 3,
+        "parameterName": "Время стабилизации",
+        "value": 43.0
+      },
+      {
+        "operationParamId": 4,
+        "parameterName": "Скорость передачи данных КА - КА",
+        "value": 54.0
+      },
+      {
+        "operationParamId": 5,
+        "parameterName": "Скорость передачи данных КА - НП",
+        "value": 54.0
+      },
+      {
+        "operationParamId": 6,
+        "parameterName": "Крен",
+        "value": 65.0
+      },
+      {
+        "operationParamId": 7,
+        "parameterName": "Тангаж",
+        "value": 87.0
+      },
+      {
+        "operationParamId": 8,
+        "parameterName": "Емкость",
+        "value": 34.0
+      },
+      {
+        "operationParamId": 9,
+        "parameterName": "Минимальный уровень заряда",
+        "value": 23.0
+      },
+      {
+        "operationParamId": 10,
+        "parameterName": "Объем памяти",
+        "value": 65.0
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "modelName": "Модель «В»",
+    "description": "Второй искусственный спутник Земли",
+    "imageFile": null,
+    "operatingParameter": [
+      {
+        "operationParamId": 1,
+        "parameterName": "Ускорение / замедление КА",
+        "value": 3.0
+      },
+      {
+        "operationParamId": 2,
+        "parameterName": "Максимальная скорость вращения КА",
+        "value": 12.0
+      },
+      {
+        "operationParamId": 3,
+        "parameterName": "Время стабилизации",
+        "value": 43.0
+      },
+      {
+        "operationParamId": 4,
+        "parameterName": "Скорость передачи данных КА - КА",
+        "value": 54.0
+      },
+      {
+        "operationParamId": 5,
+        "parameterName": "Скорость передачи данных КА - НП",
+        "value": 54.0
+      },
+      {
+        "operationParamId": 6,
+        "parameterName": "Крен",
+        "value": 65.0
+      },
+      {
+        "operationParamId": 7,
+        "parameterName": "Тангаж",
+        "value": 87.0
+      },
+      {
+        "operationParamId": 8,
+        "parameterName": "Емкость",
+        "value": 34.0
+      },
+      {
+        "operationParamId": 9,
+        "parameterName": "Минимальный уровень заряда",
+        "value": 23.0
+      },
+      {
+        "operationParamId": 10,
+        "parameterName": "Объем памяти",
+        "value": 65.0
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "modelName": "Модель «С»",
+    "description": "Третий искусственный спутник Земли",
+    "imageFile": null,
+    "operatingParameter": [
+      {
+        "operationParamId": 1,
+        "parameterName": "Ускорение / замедление КА",
+        "value": 3.0
+      },
+      {
+        "operationParamId": 2,
+        "parameterName": "Максимальная скорость вращения КА",
+        "value": 12.0
+      },
+      {
+        "operationParamId": 3,
+        "parameterName": "Время стабилизации",
+        "value": 43.0
+      },
+      {
+        "operationParamId": 4,
+        "parameterName": "Скорость передачи данных КА - КА",
+        "value": 54.0
+      },
+      {
+        "operationParamId": 5,
+        "parameterName": "Скорость передачи данных КА - НП",
+        "value": 54.0
+      },
+      {
+        "operationParamId": 6,
+        "parameterName": "Крен",
+        "value": 65.0
+      },
+      {
+        "operationParamId": 7,
+        "parameterName": "Тангаж",
+        "value": 87.0
+      },
+      {
+        "operationParamId": 8,
+        "parameterName": "Емкость",
+        "value": 34.0
+      },
+      {
+        "operationParamId": 9,
+        "parameterName": "Минимальный уровень заряда",
+        "value": 23.0
+      },
+      {
+        "operationParamId": 10,
+        "parameterName": "Объем памяти",
+        "value": 65.0
+      }
+    ]
+  }
+]

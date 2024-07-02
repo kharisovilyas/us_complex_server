@@ -348,7 +348,7 @@ public class ConnectToService {
                     systemEntity.getStartTime(),
                     orderList,
                     "E20",
-                    requestEntities.get(0).getNodeEntity().getNodeId()
+                    requestEntities.get(0).getEarthPoint().getIdNodeEntity().getNodeId()
             );
         } else {
             throw new EntityNotFoundException();
@@ -606,7 +606,7 @@ public class ConnectToService {
         // Создаем список команд для выполнения
         List<String> command = new ArrayList<>();
         // Добавляем команду cd для изменения рабочей директории
-        command.add("cd ../../smao_complex/SMAO-Complex && ./SMAO-Complex");
+        command.add("cd ../../smao_complex/SMAO-Complex && ./SMAO-Complex JSON_TO_CONSOL");
 
         // Создаем процесс с указанными командами
         ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", "-c", String.join(" ", command));

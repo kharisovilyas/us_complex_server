@@ -1,6 +1,6 @@
 package ru.spiiran.us_complex.model.dto.satrequest;
 
-import ru.spiiran.us_complex.model.dto.general.dtoIdNode;
+import ru.spiiran.us_complex.model.dto.earth.dtoEarthPoint;
 import ru.spiiran.us_complex.model.entitys.satrequest.RequestEntity;
 
 public class dtoRequest {
@@ -10,7 +10,7 @@ public class dtoRequest {
         this.catalog = new dtoCatalog(requestEntity.getCatalogEntity());
         this.filter = requestEntity.getFilter();
         this.term = requestEntity.getTerm();
-        this.idNode = new dtoIdNode(requestEntity.getNodeEntity());
+        this.earthPoint = new dtoEarthPoint(requestEntity.getEarthPoint());
         this.requestId = requestEntity.getRequestId();
         this.orderId = requestEntity.getOrderId();
         this.priory = requestEntity.getPriory();
@@ -22,17 +22,16 @@ public class dtoRequest {
     private Long priory;
     private Long term;
     private Long time;
-    private dtoIdNode idNode;
+    private dtoEarthPoint earthPoint;
     private Boolean filter;
     private Boolean deleted;
 
-
-    public dtoIdNode getIdNode() {
-        return idNode;
+    public dtoEarthPoint getEarthPoint() {
+        return earthPoint;
     }
 
-    public void setIdNode(dtoIdNode idNode) {
-        this.idNode = idNode;
+    public void setEarthPoint(dtoEarthPoint earthPoint) {
+        this.earthPoint = earthPoint;
     }
 
     public Long getRequestId() {
