@@ -24,7 +24,7 @@ public class Satellite {
         this.pos = 1;
         this.groupId = satellite.getConstellation().getConstellationId();
         this.modelId = 1L; //TODO: после выполнения спринта модель-КА
-        this.a = satellite.getAltitude() - 6300;
+        this.a = satellite.getAltitude();
         this.e = satellite.getEccentricity();
         this.i = satellite.getIncline();
         this.Q = satellite.getLongitudeAscendingNode();
