@@ -437,7 +437,7 @@ public class ConnectToService {
         //0.0                           !  True Anomaly (deg)
         List<SatelliteEntity> satelliteEntities = satelliteRepository.findAll();
         for (SatelliteEntity satellite : satelliteEntities) {
-            String parameters = satellite.getAltitude() + " " + satellite.getEccentricity() + "                    !  Min Altitude (km), Eccentricity\n" +
+            String parameters = satellite.getAltitude() - 6300 + " " + satellite.getEccentricity() + "                    !  Min Altitude (km), Eccentricity\n" +
                     satellite.getIncline() + "                          !  Inclination (deg)\n" +
                     satellite.getLongitudeAscendingNode() + "                         !  Right Ascension of Ascending Node (deg)\n" +
                     satellite.getPerigeeWidthArgument() + "                           !  Argument of Periapsis (deg)\n" +
